@@ -15,13 +15,20 @@ PredNet/
 --|
 - graph/   (.dot-graphs of backprop graph)
 -|
-- helper/  (Useful helper, e.g. yml-reader)
--|
 - log/     (log in txt-file & tensorboard logs)
 -|
 - mdl/     (Saving PyTorch models)
 -|
 - model/   (PredNet model)
--|
+-| prednet.py
+-- modules/ (Simple modules, e.g. LSTM)
+--| conv_lstm.py
+--| input.py
+--| prediction.py
+--| error.py
+--| __init__.py
+-- helper/  (Useful helper, e.g. yml parser)
+--| yaml_parser.py
+--| __init__.py
 - yml/     (Hyperparameter)
 -|
