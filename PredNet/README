@@ -1,0 +1,27 @@
+Re-implementation of PredNet: https://coxlab.github.io/prednet/
+
+File structure:
+
+PredNet/
+| requirements.txt (Install necessary libraries etc. via: pip install -r requirements.txt)
+| setup.py (Convenient way to install every necessary framework/library)
+| main.py  (Start/Stop training & testing etc.)
+| train.py (Training)
+| test.py  (Testing)
+- data/    (Datasets & the data)
+-| Kitti.py
+-| MovingMNIST.py
+-- datasets/
+--|
+- graph/   (.dot-graphs of backprop graph)
+-|
+- helper/  (Useful helper, e.g. yml-reader)
+-|
+- log/     (log in txt-file & tensorboard logs)
+-|
+- mdl/     (Saving PyTorch models)
+-|
+- model/   (PredNet model)
+-|
+- yml/     (Hyperparameter)
+-|
