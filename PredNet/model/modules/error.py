@@ -20,7 +20,7 @@ class ErrorLayer(nn.Module):
         """
         super(ErrorLayer, self).__init__()
         
-    def forward(x, y):
+    def forward(self, x, y):
         """
         """
         return torch.cat((f.relu(x - y), f.relu(y - x)), 0)
