@@ -1,0 +1,13 @@
+layer: 5
+pooling:
+    stride: 2
+kernel: 3
+padding: 2
+channels:
+    - 1
+    - 32
+    - 64
+    - 128
+    - 256
+dropout: None
+peephole: True
