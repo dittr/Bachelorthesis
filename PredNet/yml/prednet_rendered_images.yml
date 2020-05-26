@@ -11,3 +11,4 @@ channels:
     - 256
 dropout: None
 peephole: True
+pixel_max: 1
