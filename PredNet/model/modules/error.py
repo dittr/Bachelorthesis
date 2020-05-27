@@ -23,4 +23,4 @@ class ErrorLayer(nn.Module):
     def forward(self, x, y):
         """
         """
-        return torch.cat((f.relu(x - y), f.relu(y - x)), 0)
+        return torch.cat((f.relu(x - y), f.relu(y - x)), 1)
