@@ -15,7 +15,7 @@ import datetime
 
 @dataclass
 class Data:
-    epoch: int
+    epoch: int = 0
     iteration: int
     loss: float
     optimizer: str = ''
@@ -49,16 +49,13 @@ class DataLogger():
             print('[Log] Logger is not able to create log-file')
             self.logger = False
 
-
-    def write(self, data):
+    def write_training(self, data):
         """
         """
         if not self.logger:
             return
 
         output = ''
-        now = datetime.datetime.now()
-        prefix = '[{}:{}:{}]'.format(now.hour, now.minute, now.second)
 
         if self.verbose:
             output = 'Epoch: {}, Iteration: {}, Loss: {}, Optimizer: {},\
@@ -71,7 +68,44 @@ class DataLogger():
                                                                  data.loss)
 
         try:
-            self.file.write(prefix + ' ' + output)
+            self.file.write(self.get_prefix() + ' ' + output)
         except IOError:
             print('[Log] File not existend or closed: logger stopped')
             self.logger = False
+
+
+    def write_testing(self, data):
+        """
+        """
+        if not self.logger:
+            return
+
+        
+        output = 'Iteration: {}, Loss: {}'.format(data.iteration,
+                                                  data.loss)
+
+        try:
+            self.file.write(self.get_prefix() + ' ' + output)
+        except IOError:
+            print('[Log] File not existend or closed: logger stopped')
+            self.logger = False
+
+    def write(self, data):
+        """
+        """
+        if not self.logger:
+            return
+
+        try:
+            self.file.write(self.get_prefix() + ' ' + data)
+        except IOError:
+            print('[Log] File not existend or closed: logger stopped')
+            self.logger = False
+
+    def get_prefix(self):
+        """
+        """
+        now = datetime.datetime.now()
+        prefix = '[Log] [{}:{}:{}]'.format(now.hour, now.minute, now.second)
+        
+        return prefix
