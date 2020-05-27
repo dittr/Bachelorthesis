@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+@date: 27.05.2020
+@author: Sören S. Dittrich
+@version: 0.0.2
+@description: PredNet module
+"""
+
+from helper.yaml_parser import yml
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as f
+
+from model.modules.input import InputLayer
+from model.modules.prediction import PredictionLayer
+from model.modules.error import ErrorLayer
+from model.modules.conv_lstm import CONV_LSTM as LstmLayer
+
+class PredNet(nn.Module):
+    """
+    """
+    def __init__(self, path, gpu=False):
+        """
+        """
+        super(PredNet, self).__init__()
+        
+        param = yml(path) # move this to main file -> no complications with console input
+        
+        self.gpu = gpu
+        self.size = param['prednet']['size']
+        self.batch = 0 # change
+        self.channels = param['prednet']['channels'] # change
+        self.layer = param['prednet']['layer']
+        self.pixel_max = param['prednet']['pixel_max']
+        self.input = []
+        self.prediction = []
+        self.error = []
+        self.lstm = []
+        
+        for i in range(self.layer - 1):
+            self.input.append(InputLayer(channel_in=param['prednet']['channels'][i] * 2,
+                                         channel_out=param['prednet']['channels'][i+1],
+                                         kernel_size=param['prednet']['kernel'],
+                                         padding=param['prednet']['padding']))
+        
+        for i in range(self.layer):
+            self.prediction.append(PredictionLayer(channel_in=param['prednet']['channels'][i],
+                                                   channel_out=param['prednet']['channels'][i],
+                                                   kernel_size=param['prednet']['kernel'],
+                                                   padding=param['prednet']['padding']))
+            self.error.append(ErrorLayer())
+            self.lstm.append(LstmLayer(depth=1, channel_in=param['prednet']['channels'][i] * 2,
+                                       channel_hidden=param['prednet']['channels'][i],
+                                       kernel_size=param['prednet']['kernel'],
+                                       dropout=param['prednet']['dropout'],
+                                       rec_dropout=param['prednet']['dropout'],
+                                       peephole=param['prednet']['peephole'],
+                                       gpu=self.gpu))
+
+
+    def _init(self):
+        """
+        """
+        A = [[] for i in range(self.layer)]
+        Ah = [[] for i in range(self.layer)]
+        E = [[] for i in range(self.layer)]
+        R = [[] for i in range(self.layer)]
+        
+        for i in range(self.layer):
+            if self.gpu:
+                E[i].append(torch.zeros(self.batch, self.channels[i] * 2,
+                                        self.size[0], self.size[1]).cuda())
+                R[i].append(torch.zeros(self.batch, self.channels[i],
+                                        self.size[0], self.size[1]).cuda())
+            else:
+                E[i].append(torch.zeros(self.batch, self.channels[i] * 2,
+                                        self.size[0], self.size[1]))
+                R[i].append(torch.zeros(self.batch, self.channels[i],
+                                        self.size[0], self.size[1]))
+        
+        return A, Ah, E, R
+
+        
+    def forward(self, x, mode='prediction'):
+        """
+        x should look like (T x B x C x H x W)
+        """
+        # initialize all variables
+        A, Ah, E, R = self._init()
+        A[0] = x
+
+        # loop through the time series
+        for t in range(1, len(x)):
+            # loop through the layer
+            # top-down pass
+            for l in range(self.layer - 1, -1, -1):
+                # compute recurrences
+                if l == self.layer:
+                    R[l].append(self.lstm[l](E[l][t-1], R[l][t-1]))
+                else:
+                    R[l].append(self.lstm[l](E[l][t-1], R[l][t-1], f.interpolate(R[l+1][t],
+                                                                                 scale_factor=2,
+                                                                                 mode='nearest')))
+            # forward pass
+            for l in range(self.layer):
+                # compute predictions
+                if l == 0:
+                    # SatLU (saturation linear unit)
+                    Ah[l].append(torch.min(self.prediction[l](R[l][t]), self.pixel_max))
+                else:
+                    Ah[l].append(self.prediction[l](R[l][t]))
+                # compute errors
+                E[l][t].append(self.error(A[l][t], Ah[l][t]))
+
+                if l < self.layer:
+                    A[l+1][t] = self.input(E[l][t])
+
+        if mode == 'prediction':
+            return Ah[0]
+        elif mode == 'error':
+            return E[0]
+        else:
+            raise IOError('No valid option given, please use: <prediction|error>')
