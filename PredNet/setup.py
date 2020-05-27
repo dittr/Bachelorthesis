@@ -18,7 +18,7 @@ REQUIRES_PYTHON = '>=3.8.0'
 VERSION = '0.0.1'
 
 REQUIRED = [
-    'numpy', 'torch'
+    'numpy', 'torch', 'PyYAML'
 ]
 
 with open('README') as f:
