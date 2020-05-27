@@ -26,10 +26,9 @@ class DataLogger():
     """
     """
     def __init__(self, log_path='log/', mdl_name='prednet',
-                 testing=False, verbose=False):
+                 verbose=False):
         """
         """
-        self.testing = testing
         self.verbose = verbose
 
         # check if log_path already exists, create path if not
