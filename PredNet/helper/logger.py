@@ -79,7 +79,7 @@ class DataLogger():
         if not self.logger:
             return
 
-        
+
         output = 'Iteration: {}, Loss: {}'.format(data.iteration,
                                                   data.loss)
 
@@ -106,5 +106,5 @@ class DataLogger():
         """
         now = datetime.datetime.now()
         prefix = '[Log] [{}:{}:{}]'.format(now.hour, now.minute, now.second)
-        
+
         return prefix
