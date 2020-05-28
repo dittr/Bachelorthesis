@@ -24,7 +24,7 @@ class PredNet(nn.Module):
         """
         """
         super(PredNet, self).__init__()
-        
+        self.name = 'prednet'
         self.channels = channels
         self.kernel = kernel
         self.padding = padding
@@ -104,15 +104,17 @@ class PredNet(nn.Module):
                 if l == self.layer:
                     R[l].append(self.lstm[l](E[l][t-1], R[l][t-1]))
                 else:
-                    R[l].append(self.lstm[l](E[l][t-1], R[l][t-1], f.interpolate(R[l+1][t],
-                                                                                 scale_factor=2,
-                                                                                 mode='nearest')))
+                    R[l].append(self.lstm[l](E[l][t-1], R[l][t-1],
+                                f.interpolate(R[l+1][t],
+                                              scale_factor=2,
+                                              mode='nearest')))
             # forward pass
             for l in range(self.layer):
                 # compute predictions
                 if l == 0:
                     # SatLU (saturation linear unit)
-                    Ah[l].append(torch.min(self.prediction[l](R[l][t]), self.pixel_max))
+                    Ah[l].append(torch.min(self.prediction[l](R[l][t]),
+                                 self.pixel_max))
                 else:
                     Ah[l].append(self.prediction[l](R[l][t]))
                 # compute errors
