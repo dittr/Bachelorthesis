@@ -14,7 +14,7 @@ def get_today():
     """
     Simple wrapper to get todays value
     """
-    return datetime.date.today()
+    return str(datetime.date.today())
 
 def get_time():
     """
