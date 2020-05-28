@@ -1,14 +1,23 @@
-layer: 5
-pooling:
+prednet:
+    size:
+        - 64
+        - 64
+    layer: 5
+    pooling:
+        stride: 2
+    kernel: 3
+    padding: 1
     stride: 2
-kernel: 3
-padding: 2
-channels:
-    - 1
-    - 32
-    - 64
-    - 128
-    - 256
-dropout: None
-peephole: True
-pixel_max: 1
+    channels:
+        - 1
+        - 32
+        - 64
+        - 128
+        - 256
+    dropout: 0
+    peephole: True
+    pixel_max: 1
+mdl_path: 'mdl/'
+log_path: 'log/'
+data_path: 'data/'
+debug: False
