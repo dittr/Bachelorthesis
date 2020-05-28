@@ -10,7 +10,12 @@
 
 import torch
 import torch.nn as nn
-from model.modules.utils import pad_size
+import numpy as np
+
+def pad_size(kernel):
+    """
+    """
+    return int(np.floor(kernel / 2))
 
 
 class CONV_LSTM_CELL(nn.Module):
