@@ -20,14 +20,17 @@ from model.modules.conv_lstm import CONV_LSTM as LstmLayer
 class PredNet(nn.Module):
     """
     """
-    def __init__(self, channels, kernel, padding, dropout, peephole, gpu=False):
+    def __init__(self, channels, kernel, padding, stride,
+                 dropout, peephole, gpu=False):
         """
         """
         super(PredNet, self).__init__()
         self.name = 'prednet'
         self.channels = channels
+        self.layer = len(self.channels) 
         self.kernel = kernel
         self.padding = padding
+        self.stride = stride
         self.dropout = dropout
         self.peephole = peephole
         self.gpu = gpu
@@ -40,7 +43,8 @@ class PredNet(nn.Module):
             self.input.append(InputLayer(channel_in=self.channels[i] * 2,
                                          channel_out=self.channels[i+1],
                                          kernel_size=self.kernel,
-                                         padding=self.padding))
+                                         padding=self.padding,
+                                         stride=self.stride))
         
         for i in range(self.layer):
             self.prediction.append(PredictionLayer(channel_in=self.channels[i],

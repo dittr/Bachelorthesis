@@ -14,16 +14,16 @@ import torch.nn.functional as f
 class InputLayer(nn.Module):
     """
     """
-    def __init__(self, channel_in, channel_out, kernel_size, padding):
+    def __init__(self, channel_in, channel_out, kernel_size, padding, stride):
         """
         """
         super(InputLayer, self).__init__()
         
         self.conv = nn.Conv2d(in_channels=channel_in,
                               out_channels=channel_out,
-                              kernel_size=kernel_size[0],
+                              kernel_size=kernel_size,
                               padding=padding)
-        self.pool = nn.MaxPool2d(kernel_size=kernel_size[1])
+        self.pool = nn.MaxPool2d(kernel_size=kernel_size)
 
     def forward(self, x):
         """
