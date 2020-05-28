@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-@date: 27.05.2020
+@date: 28.05.2020
 @author: Sören S. Dittrich
-@version: 0.0.1
+@version: 0.0.2
 @description: Console arguments
 """
 
