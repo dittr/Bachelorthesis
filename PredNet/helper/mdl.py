@@ -29,6 +29,13 @@ class ModelSaver():
     def __init__(self, dataset, path='mdl/', mdl='prednet',
                  debug=False, logger=None):
         """
+        Initialization
+        
+        dataset := used dataset
+        path := path to save the model
+        mdl := name of the model
+        debug := print to stdout and to logger if True
+        logger := logger object
         """
         self.dataset = dataset
         self.path = path 
@@ -38,6 +45,9 @@ class ModelSaver():
 
     def save(self, param):
         """
+        Save model to file
+        
+        param := ModelParameter class with values from trained model
         """
         file = self.path + self.mdl + '_' + self.dataset + '.pth'
         torch.save({
@@ -65,6 +75,13 @@ class ModelLoader():
     def __init__(self, dataset, path='mdl/', mdl='prednet',
                  debug=False, logger=None):
         """
+        Initialization
+        
+        dataset := the dataset to use
+        path := path to the saved model
+        mdl := name of the model
+        debug := print to stdout and to logger if True
+        logger := logger object
         """
         self.dataset = dataset
         self.path = path
@@ -74,6 +91,7 @@ class ModelLoader():
 
     def load(self):
         """
+        Load model from file
         """
         param = ModelParameter
         file = self.path + self.mdl + '_' + self.dataset + '.pth'
