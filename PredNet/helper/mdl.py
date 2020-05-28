@@ -72,7 +72,7 @@ class ModelLoader():
     """
     Class to load a model from a certain path
     """
-    def __init__(self, dataset, path='mdl/', mdl='prednet',
+    def __init__(self, dataset, device, path='mdl/', mdl='prednet',
                  debug=False, logger=None):
         """
         Initialization
@@ -84,6 +84,7 @@ class ModelLoader():
         logger := logger object
         """
         self.dataset = dataset
+        self.device
         self.path = path
         self.mdl = mdl
         self.debug = debug
@@ -95,7 +96,7 @@ class ModelLoader():
         """
         param = ModelParameter
         file = self.path + self.mdl + '_' + self.dataset + '.pth'
-        checkp = torch.load(file)
+        checkp = torch.load(file, map_location=self.device)
 
         param.epoch = checkp['epoch']
         param.iteration = checkp['iteration']
