@@ -11,9 +11,9 @@
 import os
 from torch.utils.tensorboard import SummaryWriter
 
-import helper.datetime as datetime
+from helper.datetime import get_today, get_time
 
-def TensorLog():
+class TensorLog():
     """
     """
     def __init__(self, path, mdl_name, testing=False, debug=False):
@@ -24,8 +24,8 @@ def TensorLog():
         self.mode = 'training' if not testing else 'testing'
         self.debug = debug
         self.open = False
-        self.date = datetime.get_today()
-        self.time = datetime.get_time()
+        self.date = get_today()
+        self.time = get_time()
 
         if not os.path.exists(self.path):
             if self.debug:
