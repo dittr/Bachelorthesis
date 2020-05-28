@@ -2,13 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-@date: 27.05.2020
+@date: 28.05.2020
 @author: Sören S. Dittrich
-@version: 0.0.2
+@version: 0.0.3
 @description: PredNet module
 """
-
-from helper.yaml_parser import yml
 
 import torch
 import torch.nn as nn
@@ -22,47 +20,50 @@ from model.modules.conv_lstm import CONV_LSTM as LstmLayer
 class PredNet(nn.Module):
     """
     """
-    def __init__(self, path, gpu=False):
+    def __init__(self, channels, kernel, padding, dropout, peephole, gpu=False):
         """
         """
         super(PredNet, self).__init__()
         
-        param = yml(path) # move this to main file -> no complications with console input
-        
+        self.channels = channels
+        self.kernel = kernel
+        self.padding = padding
+        self.dropout = dropout
+        self.peephole = peephole
         self.gpu = gpu
-        self.size = param['prednet']['size']
-        self.batch = 0 # change
-        self.channels = param['prednet']['channels'] # change
-        self.layer = param['prednet']['layer']
-        self.pixel_max = param['prednet']['pixel_max']
         self.input = []
         self.prediction = []
         self.error = []
         self.lstm = []
         
         for i in range(self.layer - 1):
-            self.input.append(InputLayer(channel_in=param['prednet']['channels'][i] * 2,
-                                         channel_out=param['prednet']['channels'][i+1],
-                                         kernel_size=param['prednet']['kernel'],
-                                         padding=param['prednet']['padding']))
+            self.input.append(InputLayer(channel_in=self.channels[i] * 2,
+                                         channel_out=self.channels[i+1],
+                                         kernel_size=self.kernel,
+                                         padding=self.padding))
         
         for i in range(self.layer):
-            self.prediction.append(PredictionLayer(channel_in=param['prednet']['channels'][i],
-                                                   channel_out=param['prednet']['channels'][i],
-                                                   kernel_size=param['prednet']['kernel'],
-                                                   padding=param['prednet']['padding']))
+            self.prediction.append(PredictionLayer(channel_in=self.channels[i],
+                                                   channel_out=self.channels[i],
+                                                   kernel_size=self.kernel,
+                                                   padding=self.padding))
             self.error.append(ErrorLayer())
-            self.lstm.append(LstmLayer(depth=1, channel_in=param['prednet']['channels'][i] * 2,
-                                       channel_hidden=param['prednet']['channels'][i],
-                                       kernel_size=param['prednet']['kernel'],
-                                       dropout=param['prednet']['dropout'],
-                                       rec_dropout=param['prednet']['dropout'],
-                                       peephole=param['prednet']['peephole'],
+            self.lstm.append(LstmLayer(depth=1, channel_in=self.channels[i] * 2,
+                                       channel_hidden=self.channels[i],
+                                       kernel_size=self.kernel,
+                                       dropout=self.dropout,
+                                       rec_dropout=self.dropout,
+                                       peephole=self.peephole,
                                        gpu=self.gpu))
 
 
-    def _init(self):
+    def _init(self, batch, height, width):
         """
+        Initialize all lists for the first iteration.
+        
+        batch := batch size of input
+        height := height of input
+        width := width of input
         """
         A = [[] for i in range(self.layer)]
         Ah = [[] for i in range(self.layer)]
@@ -71,15 +72,15 @@ class PredNet(nn.Module):
         
         for i in range(self.layer):
             if self.gpu:
-                E[i].append(torch.zeros(self.batch, self.channels[i] * 2,
-                                        self.size[0], self.size[1]).cuda())
-                R[i].append(torch.zeros(self.batch, self.channels[i],
-                                        self.size[0], self.size[1]).cuda())
+                E[i].append(torch.zeros(batch, self.channels[i] * 2,
+                                        height, width).cuda())
+                R[i].append(torch.zeros(batch, self.channels[i],
+                                        height, width).cuda())
             else:
-                E[i].append(torch.zeros(self.batch, self.channels[i] * 2,
-                                        self.size[0], self.size[1]))
-                R[i].append(torch.zeros(self.batch, self.channels[i],
-                                        self.size[0], self.size[1]))
+                E[i].append(torch.zeros(batch, self.channels[i] * 2,
+                                        height, width))
+                R[i].append(torch.zeros(batch, self.channels[i],
+                                        height, width))
         
         return A, Ah, E, R
 
@@ -87,9 +88,11 @@ class PredNet(nn.Module):
     def forward(self, x, mode='prediction'):
         """
         x should look like (T x B x C x H x W)
+        
+        todo: Adding multi-frame prediction.
         """
         # initialize all variables
-        A, Ah, E, R = self._init()
+        A, Ah, E, R = self._init(x.size(1), x.size(3), x.size(4))
         A[0] = x
 
         # loop through the time series
