@@ -40,7 +40,7 @@ class ModelSaver():
         self.dataset = dataset
         self.path = path 
         self.mdl = mdl
-        self.debug
+        self.debug = debug
         self.logger = logger
 
     def save(self, param):
