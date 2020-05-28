@@ -16,6 +16,7 @@ class ConsoleArguments():
     """
     def __init__(self):
         """
+        Initialization of ArgumentParser
         """
         parser = argparse.ArgumentParser(description='Re-implementation of \
                                          PredNet using PyTorch.')
@@ -34,6 +35,10 @@ class ConsoleArguments():
                             help='Set mode to testing (Default: False)')
         parser.add_argument('--optimizer', '-o', type=str,
                             help='Name of optimzer to use <adam|rmsprop>')
+        parser.add_argument('--load', '-l', action='store_true',
+                            help='Load model from mdl path (Default: False)')
+        parser.add_argument('--save', '-s', action='store_true',
+                            help'Save model to mdl path (Default: False)')
         
         
         self.args = parser.parse_args()
@@ -79,3 +84,15 @@ class ConsoleArguments():
         Return the optimizer to use
         """
         return self.args.optimizer
+
+    def get_load(self):
+        """
+        Return if use pre-trained model
+        """
+        return self.args.load
+
+    def get_save(self):
+        """
+        Return if saving model
+        """
+        return self.args.save
