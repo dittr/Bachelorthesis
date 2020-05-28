@@ -30,6 +30,8 @@ class ConsoleArguments():
                             help='Batchsize')
         parser.add_argument('--sequence', '-s', type=int,
                             help='Length of input sequence')
+        parser.add_argument('--testing', '-t', action='store_true',
+                            help='Set mode to testing (Default: False)')
         
         
         self.args = parser.parse_args()
@@ -63,3 +65,9 @@ class ConsoleArguments():
         Return sequence length
         """
         return self.args.sequence
+    
+    def get_testing(self):
+        """
+        Return if testing or training is required
+        """
+        return self.args.testing
