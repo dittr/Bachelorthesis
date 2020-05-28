@@ -227,11 +227,13 @@ class CONV_LSTM(nn.Module):
         self.dim = list()
         padding = list()
         self.gpu = gpu
-        self.dim = channel_hidden
         
         # used for convenience
-        channel_in = [channel_in] + channel_hidden
-        if type(kernel_size) == type(int):
+        if type(channel_hidden) == list:
+            channel_in = [channel_in] + channel_hidden
+        else:
+            channel_in = [channel_in] + [channel_hidden]
+        if type(kernel_size) == int:
             kernel_size = [kernel_size for i in range(depth)]
         
         for i in range(len(kernel_size)):
@@ -239,7 +241,10 @@ class CONV_LSTM(nn.Module):
         
         # Create deep ConvLSTM module
         for i in range(depth):
-            self.dim.append(channel_hidden[i])
+            if depth == 1:
+                self.dim.append(channel_hidden)
+            else:
+                self.dim.append(channel_hidden[i])
             
             if not peephole:
                 self.lstm.append(CONV_LSTM_CELL(channel_in=channel_in[i],
