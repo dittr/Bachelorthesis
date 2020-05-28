@@ -21,7 +21,7 @@ def TensorLog():
         """
         self.path = path
         self.mdl_name = mdl_name
-        self.testing = 'training' if not testing else 'testing'
+        self.mode = 'training' if not testing else 'testing'
         self.debug = debug
         self.open = False
         self.date = datetime.get_today()
@@ -37,12 +37,17 @@ def TensorLog():
             if self.debug:
                 print('[DEBUG] Path not valid, create log path.')
             os.makedirs(self.path)
+            
+    def set_mode(self, value):
+        """
+        """
+        self.mode = value
 
     def open_writer(self):
         self.writer = SummaryWriter(self.path)
         self.open = True
         
-        is self.debug:
+        if self.debug:
             print('[DEBUG] Opened SummaryWriter.')
 
     def is_open(self):
@@ -64,8 +69,8 @@ def TensorLog():
         loss := name of used loss
         it := current iteration
         """
-        writer.add_scalar(self.mdl_name + '/' + self.testing + '/' + loss,
-                          loss, it)
+        self.writer.add_scalar(self.mdl_name + '/' + self.mode + '/' + loss,
+                               loss, it)
 
     def plot_image(self, name, image):
         """
@@ -74,7 +79,7 @@ def TensorLog():
         name := name where to save in log
         image := the image file
         """
-        writer.add_image(self.mdl_name + '/' + name, image)
+        self.writer.add_image(self.mdl_name + '/' + name, image)
 
     def plot_images(self, name, images):
         """
@@ -83,7 +88,7 @@ def TensorLog():
         name := name where to save in log
         image := the image file
         """
-        writer.add_images(self.mdl_name + '/' + name, images)
+        self.writer.add_images(self.mdl_name + '/' + name, images)
     
     def close_writer(self):
         """
