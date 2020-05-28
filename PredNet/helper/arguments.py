@@ -37,7 +37,7 @@ class ConsoleArguments():
                             help='Name of optimzer to use <adam|rmsprop>')
         parser.add_argument('--load', '-l', action='store_true',
                             help='Load model from mdl path (Default: False)')
-        parser.add_argument('--save', '-s', action='store_true',
+        parser.add_argument('--save', '-S', action='store_true',
                             help='Save model to mdl path (Default: False)')
         parser.add_argument('--loss', '-L', type=str,
                             help='Loss function to use <MSE|MAE|BCE>')
