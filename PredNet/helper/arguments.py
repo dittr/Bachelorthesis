@@ -38,7 +38,11 @@ class ConsoleArguments():
         parser.add_argument('--load', '-l', action='store_true',
                             help='Load model from mdl path (Default: False)')
         parser.add_argument('--save', '-s', action='store_true',
-                            help'Save model to mdl path (Default: False)')
+                            help='Save model to mdl path (Default: False)')
+        parser.add_argument('--loss', '-L', type=str,
+                            help='Loss function to use <MSE|MAE|BCE>')
+        parser.add_argument('--validate', '-v', type=int,
+                            help='After how many epochs should start a validation.')
         
         
         self.args = parser.parse_args()
@@ -96,3 +100,15 @@ class ConsoleArguments():
         Return if saving model
         """
         return self.args.save
+
+    def get_loss(self):
+        """
+        Return the loss to use
+        """
+        return self.args.loss
+
+    def get_validate(self):
+        """
+        Return the validation value
+        """
+        return self.args.validate
