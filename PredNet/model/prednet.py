@@ -34,10 +34,10 @@ class PredNet(nn.Module):
         self.dropout = dropout
         self.peephole = peephole
         self.gpu = gpu
-        self.input = []
-        self.prediction = []
-        self.error = []
-        self.lstm = []
+        self.input = nn.ModuleList()
+        self.prediction = nn.ModuleList()
+        self.error = nn.ModuleList()
+        self.lstm = nn.ModuleList()
         
         for i in range(self.layer - 1):
             self.input.append(InputLayer(channel_in=self.channels[i] * 2,
