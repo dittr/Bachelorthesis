@@ -32,6 +32,8 @@ class ConsoleArguments():
                             help='Length of input sequence')
         parser.add_argument('--testing', '-t', action='store_true',
                             help='Set mode to testing (Default: False)')
+        parser.add_argument('--optimizer', '-o', type=str,
+                            help='Name of optimzer to use <adam|rmsprop>')
         
         
         self.args = parser.parse_args()
@@ -71,3 +73,9 @@ class ConsoleArguments():
         Return if testing or training is required
         """
         return self.args.testing
+
+    def get_optimizer(self):
+        """
+        Return the optimizer to use
+        """
+        return self.args.optimizer
