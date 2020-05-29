@@ -23,7 +23,7 @@ def validation(model, lossp, dataloader, logger, device):
     for batch_id, (data, target) in enumerate(dataloader):
         # get sequence and target (This is only for gray-scaled images.)
         x = data.float().to(device)[:,:,None,:,:].permute(1,0,2,3,4)
-        y = target.float().to(device)[:,:,None,:,:].permute(1,0,2,3,4)
+        y = target.float().to(device)
 
         # forward pass
         output = model(x)
