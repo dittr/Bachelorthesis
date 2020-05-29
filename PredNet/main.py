@@ -57,7 +57,7 @@ def init_device():
     return device, gpu
     
 def init_model(channels, kernel, padding, stride, dropout,
-               peephole, pixel_max, gpu):
+               peephole, pixel_max, mode, gpu):
     """
     Initialize PredNet with arguments from yml file
     
@@ -68,10 +68,11 @@ def init_model(channels, kernel, padding, stride, dropout,
     dropout := percentage [0,1]
     peephole := LSTM using peephole
     pixel_max := maximum pixel value in input image
+    mode := mode model uses <prediction|error>
     gpu := model uses gpu
     """   
     model = PredNet(channels, kernel, padding, stride, dropout,
-                    peephole, pixel_max, gpu)
+                    peephole, pixel_max, mode, gpu)
     
     return model
 
@@ -129,21 +130,33 @@ def get_dataloader(dataset, batch, shuffle, drop):
     
     return dataloader
 
-def init_optimizer(optim, model):
+def init_optimizer(optim, model, lr):
     """
     Initialize the optimizer
     
     optim := name of optimizer <adam|rmsprop>
     model := initialized network model
+    lr := learning rate
     """
     if optim == 'adam':
-        optimizer = Optim.Adam(model.parameters())
+        optimizer = Optim.Adam(model.parameters(), lr)
     elif optim == 'rmsprop':
-        optimizer = Optim.RMSProp(model.parameters())    
+        optimizer = Optim.RMSProp(model.parameters(), lr)    
     else:
         raise IOError('[ERROR] Choose a valid optimizer <adam|rmsprop>')
 
     return optimizer
+
+def init_scheduler(optimizer, step_size):
+    """
+    Initialize the learing rate scheduler
+    
+    optimizer := initialized optimizer
+    step_size := reduce lr after step_size epochs
+    """
+    scheduler = Optim.lr_scheduler.StepLR(optimizer, step_size)
+    
+    return scheduler
 
 def load_model(model, optimizer, device, dataset, path, debug=False):
     """
@@ -164,14 +177,16 @@ def load_model(model, optimizer, device, dataset, path, debug=False):
     
     return model, params.epoch, params.iteration, optimizer, params.loss
 
-def compute(testing, model, optimizer, loss, dataloader, device, logger,
-            epoch, depoch, diteration, save, validate, debug=False):
+def compute(testing, model, optimizer, scheduler, loss, dataloader,
+            device, logger, epoch, depoch, diteration, save, validate,
+            normalize, binarize, debug=False):
     """
     Compute test or training, given the flag testing
     
     testing := If true perform testing, otherwise training
     model := initialized network model
     optimizer := initialized optimizer
+    scheduler := initialized scheduler
     loss := loss function to use
     dataloader := initialized dataloader
     device := GPU or CPU
@@ -180,13 +195,18 @@ def compute(testing, model, optimizer, loss, dataloader, device, logger,
     depoch := already performed epochs (Only pre-trained model)
     diteration := already performed iterations in peoch (Only pre-trained model)
     save := True if model should be saved, False otherwise
+    validate := validate every n epochs
+    normalize := normalize the image input
+    binarize := binarize the image input
     debug := debug value
     """
     if not testing:
-        train(model, optimizer, loss, dataloader, device, logger, epoch, save,
-              validate, depoch, diteration, debug)
+        train(model, optimizer, scheduler, loss, dataloader, device, logger,
+              epoch, save, validate, depoch, diteration, normalize,
+              binarize, debug)
     else:
-        test(model, loss, dataloader[0], logger, device)
+        test(model, loss, dataloader[0], logger, device,
+             normalize, binarize)
 
 def save_model(model, optimizer, dataset, path, debug=False):
     """
@@ -233,6 +253,7 @@ def main():
                        args['prednet']['dropout'],
                        args['prednet']['peephole'],
                        args['prednet']['pixel_max'],
+                       console.get_mode(),
                        gpu).to(device)
 
     debug = args['debug']
@@ -248,30 +269,34 @@ def main():
                                 not console.get_testing(), True) # todo: change static True
 
     # 8. Initialize optimizer
-    optim = init_optimizer(console.get_optimizer(), model)
+    optim = init_optimizer(console.get_optimizer(), model, console.get_lr())
 
-    # 9. Load pre-trained model
+    # 9. Initialize lr scheduler
+    schedule = init_scheduler(optim, console.get_epoch() // 2)
+
+    # 10. Load pre-trained model
     depoch, diteration = 0, 0
     if console.get_load():
         model, depoch, diteration, optim, dloss = load_model(model, optim,
                                                              console.get_dataset(),
                                                              args['mdl_path'])
 
-    # 10. Initialize logger
+    # 11. Initialize logger
     tensorlog = TensorLog(args['log_path'], model.name, console.get_testing(),
                           debug)
     tensorlog.open_writer()
 
-    # 11. Train/Test the model
-    compute(console.get_testing(), model, optim, console.get_loss(),
+    # 12. Train/Test the model
+    compute(console.get_testing(), model, optim, schedule, console.get_loss(),
             dataloader, device, tensorlog, console.get_epoch(),
             depoch, diteration, console.get_save(),
-            console.get_validate(), debug)
+            console.get_validate(), console.get_normalize(),
+            console.get_binarize(), debug)
 
-    # 12. Close logger
+    # 13. Close logger
     tensorlog.close_writer()
 
-    # 13. Save model
+    # 14. Save model
     save_model(model, optim, console.get_dataset(), args['mdl_path'])
     
 
