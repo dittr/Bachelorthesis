@@ -278,6 +278,9 @@ class CONV_LSTM(nn.Module):
     def forward(self, x, h=None, c=None):
         """
         """
+        if len(x.size()) != 5:
+            x = x[None,:,:,:,:]
+
         time = len(x)
         depth = len(self.lstm)
         
@@ -294,7 +297,7 @@ class CONV_LSTM(nn.Module):
                                          height, width)
             # 3. Loop through the sequence
             for j in range(time):
-                h, c = self.lstm[i].forward(x[j], h, c)
+                h, c = self.lstm[i].forward(x[j], h, c)          
                 h_out.append(h)
                 c_out.append(c)
                 
