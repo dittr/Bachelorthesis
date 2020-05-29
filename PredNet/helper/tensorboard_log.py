@@ -62,15 +62,16 @@ class TensorLog():
         """
         # todo: implement
 
-    def plot_loss(self, loss, it):
+    def plot_loss(self, loss_name, loss, it):
         """
         Plot loss values into tensorboard log
         
-        loss := name of used loss
+        loss_name := name of used loss
+        loss := current loss
         it := current iteration
         """
-        self.writer.add_scalar(self.mdl_name + '/' + self.mode + '/' + loss,
-                               loss, it)
+        self.writer.add_scalar(self.mdl_name + '/' + self.mode + '/' +
+                               str(loss_name), loss, it)
 
     def plot_image(self, name, image):
         """
