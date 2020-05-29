@@ -23,7 +23,7 @@ class InputLayer(nn.Module):
                               out_channels=channel_out,
                               kernel_size=kernel_size,
                               padding=padding)
-        self.pool = nn.MaxPool2d(kernel_size=kernel_size)
+        self.pool = nn.MaxPool2d(kernel_size=stride, stride=stride)
 
     def forward(self, x):
         """
