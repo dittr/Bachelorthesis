@@ -21,7 +21,7 @@ class PredNet(nn.Module):
     """
     """
     def __init__(self, channels, kernel, padding, stride,
-                 dropout, peephole, gpu=False):
+                 dropout, peephole, pixel_max, gpu=False):
         """
         """
         super(PredNet, self).__init__()
@@ -33,11 +33,14 @@ class PredNet(nn.Module):
         self.stride = stride
         self.dropout = dropout
         self.peephole = peephole
+        self.pixel_max = pixel_max
         self.gpu = gpu
         self.input = nn.ModuleList()
         self.prediction = nn.ModuleList()
         self.error = nn.ModuleList()
         self.lstm = nn.ModuleList()
+        
+        self.channels.append(0)
         
         for i in range(self.layer - 1):
             self.input.append(InputLayer(channel_in=self.channels[i] * 2,
@@ -52,7 +55,7 @@ class PredNet(nn.Module):
                                                    kernel_size=self.kernel,
                                                    padding=self.padding))
             self.error.append(ErrorLayer())
-            self.lstm.append(LstmLayer(depth=1, channel_in=self.channels[i] * 2,
+            self.lstm.append(LstmLayer(depth=1, channel_in=self.channels[i] * 2 + self.channels[i+1],
                                        channel_hidden=self.channels[i],
                                        kernel_size=self.kernel,
                                        dropout=self.dropout,
@@ -77,14 +80,18 @@ class PredNet(nn.Module):
         for i in range(self.layer):
             if self.gpu:
                 E[i].append(torch.zeros(batch, self.channels[i] * 2,
-                                        height, width).cuda())
+                                        height // 2**i,
+                                        width // 2**i).cuda())
                 R[i].append(torch.zeros(batch, self.channels[i],
-                                        height, width).cuda())
+                                        height // 2**i,
+                                        width // 2**i).cuda())
             else:
                 E[i].append(torch.zeros(batch, self.channels[i] * 2,
-                                        height, width))
+                                        height // 2**i,
+                                        width // 2**i))
                 R[i].append(torch.zeros(batch, self.channels[i],
-                                        height, width))
+                                        height // 2**i,
+                                        width // 2**i))
         
         return A, Ah, E, R
 
@@ -105,27 +112,27 @@ class PredNet(nn.Module):
             # top-down pass
             for l in range(self.layer - 1, -1, -1):
                 # compute recurrences
-                if l == self.layer:
-                    R[l].append(self.lstm[l](E[l][t-1], R[l][t-1]))
+                if l == self.layer - 1:
+                    R[l].append(self.lstm[l](E[l][t-1], R[l][t-1])[0][-1])
                 else:
-                    R[l].append(self.lstm[l](E[l][t-1], R[l][t-1],
-                                f.interpolate(R[l+1][t],
-                                              scale_factor=2,
-                                              mode='nearest')))
+                    R[l].append(self.lstm[l](torch.cat((E[l][t-1],
+                                f.interpolate(R[l+1][t], scale_factor=2,
+                                              mode='nearest')), dim=1),
+                                R[l][t-1])[0][-1])
             # forward pass
             for l in range(self.layer):
                 # compute predictions
                 if l == 0:
                     # SatLU (saturation linear unit)
-                    Ah[l].append(torch.min(self.prediction[l](R[l][t]),
-                                 self.pixel_max))
+                    Ah[l].append(f.hardtanh(self.prediction[l](R[l][t]), 0,
+                                            self.pixel_max))
                 else:
                     Ah[l].append(self.prediction[l](R[l][t]))
                 # compute errors
-                E[l][t].append(self.error(A[l][t], Ah[l][t]))
+                E[l].append(self.error[l](A[l][t-1], Ah[l][t-1]))
 
-                if l < self.layer:
-                    A[l+1][t] = self.input(E[l][t])
+                if l < self.layer - 1:
+                    A[l+1].append(self.input[l](E[l][t]))
 
         if mode == 'prediction':
             return Ah[0]
