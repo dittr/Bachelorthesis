@@ -10,9 +10,11 @@
 
 import torch
 
+from helper.transformation import normalize, binarize
 from helper.loss import loss as Loss
 
-def test(model, lossp, dataloader, logger, device):
+
+def test(model, lossp, dataloader, logger, device, norm, binar):
     # set model in evaluation mode
     model.eval()
 
@@ -23,6 +25,12 @@ def test(model, lossp, dataloader, logger, device):
         # get sequence and target (This is only for gray-scaled images.)
         x = data.float().to(device)[:,:,None,:,:].permute(1,0,2,3,4)
         y = target.float().to(device)
+        if norm or binar:
+            x = normalize(x)
+            y = normalize(y)
+        if binar:
+            x = binarize(x)
+            y = binarize(y)
 
         # forward pass
         output = model(x)
