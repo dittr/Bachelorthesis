@@ -40,7 +40,7 @@ class ConsoleArguments():
         parser.add_argument('--save', '-S', action='store_true',
                             help='Save model to mdl path (Default: False)')
         parser.add_argument('--loss', '-L', type=str,
-                            help='Loss function to use <MSE|MAE|BCE>')
+                            help='Loss function to use <mse|mae|bce>')
         parser.add_argument('--validate', '-v', type=int,
                             help='After how many epochs should start a validation.')
         
