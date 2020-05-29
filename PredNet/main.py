@@ -179,7 +179,7 @@ def load_model(model, optimizer, device, dataset, path, debug=False):
 
 def compute(testing, model, optimizer, scheduler, loss, dataloader,
             device, logger, epoch, depoch, diteration, save, validate,
-            normalize, binarize, debug=False):
+            normalize, binarize, time_weight, layer_weight, debug=False):
     """
     Compute test or training, given the flag testing
     
@@ -198,12 +198,14 @@ def compute(testing, model, optimizer, scheduler, loss, dataloader,
     validate := validate every n epochs
     normalize := normalize the image input
     binarize := binarize the image input
+    time_weight :=
+    layer_weight :=
     debug := debug value
     """
     if not testing:
         train(model, optimizer, scheduler, loss, dataloader, device, logger,
               epoch, save, validate, depoch, diteration, normalize,
-              binarize, debug)
+              binarize, time_weight, layer_weight, debug)
     else:
         test(model, loss, dataloader[0], logger, device,
              normalize, binarize)
@@ -228,6 +230,28 @@ def save_model(model, optimizer, dataset, path, debug=False):
     params.optim_state = optimizer.state_dict()
     
     saver.save(params)
+
+def create_error_weights(time_weights, layer_weights, seq_len, layer, gpu):
+    """
+    Create the time and layer weights for the loss module
+    
+    time_weights := both values from the yml file
+    layer_weights := both values from the yml file
+    seq_len := length of input sequence
+    layer := amount of layer used in the network
+    gpu := GPU or CPU
+    """
+    l1 = time_weights[0]
+    if gpu:
+        layer_weights = torch.FloatTensor([[time_weights[1] for i in range(seq_len - 1)]]).cuda()
+        layer_weights = torch.cat((torch.FloatTensor([[l1]]).cuda(), layer_weights), 1).T
+        time_weights = (1. / (layer - 1) * torch.ones(layer, 1)).cuda()
+    else:
+        layer_weights = torch.FloatTensor([[time_weights[1] for i in range(seq_len - 1)]])
+        layer_weights = torch.cat((torch.FloatTensor([[l1]]), layer_weights), 1).T
+        time_weights = 1. / (layer - 1) * torch.ones(layer, 1)
+    
+    return time_weights, layer_weights
     
 def main():
     """
@@ -286,19 +310,28 @@ def main():
                           debug)
     tensorlog.open_writer()
 
-    # 12. Train/Test the model
+    # 12. Build error weights, if training
+    time_weight, layer_weight = None, None
+    if not console.get_testing():
+        time_weight, layer_weight = create_error_weights(args['prednet']['seq_weight'],
+                                                         args['prednet']['layer_weight'],
+                                                         console.get_sequence(),
+                                                         len(args['prednet']['channels'][:-1]),
+                                                         gpu)
+
+    # 13. Train/Test the model
     compute(console.get_testing(), model, optim, schedule, console.get_loss(),
             dataloader, device, tensorlog, console.get_epoch(),
             depoch, diteration, console.get_save(),
             console.get_validate(), console.get_normalize(),
-            console.get_binarize(), debug)
+            console.get_binarize(), time_weight, layer_weight, debug)
 
-    # 13. Close logger
+    # 14. Close logger
     tensorlog.close_writer()
 
-    # 14. Save model
+    # 15. Save model
     save_model(model, optim, console.get_dataset(), args['mdl_path'])
-    
+
 
 if __name__ == '__main__':
     print('Start')
