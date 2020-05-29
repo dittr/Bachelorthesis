@@ -43,7 +43,14 @@ class ConsoleArguments():
                             help='Loss function to use <mse|mae|bce>')
         parser.add_argument('--validate', '-v', type=int,
                             help='After how many epochs should start a validation.')
-        
+        parser.add_argument('--normalize', '-n', action='store_true',
+                            help='Normalize the image data ({0,...,255} -> [0,1])')
+        parser.add_argument('--binarize', '-B', action='store_true',
+                            help='Binarize the image data ({0,1})')
+        parser.add_argument('--learning_rate', '-r', type=float,
+                            help='Learning rate for training.')
+        parser.add_argument('--mode', '-m', type=str,
+                            help='Mode for PredNet <prediction|error>')
         
         self.args = parser.parse_args()
 
@@ -112,3 +119,27 @@ class ConsoleArguments():
         Return the validation value
         """
         return self.args.validate
+
+    def get_normalize(self):
+        """
+        Return the normalization value
+        """
+        return self.args.normalize
+
+    def get_binarize(self):
+        """
+        Return the binarization value
+        """
+        return self.args.binarize
+
+    def get_lr(self):
+        """
+        Return the learning rate value
+        """
+        return self.args.learning_rate
+
+    def get_mode(self):
+        """
+        Return PredNet operating mode
+        """
+        return self.args.mode
