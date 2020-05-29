@@ -66,7 +66,7 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
                 validation(model, lossp, dataloader[1], logger, device,
                            normalize, binarize)
             else:
-                print('Test Epoch: {} Mean loss: {:.6f}'.format(i+1, bloss / batch_id))
+                print('Epoch: {} Mean loss: {:.6f}'.format(i+1, bloss / batch_id))
 
         # perform scheduler update
         schedule.step()
