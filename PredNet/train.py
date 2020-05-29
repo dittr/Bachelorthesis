@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 
 """
-@date: 28.05.2020
+@date: 29.05.2020
 @author: Sören S. Dittrich
-@version: 0.0.2
+@version: 0.0.3
 @description: Train file
 """
 
 from validate import validation
 
 from helper.loss import loss as Loss
+
 
 def train(model, optim, lossp, dataloader, device, logger, epoch, save, validate,
           depoch=0, diteration=0, debug=False):
@@ -29,7 +30,7 @@ def train(model, optim, lossp, dataloader, device, logger, epoch, save, validate
         for batch_id, (data, target) in enumerate(dataloader[0]):
             # get sequence and target (This is only for gray-scaled images.)
             x = data.float().to(device)[:,:,None,:,:].permute(1,0,2,3,4)
-            y = target.float().to(device)[:,:,None,:,:].permute(1,0,2,3,4)
+            y = target.float().to(device)
 
             # clear optimizer
             optim.zero_grad()
@@ -46,8 +47,11 @@ def train(model, optim, lossp, dataloader, device, logger, epoch, save, validate
             it += 1
             
             # log scalar values
-            logger.plot_loss(loss.item(), it)
+            logger.plot_loss(lossp, loss.item(), it)
             
         # validation every n epochs
         if (i+1) % validate == 0:
-            validation(model, lossp, dataloader[1], logger, device)
+            if len(dataloader) > 1:
+                validation(model, lossp, dataloader[1], logger, device)
+            else:
+                print('No validation dataset given, continue training.')
