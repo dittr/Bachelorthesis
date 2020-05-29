@@ -105,39 +105,46 @@ class PredNet(nn.Module):
         """
         # initialize all variables
         A, Ah, E, R = self._init(x.size(1), x.size(3), x.size(4))
+        error = list()
         A[0] = x
 
         # loop through the time series
-        for t in range(1, len(x)):
+        for t in range(len(x)):
             # loop through the layer
             # top-down pass
             for l in range(self.layer - 1, -1, -1):
                 # compute recurrences
                 if l == self.layer - 1:
-                    R[l].append(self.lstm[l](E[l][t-1], R[l][t-1])[0][-1])
+                    R[l].append(self.lstm[l](E[l][t], R[l][t])[0][-1])
                 else:
-                    R[l].append(self.lstm[l](torch.cat((E[l][t-1],
-                                f.interpolate(R[l+1][t], scale_factor=2,
+                    R[l].append(self.lstm[l](torch.cat((E[l][t],
+                                f.interpolate(R[l+1][t+1], scale_factor=2,
                                               mode='nearest')), dim=1),
-                                R[l][t-1])[0][-1])
+                                R[l][t])[0][-1])
             # forward pass
             for l in range(self.layer):
                 # compute predictions
                 if l == 0:
                     # SatLU (saturation linear unit)
-                    Ah[l].append(f.hardtanh(self.prediction[l](R[l][t]), 0,
+                    Ah[l].append(f.hardtanh(self.prediction[l](R[l][t+1]), 0,
                                             self.pixel_max))
                 else:
-                    Ah[l].append(self.prediction[l](R[l][t]))
+                    Ah[l].append(self.prediction[l](R[l][t+1]))
                 # compute errors
-                E[l].append(self.error[l](A[l][t-1], Ah[l][t-1]))
+                E[l].append(self.error[l](A[l][t], Ah[l][t]))
 
                 if l < self.layer - 1:
-                    A[l+1].append(self.input[l](E[l][t]))
+                    A[l+1].append(self.input[l](E[l][t+1]))
+            
+            if self.mode == 'error':
+                mean_error = torch.cat([torch.mean(e[-1].view(e[-1].size(0), -1), 1,
+                                                   keepdim=True) for e in E], 1)
+                error.append(mean_error)
 
         if self.mode == 'prediction':
             return Ah[0]
         elif self.mode == 'error':
-            return E[0]
+            error = torch.stack(error, 0).permute(1,2,0)
+            return error
         else:
             raise IOError('No valid option given, please use: <prediction|error>')
