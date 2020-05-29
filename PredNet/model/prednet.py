@@ -21,7 +21,7 @@ class PredNet(nn.Module):
     """
     """
     def __init__(self, channels, kernel, padding, stride,
-                 dropout, peephole, pixel_max, gpu=False):
+                 dropout, peephole, pixel_max, mode, gpu=False):
         """
         """
         super(PredNet, self).__init__()
@@ -34,6 +34,7 @@ class PredNet(nn.Module):
         self.dropout = dropout
         self.peephole = peephole
         self.pixel_max = pixel_max
+        self.mode = mode
         self.gpu = gpu
         self.input = nn.ModuleList()
         self.prediction = nn.ModuleList()
@@ -96,7 +97,7 @@ class PredNet(nn.Module):
         return A, Ah, E, R
 
         
-    def forward(self, x, mode='prediction'):
+    def forward(self, x):
         """
         x should look like (T x B x C x H x W)
         
@@ -134,9 +135,9 @@ class PredNet(nn.Module):
                 if l < self.layer - 1:
                     A[l+1].append(self.input[l](E[l][t]))
 
-        if mode == 'prediction':
+        if self.mode == 'prediction':
             return Ah[0]
-        elif mode == 'error':
+        elif self.mode == 'error':
             return E[0]
         else:
             raise IOError('No valid option given, please use: <prediction|error>')
