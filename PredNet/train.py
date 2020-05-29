@@ -11,13 +11,12 @@
 from validate import validation
 
 from helper.transformation import normalize, binarize
-from helper.loss import loss as Loss
-
-import matplotlib.pyplot as plt
+from helper.loss import error_loss as Loss
 
 
 def train(model, optim, schedule, lossp, dataloader, device, logger,
-          epoch, save, validate, depoch, diteration, norm, binar, debug=False):
+          epoch, save, validate, depoch, diteration, norm, binar,
+          time_weight, layer_weight, debug=False):
     if debug:
         print('[DEBUG] Start training.')
 
@@ -34,13 +33,10 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
         for batch_id, (data, target) in enumerate(dataloader[0]):
             # get sequence and target (This is only for gray-scaled images.)
             x = data.float().to(device)[:,:,None,:,:].permute(1,0,2,3,4)
-            y = target.float().to(device)
             if norm or binar:
                 x = normalize(x)
-                y = normalize(y)
             if binar:
                 x = binarize(x)
-                y = binarize(y)
 
             # clear optimizer
             optim.zero_grad()
@@ -49,13 +45,9 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
             output = model(x)
 
             # compute loss
-            loss = Loss(output[-1], y, lossp)
+            loss = Loss(time_weight, layer_weight, len(time_weight), output)
             
-            bloss += loss.item()
-
-            # plot output and y
-            plt.imsave('out.png', output[-1][0][0].cpu().detach())
-            plt.imsave('true.png', y[0][0].cpu())
+            bloss += loss
 
             # backpropagation
             loss.backward()
@@ -66,7 +58,7 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
             it += 1
 
             # log scalar values
-            logger.plot_loss(lossp, loss.item(), it)
+            logger.plot_loss('error', loss, it)
 
         # validation every n epochs
         if (i+1) % validate == 0:
