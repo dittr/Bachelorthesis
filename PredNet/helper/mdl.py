@@ -84,7 +84,7 @@ class ModelLoader():
         logger := logger object
         """
         self.dataset = dataset
-        self.device
+        self.device = device
         self.path = path
         self.mdl = mdl
         self.debug = debug
