@@ -41,7 +41,7 @@ def error_loss(time_weight, layer_weight, seq_len, error):
     """
     bsize = error.size(0)
     error = torch.mm(torch.reshape(error, (-1, seq_len)), time_weight)
-    error = torch.mm(torch.reshape(error, (bsize, -1)).T, layer_weight)
+    error = torch.mm(torch.reshape(error, (bsize, -1)), layer_weight)
     error = torch.mean(error)
 
     return error
