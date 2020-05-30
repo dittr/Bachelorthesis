@@ -32,7 +32,7 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
         # run through all batches in the dataloader
         for batch_id, data in enumerate(dataloader[0]):
             # get sequence and target (This is only for gray-scaled images.)
-            x = data.float().to(device)[:,:,None,:,:].permute(1,0,2,3,4)
+            x = data.float().to(device)[:,:,None,:,:]
             if norm or binar:
                 x = normalize(x)
             if binar:
