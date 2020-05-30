@@ -25,28 +25,25 @@ def validation(model, lossp, dataloader, logger, device, norm, binar):
     for batch_id, (data, target) in enumerate(dataloader):
         # get sequence and target (This is only for gray-scaled images.)
         x = data.float().to(device)[:,:,None,:,:].permute(1,0,2,3,4)
-        y = target.float().to(device)
         if norm or binar:
             x = normalize(x)
-            y = normalize(y)
         if binar:
             x = binarize(x)
-            y = binarize(y)
 
         # forward pass
-        output = model(x)
+        output = torch.stack(model(x))
 
         # compute loss
-        loss = Loss(output[-1], y, lossp)
+        loss = Loss(output, x, lossp)
 
         it += 1
 
         # log scalar values
-        logger.plot_loss(loss.item(), it)
+        logger.plot_loss(lossp, loss.item(), it)
 
         # log images
-        x = torch.cat((x[1:], y), dim=0).permute(1,0,2,3,4)[0]
+        x = x.permute(1,0,2,3,4)[0]
         output = output.permute(1,0,2,3,4)[0]
-        
+
         logger.plot_images('ground_truth', x)
         logger.plot_images('predicted', output)
