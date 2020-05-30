@@ -330,7 +330,8 @@ def main():
     tensorlog.close_writer()
 
     # 15. Save model
-    save_model(model, optim, console.get_dataset(), args['mdl_path'])
+    if console.get_save():
+        save_model(model, optim, console.get_dataset(), args['mdl_path'])
 
 
 if __name__ == '__main__':
