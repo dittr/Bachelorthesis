@@ -198,8 +198,8 @@ def compute(testing, model, optimizer, scheduler, loss, dataloader,
     validate := validate every n epochs
     normalize := normalize the image input
     binarize := binarize the image input
-    time_weight :=
-    layer_weight :=
+    time_weight := time weight parameters for error loss
+    layer_weight := layer weight parameters for error loss
     debug := debug value
     """
     if not testing:
