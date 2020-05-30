@@ -97,7 +97,7 @@ def init_dataset(dataset, root, testing, download=True):
     data = []
     
     if dataset == 'mnist':
-        data.append(MovingMNIST(root, testing, download=download))
+        data.append(MovingMNIST(root, testing))
     elif dataset == 'kitti':
         data.append(Kitti(root, testing))
     else:
