@@ -301,7 +301,7 @@ def main():
     # 10. Load pre-trained model
     depoch, diteration = 0, 0
     if console.get_load():
-        model, depoch, diteration, optim, dloss = load_model(model, optim,
+        model, depoch, diteration, optim, dloss = load_model(model, optim, device,
                                                              console.get_dataset(),
                                                              args['mdl_path'])
 
