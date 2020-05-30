@@ -22,7 +22,7 @@ def validation(model, lossp, dataloader, logger, device, norm, binar):
     it = 0
 
     # run through all batches in the dataloader
-    for batch_id, (data, target) in enumerate(dataloader):
+    for batch_id, data in enumerate(dataloader):
         # get sequence and target (This is only for gray-scaled images.)
         x = data.float().to(device)[:,:,None,:,:].permute(1,0,2,3,4)
         if norm or binar:
