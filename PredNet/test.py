@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-@date: 28.05.2020
+@date: 30.05.2020
 @author: Sören S. Dittrich
-@version: 0.0.2
+@version: 0.0.3
 @description: Test file
 """ 
 
@@ -15,6 +15,17 @@ from helper.loss import loss as Loss
 
 
 def test(model, lossp, dataloader, logger, device, norm, binar):
+    """
+    Testing the model
+    
+    model := initialized network model
+    lossp := name of loss to use <mae|mse|bce|bcel>
+    dataloader := initialized dataloader
+    logger := initialized tensorboard logger
+    device := GPU or CPU
+    norm := True if normalization is required, False otherwise
+    binar := True if binarization is required, False otherwise
+    """
     # set model in evaluation mode
     model.eval()
 
