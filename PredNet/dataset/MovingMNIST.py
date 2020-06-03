@@ -21,10 +21,11 @@ class MovingMNIST(data.Dataset):
     training_file = 'moving_mnist_train.hkl'
     test_file = 'moving_mnist_test.hkl'
     
-    def __init__(self, root, testing=False):
+    def __init__(self, root, seq_len, testing=False):
         """
         """
         self.root = root
+        self.seq_len = seq_len
         self.testing = False        
         self.train_data = torch.from_numpy(hkl.load(os.path.join(self.root,
                                                                  self.training_file)))
@@ -36,15 +37,15 @@ class MovingMNIST(data.Dataset):
         """
         """
         if not self.testing:
-            return self.train_data[index]
+            return self.train_data[self.seq_len*index:self.seq_len*(index+1)]
         else:
-            return self.test_data[index]
+            return self.test_data[self.seq_len*index:self.seq_len*(index+1)]
 
 
     def __len__(self):
         """
         """
-        if self.testing:
-            return len(self.train_data)
+        if not self.testing:
+            return len(self.train_data) // self.seq_len
         else:
-            return len(self.test_data)
+            return len(self.test_data) // self.seq_len
