@@ -18,6 +18,7 @@ from model.prednet import PredNet
 # datasets
 from dataset.MovingMNIST import MovingMNIST
 from dataset.Kitti import Kitti
+from dataset.Kth import Kth
 
 # helper imports
 from helper.arguments import ConsoleArguments
@@ -87,7 +88,7 @@ def print_model(model):
       ' trainable parameters.')    
     print('[DEBUG] ' + model.state_dict())
 
-def init_dataset(dataset, root, testing, download=True):
+def init_dataset(dataset, root, testing, seq_len, download=True):
     """
     Initialize available datasets for training and validation or testing
     
@@ -97,11 +98,13 @@ def init_dataset(dataset, root, testing, download=True):
     data = []
     
     if dataset == 'mnist':
-        data.append(MovingMNIST(root, testing))
+        data.append(MovingMNIST(root, seq_len, testing))
     elif dataset == 'kitti':
-        data.append(Kitti(root, testing))
+        data.append(Kitti(root, seq_len, testing))
+    elif dataset == 'kth':
+        data.append(Kth(root, seq_len, testing))
     else:
-        raise IOError('[ERROR] Choose a valid dataset <mnist|kitti>')
+        raise IOError('[ERROR] Choose a valid dataset <mnist|kitti|kth>')
     
     return data
 
@@ -155,7 +158,7 @@ def init_scheduler(optimizer, step_size):
     step_size := reduce lr after step_size epochs
     """
     scheduler = Optim.lr_scheduler.StepLR(optimizer, step_size)
-    
+
     return scheduler
 
 def load_model(model, optimizer, device, dataset, path, debug=False):
@@ -171,14 +174,14 @@ def load_model(model, optimizer, device, dataset, path, debug=False):
     """
     loader = ModelLoader(dataset, device, path, model.name, debug)
     params = loader.load()
-    
+
     model.load_state_dict(params.mdl_state)
     optimizer.load_state_dict(params.optim_state)
-    
+
     return model, params.epoch, params.iteration, optimizer, params.loss
 
 def compute(testing, model, optimizer, scheduler, loss, dataloader,
-            device, logger, epoch, depoch, diteration, save, validate,
+            device, logger, epoch, iteration, depoch, diteration, save, validate,
             normalize, binarize, time_weight, layer_weight, debug=False):
     """
     Compute test or training, given the flag testing
@@ -192,6 +195,7 @@ def compute(testing, model, optimizer, scheduler, loss, dataloader,
     device := GPU or CPU
     logger := tensorboard logger
     epoch := epochs to perform
+    iteration := number of iterations to perform per epoch
     depoch := already performed epochs (Only pre-trained model)
     diteration := already performed iterations in peoch (Only pre-trained model)
     save := True if model should be saved, False otherwise
@@ -204,10 +208,10 @@ def compute(testing, model, optimizer, scheduler, loss, dataloader,
     """
     if not testing:
         train(model, optimizer, scheduler, loss, dataloader, device, logger,
-              epoch, save, validate, depoch, diteration, normalize,
+              epoch, iteration, save, validate, depoch, diteration, normalize,
               binarize, time_weight, layer_weight, debug)
     else:
-        test(model, loss, dataloader[0], logger, device,
+        test(model, iteration, loss, dataloader[0], logger, device,
              normalize, binarize)
 
 def save_model(model, optimizer, dataset, path, debug=False):
@@ -286,7 +290,8 @@ def main():
 
     # 6. Initialize dataset
     dataset = init_dataset(console.get_dataset(), args['data_path'],
-                           console.get_testing())
+                           console.get_testing(),
+                           console.get_sequence())
     
     # 7 Get dataloader from dataset
     dataloader = get_dataloader(dataset, console.get_batch(),
@@ -322,7 +327,7 @@ def main():
     # 13. Train/Test the model
     compute(console.get_testing(), model, optim, schedule, console.get_loss(),
             dataloader, device, tensorlog, console.get_epoch(),
-            depoch, diteration, console.get_save(),
+            console.get_iteration(), depoch, diteration, console.get_save(),
             console.get_validate(), console.get_normalize(),
             console.get_binarize(), time_weight, layer_weight, debug)
 

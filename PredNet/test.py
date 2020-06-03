@@ -14,11 +14,12 @@ from helper.transformation import normalize, binarize
 from helper.loss import loss as Loss
 
 
-def test(model, lossp, dataloader, logger, device, norm, binar):
+def test(model, iteration, lossp, dataloader, logger, device, norm, binar):
     """
     Testing the model
     
     model := initialized network model
+    iteration := iterations to run
     lossp := name of loss to use <mae|mse|bce|bcel>
     dataloader := initialized dataloader
     logger := initialized tensorboard logger
@@ -34,7 +35,7 @@ def test(model, lossp, dataloader, logger, device, norm, binar):
     # run through all batches in the dataloader
     for batch_id, data in enumerate(dataloader):
         # get sequence and target (This is only for gray-scaled images.)
-        x = data.float().to(device)[:,:,None,:,:]
+        x = data.float().to(device).permute(1,0,2,3,4)
         if norm or binar:
             x = normalize(x)
         if binar:
@@ -57,3 +58,6 @@ def test(model, lossp, dataloader, logger, device, norm, binar):
 
         logger.plot_images('ground_truth', x)
         logger.plot_images('predicted', output)
+
+        if batch_id >= iteration:
+            break
