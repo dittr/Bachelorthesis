@@ -77,6 +77,7 @@ class PredNet(nn.Module):
         Ah = [[] for i in range(self.layer)]
         E = [[] for i in range(self.layer)]
         R = [[] for i in range(self.layer)]
+        H = [[] for i in range(self.layer)]
         
         for i in range(self.layer):
             if self.gpu:
@@ -94,7 +95,7 @@ class PredNet(nn.Module):
                                         height // 2**i,
                                         width // 2**i))
         
-        return A, Ah, E, R
+        return A, Ah, E, R, H
 
         
     def forward(self, x):
@@ -104,7 +105,7 @@ class PredNet(nn.Module):
         todo: Adding multi-frame prediction.
         """
         # initialize all variables
-        A, Ah, E, R = self._init(x.size(1), x.size(3), x.size(4))
+        A, Ah, E, R, H = self._init(x.size(1), x.size(3), x.size(4))
         error = list()
         A[0] = x
 
@@ -113,14 +114,22 @@ class PredNet(nn.Module):
             # loop through the layer
             # top-down pass
             for l in range(self.layer - 1, -1, -1):
+                if t == 0:
+                    hx = (R[l][t], R[l][t])
+                else:
+                    hx = H[l]
                 # compute recurrences
                 if l == self.layer - 1:
-                    R[l].append(self.lstm[l](E[l][t], R[l][t])[0][-1])
+                    Ra, hx = self.lstm[l](E[l][t], hx[0], hx[1])
+                    R[l].append(Ra)
                 else:
-                    R[l].append(self.lstm[l](torch.cat((E[l][t],
+                    Ra, hx = self.lstm[l](torch.cat((E[l][t],
                                 f.interpolate(R[l+1][t+1], scale_factor=2,
                                               mode='nearest')), dim=1),
-                                R[l][t])[0][-1])
+                                hx[0], hx[1])
+                    R[l].append(Ra)
+                H[l] = hx
+
             # forward pass
             for l in range(self.layer):
                 # compute predictions
