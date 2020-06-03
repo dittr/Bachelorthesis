@@ -15,7 +15,7 @@ from helper.loss import error_loss as Loss
 
 
 def train(model, optim, schedule, lossp, dataloader, device, logger,
-          epoch, save, validate, depoch, diteration, norm, binar,
+          epoch, iteration, save, validate, depoch, diteration, norm, binar,
           time_weight, layer_weight, debug=False):
     """
     Training the model
@@ -28,6 +28,7 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
     device := GPU or CPU
     logger := initialized tensorboard logger
     epoch := epochs to run
+    iteration := iterations to run per epoch
     save := True if model should be saved, False otherwise
     validate := validate performance after n epochs
     depoch := already performed amount of epochs (Done epoch)
@@ -53,7 +54,7 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
         # run through all batches in the dataloader
         for batch_id, data in enumerate(dataloader[0]):
             # get sequence and target (This is only for gray-scaled images.)
-            x = data.float().to(device)[:,:,None,:,:]
+            x = data.float().to(device).permute(1,0,2,3,4)
             if norm or binar:
                 x = normalize(x)
             if binar:
@@ -80,6 +81,9 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
 
             # log scalar values
             logger.plot_loss('error', loss, it)
+            
+            if batch_id >= iteration:
+                break
 
         # validation every n epochs
         if (i+1) % validate == 0:
