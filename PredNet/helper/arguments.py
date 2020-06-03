@@ -24,9 +24,11 @@ class ConsoleArguments():
         parser.add_argument('--parameter', '-p', type=str,
                             help='Path to yml parameter file')
         parser.add_argument('--dataset', '-d', type=str,
-                            help='mnist, face, kitti')
+                            help='Dataset to use <mnist|kth|kitti>')
         parser.add_argument('--epoch', '-e', type=int,
                             help='Number of epochs')
+        parser.add_argument('--iteration', '-i', type=int,
+                            help='Number of iterations per epoch')
         parser.add_argument('--batch', '-b', type=int,
                             help='Batchsize')
         parser.add_argument('--sequence', '-s', type=int,
@@ -40,7 +42,7 @@ class ConsoleArguments():
         parser.add_argument('--save', '-S', action='store_true',
                             help='Save model to mdl path (Default: False)')
         parser.add_argument('--loss', '-L', type=str,
-                            help='Loss function to use <mse|mae|bce>')
+                            help='Loss function to use <mse|mae|bce|bcel>')
         parser.add_argument('--validate', '-v', type=int,
                             help='After how many epochs should start a validation.')
         parser.add_argument('--normalize', '-n', action='store_true',
@@ -71,6 +73,12 @@ class ConsoleArguments():
         Return number of epochs
         """
         return self.args.epoch
+
+    def get_iteration(self):
+        """
+        Return number of iterations per epoch
+        """
+        return self.args.iteration
 
     def get_batch(self):
         """
