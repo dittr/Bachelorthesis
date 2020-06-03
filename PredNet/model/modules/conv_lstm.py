@@ -306,5 +306,5 @@ class CONV_LSTM(nn.Module):
             h = None
             c = None
         
-        # return prediction and cell-states
-        return h_out, c_out
+        # return prediction and cell-state
+        return h_out[-1], (h_out[-1], c_out[-1])
