@@ -24,5 +24,6 @@ prednet:
 mdl_path: 'mdl/'
 log_path: 'log/'
 data_path: 'data/'
+plot_path: 'graph/'
 debug: False
  
