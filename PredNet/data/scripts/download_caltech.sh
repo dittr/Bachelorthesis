@@ -14,7 +14,7 @@ PATH="."
 DL="http://www.vision.caltech.edu.s3-us-west-2.amazonaws.com/Image_Datasets/CaltechPedestrians/datasets/USA/"
 FILES="set"
 
-if [ $# == 1 ]; then
+if [ $# -eq 1 ]; then
     echo "Usage: $0 start end"
     exit -1
 fi
