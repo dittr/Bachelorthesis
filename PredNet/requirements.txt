@@ -4,3 +4,5 @@ torch
 tensorboard
 PyYAML
 hickle
+torchviz
+graphviz

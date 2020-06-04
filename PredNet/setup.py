@@ -18,7 +18,7 @@ REQUIRES_PYTHON = '>=3.8.0'
 VERSION = '0.0.1'
 
 REQUIRED = [
-    'numpy', 'matplotlib', 'torch', 'tensorboard', 'PyYAML', 'hickle'
+    'numpy', 'matplotlib', 'torch', 'tensorboard', 'PyYAML', 'hickle', 'torchviz', 'graphviz'
 ]
 
 with open('README') as f:
