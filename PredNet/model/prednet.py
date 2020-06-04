@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-@date: 28.05.2020
+@date: 04.06.2020
 @author: Sören S. Dittrich
-@version: 0.0.3
+@version: 0.0.4
 @description: PredNet module
 """
 
@@ -23,6 +23,17 @@ class PredNet(nn.Module):
     def __init__(self, channels, kernel, padding, stride,
                  dropout, peephole, pixel_max, mode, gpu=False):
         """
+        Initialize PredNet module
+        
+        channels := list of channels
+        kernel := kernel size for all conv layers
+        padding := padding to use for all conv layers
+        stride := stride for max-pooling
+        dropout := value for dropout [0,1]
+        peephole := use ConvLSTM with or without peephole
+        pixel_max := max value of input image
+        mode := Mode for PredNet <prediction|error>
+        gpu := GPU or CPU
         """
         super(PredNet, self).__init__()
         self.name = 'prednet'
@@ -56,7 +67,8 @@ class PredNet(nn.Module):
                                                    kernel_size=self.kernel,
                                                    padding=self.padding))
             self.error.append(ErrorLayer())
-            self.lstm.append(LstmLayer(depth=1, channel_in=self.channels[i] * 2 + self.channels[i+1],
+            self.lstm.append(LstmLayer(depth=1, channel_in=self.channels[i] \
+                                       * 2 + self.channels[i+1],
                                        channel_hidden=self.channels[i],
                                        kernel_size=self.kernel,
                                        dropout=self.dropout,
@@ -100,7 +112,9 @@ class PredNet(nn.Module):
         
     def forward(self, x):
         """
-        x should look like (T x B x C x H x W)
+        Forward method
+        
+        x := input timeseries
         
         todo: Adding multi-frame prediction.
         """
