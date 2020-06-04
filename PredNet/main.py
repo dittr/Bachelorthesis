@@ -27,6 +27,7 @@ from helper.mdl import ModelLoader
 from helper.mdl import ModelSaver
 from helper.mdl import ModelParameter
 from helper.tensorboard_log import TensorLog
+from helper.plot_graph import plot_graph
 
 # training and testing
 from train import train
@@ -287,6 +288,9 @@ def main():
     debug = args['debug']
     if debug:
         print_model(model)
+
+    if console.get_plot():
+        plot_graph(model, args['prednet']['size'], args['plot_path'], gpu)
 
     # 6. Initialize dataset
     dataset = init_dataset(console.get_dataset(), args['data_path'],
