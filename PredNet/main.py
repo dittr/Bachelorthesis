@@ -19,6 +19,7 @@ from model.prednet import PredNet
 from dataset.MovingMNIST import MovingMNIST
 from dataset.Kitti import Kitti
 from dataset.Kth import Kth
+from dataset.Caltech import Caltech
 
 # helper imports
 from helper.arguments import ConsoleArguments
@@ -111,8 +112,10 @@ def init_dataset(dataset, root, testing, seq_len, download=True):
         data.append(Kitti(root, seq_len, testing))
     elif dataset == 'kth':
         data.append(Kth(root, seq_len, testing))
+    elif dataset == 'caltech':
+        data.append(Caltech(root, seq_len, testing))
     else:
-        raise IOError('[ERROR] Choose a valid dataset <mnist|kitti|kth>')
+        raise IOError('[ERROR] Choose a valid dataset <mnist|kitti|kth|caltech>')
 
     return data
 
