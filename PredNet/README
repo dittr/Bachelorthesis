@@ -8,27 +8,46 @@ PredNet/
 | main.py  (Start/Stop training & testing etc.)
 | train.py (Training)
 | test.py  (Testing)
-- data/    (Datasets & the data)
+| validate.py (Validation)
+| README (This readme file)
+- data/    (data files and some scripts for fetching and pre-processing)
+-- scripts/
+--| 00sequences.txt
+--| download_kth.sh (from:
+--| download_caltech.sh
+--| data_utils_kth.py (from:
+--| data_utils_caltech.py
+--| moving_mnist.py (from:
+- datasets/
+-| __init__.py
 -| Kitti.py
 -| MovingMNIST.py
--- datasets/
---|
+-| Kth.py
+-| Caltech.py
 - graph/   (.dot-graphs of backprop graph)
--|
-- log/     (log in txt-file & tensorboard logs)
--|
+- log/     (log of txt-file & tensorboard logs)
 - mdl/     (Saving PyTorch models)
--|
 - model/   (PredNet model)
+-| __init__.py
 -| prednet.py
 -- modules/ (Simple modules, e.g. LSTM)
+--| __init__.py
 --| conv_lstm.py
 --| input.py
 --| prediction.py
 --| error.py
---| __init__.py
 -- helper/  (Useful helper, e.g. yml parser)
---| yaml_parser.py
 --| __init__.py
+--| arguments.py
+--| datetime.py
+--| logger.py
+--| loss.py
+--| mdl.py
+--| plot_graph.py
+--| tensorboard_log.py
+--| transformation.py
+--| yaml_parser.py
 - yml/     (Hyperparameter)
--|
+-| prednet_kitti_l0.yml
+-| prednet_kth_l0.yml
+-| prednet_mnist_l0.yml
