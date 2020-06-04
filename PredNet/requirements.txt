@@ -6,3 +6,4 @@ PyYAML
 hickle
 torchviz
 graphviz
+opencv-python
