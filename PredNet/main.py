@@ -99,7 +99,7 @@ def init_dataset(dataset, root, testing, seq_len, download=True):
     """
     Initialize available datasets for training and validation or testing
 
-    dataset := name of the dataset <mnist|kitti>
+    dataset := name of the dataset <mnist|kitti|kth|caltech>
     testing := return testing set if True otherwise training set
     seq_len := length of required sequence
     download := download dataset
@@ -183,7 +183,7 @@ def load_model(model, optimizer, device, dataset, path, debug=False):
     model := initialized network model
     optimizer := initialized optimizer
     device := GPU or CPU
-    dataset := name of used dataset <mnist|kitti>
+    dataset := name of used dataset <mnist|kitti|kth|caltech>
     path := path from where to load the model
     debug := print debug output -> False
     """
@@ -237,7 +237,7 @@ def save_model(model, optimizer, dataset, path, debug=False):
 
     model := initialized network model
     optimizer := initialized optimizer
-    dataset := name of used dataset <mnist|kitti>
+    dataset := name of used dataset <mnist|kitti|kth|caltech>
     path := path from where to load the model
     debug := print debug output -> False
     """
@@ -328,8 +328,13 @@ def main():
     # 10. Load pre-trained model
     depoch, diteration = 0, 0
     if console.get_load():
+        # To recreate the natural image test from the paper (Training on Kitti,
+        # Testing on Caltech).
+        dset = console.get_dataset()
+        if console.get_testing() and dset == 'caltech':
+            dset = 'kitti'
         model, depoch, diteration, optim, dloss = load_model(model, optim, device,
-                                                             console.get_dataset(),
+                                                             dset,
                                                              args['mdl_path'])
 
     # 11. Initialize logger
