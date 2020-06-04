@@ -14,7 +14,7 @@ PATH="."
 DL="http://www.vision.caltech.edu.s3-us-west-2.amazonaws.com/Image_Datasets/CaltechPedestrians/datasets/USA/"
 FILES="set"
 
-if [ $# -eq 1 ]; then
+if [ $# -lt 2 ]; then
     echo "Usage: $0 start end"
     exit -1
 fi
@@ -33,7 +33,7 @@ for i in $($seq $1 $2); do
     if [ $i -lt 10 ]; then
         $tar -xvf "$FILES"0"$i.tar"
     else
-        $tar "-xvf  $FILES$i.tar"
+        $tar -xvf "$FILES$i.tar"
     fi
 done
 
