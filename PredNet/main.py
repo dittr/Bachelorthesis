@@ -40,13 +40,15 @@ def init_arguments():
     """
     return ConsoleArguments()
 
+
 def init_yml(path):
     """
     Read yml file from console arguments
-    
+
     path := path to yml file
     """
     return yml(path)
+
 
 def init_device():
     """
@@ -57,12 +59,13 @@ def init_device():
         gpu = True
         
     return device, gpu
-    
+
+
 def init_model(channels, kernel, padding, stride, dropout,
                peephole, pixel_max, mode, gpu):
     """
     Initialize PredNet with arguments from yml file
-    
+
     channels := list of channels
     kernel := kernel size
     padding := padding size
@@ -75,13 +78,14 @@ def init_model(channels, kernel, padding, stride, dropout,
     """   
     model = PredNet(channels, kernel, padding, stride, dropout,
                     peephole, pixel_max, mode, gpu)
-    
+
     return model
+
 
 def print_model(model):
     """
     Printing the models trainable parameter and the state_dict
-    
+
     model := initialized network model
     """
     trainable_param = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -89,12 +93,15 @@ def print_model(model):
       ' trainable parameters.')    
     print('[DEBUG] ' + model.state_dict())
 
+
 def init_dataset(dataset, root, testing, seq_len, download=True):
     """
     Initialize available datasets for training and validation or testing
-    
+
     dataset := name of the dataset <mnist|kitti>
     testing := return testing set if True otherwise training set
+    seq_len := length of required sequence
+    download := download dataset
     """
     data = []
     
@@ -106,20 +113,21 @@ def init_dataset(dataset, root, testing, seq_len, download=True):
         data.append(Kth(root, seq_len, testing))
     else:
         raise IOError('[ERROR] Choose a valid dataset <mnist|kitti|kth>')
-    
+
     return data
+
 
 def get_dataloader(dataset, batch, shuffle, drop):
     """
     Return dataloader
-    
+
     dataset := initialized dataset(s)
     batch := batch size
     shuffle := shuffle the dataset (True if training set, False otherwise)
     drop := necessary if size differs
     """
     dataloader = []
-    
+
     for i in range(len(dataset)):
         if i == 0:
             dataloader.append(torch.utils.data.DataLoader(dataset=dataset[i],
@@ -131,13 +139,14 @@ def get_dataloader(dataset, batch, shuffle, drop):
                                                           batch_size=batch,
                                                           shuffle=not shuffle,
                                                           drop_last=drop))
-    
+
     return dataloader
+
 
 def init_optimizer(optim, model, lr):
     """
     Initialize the optimizer
-    
+
     optim := name of optimizer <adam|rmsprop>
     model := initialized network model
     lr := learning rate
@@ -151,6 +160,7 @@ def init_optimizer(optim, model, lr):
 
     return optimizer
 
+
 def init_scheduler(optimizer, step_size):
     """
     Initialize the learing rate scheduler
@@ -161,6 +171,7 @@ def init_scheduler(optimizer, step_size):
     scheduler = Optim.lr_scheduler.StepLR(optimizer, step_size)
 
     return scheduler
+
 
 def load_model(model, optimizer, device, dataset, path, debug=False):
     """
@@ -181,12 +192,13 @@ def load_model(model, optimizer, device, dataset, path, debug=False):
 
     return model, params.epoch, params.iteration, optimizer, params.loss
 
+
 def compute(testing, model, optimizer, scheduler, loss, dataloader,
             device, logger, epoch, iteration, depoch, diteration, save, validate,
             normalize, binarize, time_weight, layer_weight, debug=False):
     """
     Compute test or training, given the flag testing
-    
+
     testing := If true perform testing, otherwise training
     model := initialized network model
     optimizer := initialized optimizer
@@ -215,10 +227,11 @@ def compute(testing, model, optimizer, scheduler, loss, dataloader,
         test(model, iteration, loss, dataloader[0], logger, device,
              normalize, binarize)
 
+
 def save_model(model, optimizer, dataset, path, debug=False):
     """
-    Save the model in the end
-    
+    Save the model at the end
+
     model := initialized network model
     optimizer := initialized optimizer
     dataset := name of used dataset <mnist|kitti>
@@ -227,19 +240,20 @@ def save_model(model, optimizer, dataset, path, debug=False):
     """
     saver = ModelSaver(dataset, path, model.name, debug)
     params = ModelParameter
-    
+
     params.epoch = 0 # todo: change this!
     params.iteration = 0 # todo: change this!
     params.loss = 0 # todo: change this!
     params.mdl_state = model.state_dict()
     params.optim_state = optimizer.state_dict()
-    
+
     saver.save(params)
+
 
 def create_error_weights(time_weights, layer_weights, seq_len, layer, gpu):
     """
     Create the time and layer weights for the loss module
-    
+
     time_weights := both values from the yml file
     layer_weights := both values from the yml file
     seq_len := length of input sequence
@@ -255,9 +269,10 @@ def create_error_weights(time_weights, layer_weights, seq_len, layer, gpu):
         layer_weights = torch.FloatTensor([[time_weights[1] for i in range(seq_len - 1)]])
         layer_weights = torch.cat((torch.FloatTensor([[l1]]), layer_weights), 1).T
         time_weights = 1. / (layer - 1) * torch.ones(layer, 1)
-    
+
     return time_weights, layer_weights
-    
+
+
 def main():
     """
     Main file: Where the magic happens ;)
@@ -296,7 +311,7 @@ def main():
     dataset = init_dataset(console.get_dataset(), args['data_path'],
                            console.get_testing(),
                            console.get_sequence())
-    
+
     # 7 Get dataloader from dataset
     dataloader = get_dataloader(dataset, console.get_batch(),
                                 not console.get_testing(), True) # todo: change static True
