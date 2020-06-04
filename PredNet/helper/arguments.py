@@ -53,6 +53,8 @@ class ConsoleArguments():
                             help='Learning rate for training.')
         parser.add_argument('--mode', '-m', type=str,
                             help='Mode for PredNet <prediction|error>')
+        parser.add_argument('--plot', '-P', action='store_true',
+                            help='Plot backpropagation graph (Default: False)')
         
         self.args = parser.parse_args()
 
@@ -151,3 +153,9 @@ class ConsoleArguments():
         Return PredNet operating mode
         """
         return self.args.mode
+
+    def get_plot(self):
+        """
+        Return plot value
+        """
+        return self.args.plot
