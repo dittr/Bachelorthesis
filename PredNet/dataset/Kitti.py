@@ -29,17 +29,20 @@ class Kitti(data.Dataset):
         self.root = root
         self.seq_len = seq_len
         self.testing = testing
-
-        self.train_data = hkl.load(os.path.join(self.root, self.training_data))
-        self.train_sources = hkl.load(os.path.join(self.root,
-                                                   self.training_sources))
-        self.test_data = hkl.load(os.path.join(self.root, self.testing_data))
-        self.test_sources = hkl.load(os.path.join(self.root,
-                                                  self.testing_sources))
-
-        self.train_data = self._create_tensor(self.train_data,
-                                              self.train_sources)
-        self.test_data = self._create_tensor(self.test_data, self.test_sources)
+        
+        if not self.testing:
+            self.train_data = hkl.load(os.path.join(self.root,
+                                                    self.training_data))
+            self.train_sources = hkl.load(os.path.join(self.root,
+                                                       self.training_sources))
+            self.train_data = self._create_tensor(self.train_data,
+                                                  self.train_sources)
+        else:
+           self.test_data = hkl.load(os.path.join(self.root, self.testing_data))
+           self.test_sources = hkl.load(os.path.join(self.root,
+                                                     self.testing_sources))
+           self.test_data = self._create_tensor(self.test_data,
+                                                self.test_sources) 
 
 
     def __getitem__(self, index):

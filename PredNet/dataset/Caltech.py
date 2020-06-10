@@ -35,15 +35,18 @@ class Caltech(data.Dataset):
         self.seq_len = seq_len
         self.testing = testing
 
-        self.train_data = hkl.load(os.path.join(root, self.train_file))
-        self.train_source_data = hkl.load(os.path.join(root, self.train_sources))
-        self.test_data = hkl.load(os.path.join(root, self.test_file))
-        self.test_source_data = hkl.load(os.path.join(root, self.test_sources))
-
-        self.train_data = self._create_tensor(self.train_data,
-                                              self.train_source_data)
-        self.test_data = self._create_tensor(self.test_data,
-                                             self.test_source_data)
+        if not self.testing:
+            self.train_data = hkl.load(os.path.join(root, self.train_file))
+            self.train_source_data = hkl.load(os.path.join(root,
+                                                           self.train_sources))
+            self.train_data = self._create_tensor(self.train_data,
+                                                  self.train_source_data)
+        else:
+            self.test_data = hkl.load(os.path.join(root, self.test_file))
+            self.test_source_data = hkl.load(os.path.join(root,
+                                                          self.test_sources))
+            self.test_data = self._create_tensor(self.test_data,
+                                                 self.test_source_data)
 
 
     def __getitem__(self, index):
@@ -68,6 +71,9 @@ class Caltech(data.Dataset):
         """
         """
         X = list()
+        
+        # fix memory problem, by diving the dataset into 1/10
+        data = data[:len(data) // 10]
 
         for i in range(len(data) // self.seq_len):
             if len(set(sources[self.seq_len*i:self.seq_len*(i+1)])) == 1:
