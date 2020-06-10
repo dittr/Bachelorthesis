@@ -28,11 +28,13 @@ class Kth(data.Dataset):
         self.seq_len = seq_len
         self.testing = testing
         
-        self.train_data = hkl.load(os.path.join(self.root,self.training_file))
-        self.test_data = hkl.load(os.path.join(self.root, self.test_file))
-        
-        self.train_data = self._create_tensor(self.train_data)
-        self.test_data = self._create_tensor(self.test_data)
+        if not self.testing:
+            self.train_data = hkl.load(os.path.join(self.root,
+                                                    self.training_file))
+            self.train_data = self._create_tensor(self.train_data)
+        else:
+            self.test_data = hkl.load(os.path.join(self.root, self.test_file))
+            self.test_data = self._create_tensor(self.test_data)
 
 
     def __getitem__(self, index):
