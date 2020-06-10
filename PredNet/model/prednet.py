@@ -109,7 +109,7 @@ class PredNet(nn.Module):
         
         return A, Ah, E, R, H
 
-        
+
     def forward(self, x):
         """
         Forward method
@@ -154,12 +154,12 @@ class PredNet(nn.Module):
                 else:
                     Ah[l].append(self.prediction[l](R[l][t+1]))
                 # compute errors
-                E[l].append(self.error[l](A[l][t], Ah[l][t]))
+                E[l].append(self.error[l](Ah[l][t], A[l][t]))
 
                 if l < self.layer - 1:
                     A[l+1].append(self.input[l](E[l][t+1]))
             
-            if self.mode == 'error':
+            if self.mode == 'error':              
                 mean_error = torch.cat([torch.mean(e[-1].view(e[-1].size(0), -1), 1,
                                                    keepdim=True) for e in E], 1)
                 error.append(mean_error)
@@ -167,7 +167,7 @@ class PredNet(nn.Module):
         if self.mode == 'prediction':
             return Ah[0]
         elif self.mode == 'error':
-            error = torch.stack(error, 0).permute(1,2,0)
+            error = torch.stack(error, 2)
             return error
         else:
             raise IOError('No valid option given, please use: <prediction|error>')
