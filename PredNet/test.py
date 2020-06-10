@@ -35,7 +35,7 @@ def test(model, iteration, lossp, dataloader, logger, device, norm, binar):
     # run through all batches in the dataloader
     for batch_id, data in enumerate(dataloader):
         # get sequence and target (This is only for gray-scaled images.)
-        x = data.float().to(device).permute(1,0,2,3,4)
+        x = data.to(device).permute(1,0,2,3,4)
         if norm or binar:
             x = normalize(x)
         if binar:
@@ -45,7 +45,7 @@ def test(model, iteration, lossp, dataloader, logger, device, norm, binar):
         output = torch.stack(model(x))
 
         # compute loss
-        loss = Loss(output, x, lossp)
+        loss = Loss(output[1:], x[1:], lossp)
 
         it += 1
 
@@ -59,5 +59,5 @@ def test(model, iteration, lossp, dataloader, logger, device, norm, binar):
         logger.plot_images('ground_truth', x)
         logger.plot_images('predicted', output)
 
-        if batch_id >= iteration:
+        if batch_id >= iteration and iteration > 0:
             break
