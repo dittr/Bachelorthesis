@@ -135,8 +135,8 @@ graph/
 data/files/
 
 # tex stuff
-.aux
-.log
-.bbl
-.blg
-.gz
+*.aux
+*.log
+*.bbl
+*.blg
+*.gz
