@@ -6,10 +6,11 @@
 @author: Sören S. Dittrich
 @version: 0.0.1
 @description: Loss module (Choosing the correct loss generally)
-""" 
+"""
 
 import torch
 import torch.nn.functional as f
+
 
 def loss(x, y, loss):
     """
@@ -30,6 +31,7 @@ def loss(x, y, loss):
     else:
         raise IOError('[ERROR] Use a valid loss function <mse|mae|bce|bcel>')
 
+
 def error_loss(time_weight, layer_weight, seq_len, error):
     """
     Compute the error for PredNet module / Used in training
@@ -40,7 +42,9 @@ def error_loss(time_weight, layer_weight, seq_len, error):
     error := the error values (batch_size x layer x time)
     """
     bsize = error.size(0)
+    # (bsize * layer,time) x (time,1) = (bsize * layer,1)
     error = torch.mm(torch.reshape(error, (-1, seq_len)), time_weight)
+    # (bsize, layer) x (layer, 1) = (bsize, 1)
     error = torch.mm(torch.reshape(error, (bsize, -1)), layer_weight)
     error = torch.mean(error)
 
