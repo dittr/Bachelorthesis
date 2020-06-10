@@ -51,3 +51,5 @@ PredNet/
 -| prednet_kitti_l0.yml
 -| prednet_kth_l0.yml
 -| prednet_mnist_l0.yml
+
+To use the datasets <MovingMNIST|Kitti|KTH|Caltech> one needs to download and preprocess the data. Most download and preprocess scripts are found in data/scripts.
