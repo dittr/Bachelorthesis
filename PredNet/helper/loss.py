@@ -10,7 +10,7 @@
 
 import torch
 import torch.nn.functional as f
-
+from pytorch_msssim import ssim
 
 def loss(x, y, loss):
     """
@@ -18,7 +18,7 @@ def loss(x, y, loss):
     
     x := predicted next frame
     y := true next frame
-    loss := name of the loss <mse|mae|bce|bcel>
+    loss := name of the loss <mse|mae|bce|bcel|ssim>
     """
     if loss == 'mse':
         return f.mse_loss(x, y)
@@ -28,8 +28,16 @@ def loss(x, y, loss):
         return f.binary_cross_entropy(x, y)
     elif loss == 'bcel':
         return f.binary_cross_entropy_with_logits(x, y)
+    elif loss == 'ssim':
+        # The library is only for 4d tensors, but we have 5d (TxBxCxHxW)
+        # Loop through the sequence and take mean ssim
+        loss = 0
+        for i in range(len(x)):
+            # ssim is not a loss function -> 1 - ssim
+            loss += 1 - ssim(x[i], y[i], data_range=torch.max(y[i]))
+        return loss /= len(x)
     else:
-        raise IOError('[ERROR] Use a valid loss function <mse|mae|bce|bcel>')
+        raise IOError('[ERROR] Use a valid loss function <mse|mae|bce|bcel|ssim>')
 
 
 def error_loss(time_weight, layer_weight, seq_len, error):
