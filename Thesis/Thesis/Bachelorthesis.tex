@@ -1,1 +1,83 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref, bookmark}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+
+% set images
+\usepackage{float}
+
+% pseudocode
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
+% Images next to each other
+\usepackage{subfig}
+
+% citing
+\usepackage[square,numbers]{natbib}
+\bibliographystyle{dinat}
+
+% general page design
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Bachelorthesis}
+\rhead{Universität Hildesheim}
+\rfoot{\thepage}
+
+% front page
+\title{\LARGE Bachelorthesis\\\large Comparing different state-of-the-art solutions for image prediction using time-series analysis}
+\author{ Sören Dittrich\\
+	\texttt{\href{mailto:soeren.dittrich@uni-hildesheim.de}{soeren.dittrich@uni-hildesheim.de}}
+}
+\date{September 2020}
+
+% start of document
+\begin{document}
+ \bibliographystyle{alphadin}
+ 
+ \begin{titlepage}
+  \maketitle
+  \thispagestyle{empty}
+  \begin{abstract}\noindent 
+   \input{sections/abstract}
+  \end{abstract}
+ \end{titlepage}
+ 
+ % introduction
+ \input{sections/introduction}
+
+ % related work
+ \input{sections/related}
+ 
+ % algorithm
+ \input{sections/implementation}
+ 
+ % usage
+ \input{sections/methodology}
+ 
+ % training
+ \input{sections/training}
+ 
+ % experiments
+ \input{sections/experiments}
+ 
+ % discussion
+ \input{sections/discussion}
+ 
+ % conclusion
+ \input{sections/conclusion}
+ 
+ % literature
+% \newpage
+% \pagestyle{empty}
+ \pdfbookmark[section]{Bibliography}{Bibliography}
+ \bibliography{../Bibliography/bibliography.bib} \label{section::literature}
+
+\end{document} 
  
