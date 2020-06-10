@@ -35,7 +35,7 @@ def loss(x, y, loss):
         for i in range(len(x)):
             # ssim is not a loss function -> 1 - ssim
             loss += 1 - ssim(x[i], y[i], data_range=torch.max(y[i]))
-        return loss /= len(x)
+        return loss / len(x)
     else:
         raise IOError('[ERROR] Use a valid loss function <mse|mae|bce|bcel|ssim>')
 
