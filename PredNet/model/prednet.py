@@ -75,6 +75,7 @@ class PredNet(nn.Module):
                                        rec_dropout=self.dropout,
                                        peephole=self.peephole,
                                        gpu=self.gpu))
+        self.upsample = nn.Upsample(scale_factor=2)
 
 
     def _init(self, batch, height, width):
@@ -138,8 +139,7 @@ class PredNet(nn.Module):
                     R[l].append(Ra)
                 else:
                     Ra, hx = self.lstm[l](torch.cat((E[l][t],
-                                f.interpolate(R[l+1][t+1], scale_factor=2,
-                                              mode='nearest')), dim=1),
+                                self.upsample(R[l+1][t+1])), dim=1),
                                 hx[0], hx[1])
                     R[l].append(Ra)
                 H[l] = hx
