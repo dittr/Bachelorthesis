@@ -133,3 +133,10 @@ log/
 mdl/
 graph/
 data/files/
+
+# tex stuff
+.aux
+.log
+.bbl
+.blg
+.gz
