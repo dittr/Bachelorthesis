@@ -53,8 +53,8 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
         
         # run through all batches in the dataloader
         for batch_id, data in enumerate(dataloader[0]):
-            # get sequence and target (This is only for gray-scaled images.)
-            x = data.float().to(device).permute(1,0,2,3,4)
+            # get sequence and target
+            x = data.to(device).permute(1,0,2,3,4)
             if norm or binar:
                 x = normalize(x)
             if binar:
@@ -82,7 +82,7 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
             # log scalar values
             logger.plot_loss('error', loss, it)
             
-            if batch_id >= iteration:
+            if batch_id >= iteration and iteration > 0:
                 break
 
         # validation every n epochs
@@ -93,5 +93,6 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
             else:
                 print('Epoch: {} Mean loss: {:.6f}'.format(i+1, bloss / batch_id))
 
-        # perform scheduler update
-        schedule.step()
+        if i > 0:
+            # perform scheduler update
+            schedule.step()
