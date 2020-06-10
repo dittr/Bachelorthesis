@@ -1,3 +1,68 @@
+% framework (PyTorch / Tensorboard)
+
+% 1. PyTorch
+@incollection{Paszke2019,
+title = {PyTorch: An Imperative Style, High-Performance Deep Learning Library},
+author = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and Kopf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
+booktitle = {Advances in Neural Information Processing Systems 32},
+editor = {H. Wallach and H. Larochelle and A. Beygelzimer and F. d\textquotesingle Alch\'{e}-Buc and E. Fox and R. Garnett},
+pages = {8024--8035},
+year = {2019},
+publisher = {Curran Associates, Inc.},
+url = {http://papers.neurips.cc/paper/9015-pytorch-an-imperative-style-high-performance-deep-learning-library.pdf}
+}
+% 2. Tensorboard
+@misc{tensorflow2015,
+title={ {TensorFlow}: Large-Scale Machine Learning on Heterogeneous Systems},
+url={https://www.tensorflow.org/},
+note={Software available from tensorflow.org},
+author={
+    Mart\'{\i}n~Abadi and
+    Ashish~Agarwal and
+    Paul~Barham and
+    Eugene~Brevdo and
+    Zhifeng~Chen and
+    Craig~Citro and
+    Greg~S.~Corrado and
+    Andy~Davis and
+    Jeffrey~Dean and
+    Matthieu~Devin and
+    Sanjay~Ghemawat and
+    Ian~Goodfellow and
+    Andrew~Harp and
+    Geoffrey~Irving and
+    Michael~Isard and
+    Yangqing Jia and
+    Rafal~Jozefowicz and
+    Lukasz~Kaiser and
+    Manjunath~Kudlur and
+    Josh~Levenberg and
+    Dandelion~Man\'{e} and
+    Rajat~Monga and
+    Sherry~Moore and
+    Derek~Murray and
+    Chris~Olah and
+    Mike~Schuster and
+    Jonathon~Shlens and
+    Benoit~Steiner and
+    Ilya~Sutskever and
+    Kunal~Talwar and
+    Paul~Tucker and
+    Vincent~Vanhoucke and
+    Vijay~Vasudevan and
+    Fernanda~Vi\'{e}gas and
+    Oriol~Vinyals and
+    Pete~Warden and
+    Martin~Wattenberg and
+    Martin~Wicke and
+    Yuan~Yu and
+    Xiaoqiang~Zheng},
+  year={2015},
+}
+
+% datasets
+
+% 1. MovingMNIST dataset
 @ARTICLE{LeCun1998,
   author={Y. {Lecun} and L. {Bottou} and Y. {Bengio} and P. {Haffner}},
   journal={Proceedings of the IEEE}, 
@@ -5,5 +70,176 @@
   year={1998},
   volume={86},
   number={11},
-  pages={2278-2324},}
+  pages={2278-2324}
+}
+% 2. Kitti dataset
+@ARTICLE{Geiger2013,
+  author = {Andreas Geiger and Philip Lenz and Christoph Stiller and Raquel Urtasun},
+  title = {Vision meets Robotics: The KITTI Dataset},
+  journal = {International Journal of Robotics Research (IJRR)},
+  year = {2013}
+}
+% 3. KTH dataset
+@inproceedings{Schüldt2004,
+author = {Schüldt, Christian and Laptev, Ivan and Caputo, Barbara},
+year = {2004},
+month = {09},
+pages = {32 - 36 Vol.3},
+title = {Recognizing human actions: A local SVM approach},
+volume = {3},
+isbn = {0-7695-2128-2},
+journal = {Proceedings - International Conference on Pattern Recognition},
+doi = {10.1109/ICPR.2004.1334462}
+}
+% 4. Caltech Pedestrian
+@article{Dollar2012,
+  author = {Piotr Doll\'ar and Christian Wojek and Bernt Schiele and Pietro Perona},
+  title = {Pedestrian Detection: An Evaluation of the State of the Art},
+  journal = {PAMI},
+  volume = {34},
+  year = {2012},
+}
 
+% optimizer
+
+% 1. Adam
+@inproceedings{Kingma2015,
+  author    = {Diederik P. Kingma and
+               Jimmy Ba},
+  title     = {Adam: {A} Method for Stochastic Optimization},
+  booktitle = {3rd International Conference on Learning Representations, {ICLR} 2015,
+               San Diego, CA, USA, May 7-9, 2015, Conference Track Proceedings},
+  year      = {2015},
+  url       = {http://arxiv.org/abs/1412.6980}
+}
+% 2. RmsProp (not published, use secondary)
+@article{Ruder2016,
+  author    = {Sebastian Ruder},
+  title     = {An overview of gradient descent optimization algorithms},
+  journal   = {CoRR},
+  volume    = {abs/1609.04747},
+  year      = {2016},
+  url       = {http://arxiv.org/abs/1609.04747},
+  archivePrefix = {arXiv},
+  eprint    = {1609.04747}
+}
+
+% Error functions for images
+
+% 1. Image Restoration
+@ARTICLE{7797130,  author={H. {Zhao} and O. {Gallo} and I. {Frosio} and J. {Kautz}},  journal={IEEE Transactions on Computational Imaging},   title={Loss Functions for Image Restoration With Neural Networks},   year={2017},  volume={3},  number={1},  pages={47-57},}
+
+% LSTM / ConvLSTM
+
+% 1. LSTM
+@article{article,
+author = {Hochreiter, Sepp and Schmidhuber, Jürgen},
+year = {1997},
+month = {12},
+pages = {1735-80},
+title = {Long Short-term Memory},
+volume = {9},
+journal = {Neural computation},
+doi = {10.1162/neco.1997.9.8.1735}
+}
+% 2. ConvLSTM
+@incollection{NIPS2015_5955,
+title = {Convolutional LSTM Network: A Machine Learning Approach for Precipitation Nowcasting},
+author = {SHI, Xingjian and Chen, Zhourong and Wang, Hao and Yeung, Dit-Yan and Wong, Wai-kin and WOO, Wang-chun},
+booktitle = {Advances in Neural Information Processing Systems 28},
+editor = {C. Cortes and N. D. Lawrence and D. D. Lee and M. Sugiyama and R. Garnett},
+pages = {802--810},
+year = {2015},
+publisher = {Curran Associates, Inc.},
+url = {http://papers.nips.cc/paper/5955-convolutional-lstm-network-a-machine-learning-approach-for-precipitation-nowcasting.pdf}
+}
+
+% Baselines / Paper
+
+% 1. PredNet
+@article{Lotter2016,
+  author    = {William Lotter and
+               Gabriel Kreiman and
+               David D. Cox},
+  title     = {Deep Predictive Coding Networks for Video Prediction and Unsupervised
+               Learning},
+  journal   = {CoRR},
+  volume    = {abs/1605.08104},
+  year      = {2016},
+  url       = {http://arxiv.org/abs/1605.08104},
+  archivePrefix = {arXiv},
+  eprint    = {1605.08104}
+}
+% 2. Spatio temporal Video Autoencoder with differentiable Memory
+@article{Patraucean2015,
+  author    = {Viorica Patraucean and
+               Ankur Handa and
+               Roberto Cipolla},
+  title     = {Spatio-temporal video autoencoder with differentiable memory},
+  journal   = {CoRR},
+  volume    = {abs/1511.06309},
+  year      = {2015},
+  url       = {http://arxiv.org/abs/1511.06309},
+  archivePrefix = {arXiv},
+  eprint    = {1511.06309}
+}
+
+% Predictive Coding
+
+% 1. Cortical Responses
+@article{Friston2005,
+author = {Friston, Karl},
+year = {2005},
+month = {05},
+pages = {815-36},
+title = {A Theory of Cortical Responses},
+volume = {360},
+journal = {Philosophical transactions of the Royal Society of London. Series B, Biological sciences},
+doi = {10.1098/rstb.2005.1622}
+}
+% 2. Visual Context
+@Article{Rao1999,
+author={Rao, Rajesh P. N.
+and Ballard, Dana H.},
+title={Predictive coding in the visual cortex: a functional interpretation of some extra-classical receptive-field effects},
+journal={Nature Neuroscience},
+year={1999},
+month={Jan},
+day={01},
+volume={2},
+number={1},
+pages={79-87},
+issn={1546-1726},
+doi={10.1038/4580},
+url={https://doi.org/10.1038/4580}
+}
+
+% PredNet critics
+
+% 1. Critical Review
+@article{Rane2019,
+  author    = {Roshan Rane and
+               Vageesh Saxena and
+               Edit Sz{\"{u}}gyi},
+  title     = {Video Action Classification Using PredNet},
+  journal   = {CoRR},
+  volume    = {abs/1906.11902},
+  year      = {2019},
+  url       = {http://arxiv.org/abs/1906.11902},
+  archivePrefix = {arXiv},
+  eprint    = {1906.11902}
+}
+% 2. rcg-LSTM
+@article{Elsayed2018,
+  author    = {Nelly Elsayed and
+               Anthony S. Maida and
+               Magdy A. Bayoumi},
+  title     = {Reduced-Gate Convolutional {LSTM} Using Predictive Coding for Spatiotemporal
+               Prediction},
+  journal   = {CoRR},
+  volume    = {abs/1810.07251},
+  year      = {2018},
+  url       = {http://arxiv.org/abs/1810.07251},
+  archivePrefix = {arXiv},
+  eprint    = {1810.07251}
+}
