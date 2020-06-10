@@ -92,7 +92,8 @@ def print_model(model):
     trainable_param = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print('[DEBUG] ' + model.name + ' consists of: ' + str(trainable_param) +
       ' trainable parameters.')    
-    print('[DEBUG] ' + model.state_dict())
+    for param_tensor in model.state_dict():
+        print(param_tensor, "\t", model.state_dict()[param_tensor].size())
 
 
 def init_dataset(dataset, root, testing, seq_len, download=True):
