@@ -46,6 +46,7 @@ def read_sequence(file, fps, size):
     file := sequence file
     fps := fps to use
     """
+    i = FPS
     x = list()
     cap = cv.VideoCapture(file)
 
@@ -55,9 +56,11 @@ def read_sequence(file, fps, size):
         if not ret:
             break
 
-        x.append(process_image(frame, size))
-
-        cv.waitKey(fps)
+        if i == FPS:
+            x.append(process_image(frame, size))
+            i = 0
+        i++
+        
 
     return x
 
