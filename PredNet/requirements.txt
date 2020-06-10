@@ -7,3 +7,4 @@ hickle
 torchviz
 graphviz
 opencv-python
+pytorch-msssim
