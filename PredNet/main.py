@@ -269,12 +269,11 @@ def create_error_weights(time_weights, layer_weights, seq_len, layer, gpu):
         layer_weights = torch.FloatTensor([[time_weights[1] for i in range(seq_len - 1)]]).cuda()
         layer_weights = torch.cat((torch.FloatTensor([[l1]]).cuda(), layer_weights), 1).T
         time_weights = (1. / (layer - 1) * torch.ones(layer, 1)).cuda()
-        time_weights[0] = 0
     else:
         layer_weights = torch.FloatTensor([[time_weights[1] for i in range(seq_len - 1)]])
         layer_weights = torch.cat((torch.FloatTensor([[l1]]), layer_weights), 1).T
         time_weights = 1. / (layer - 1) * torch.ones(layer, 1)
-        time_weights[0] = 0
+    time_weights[0] = 0
 
     return time_weights, layer_weights
 
