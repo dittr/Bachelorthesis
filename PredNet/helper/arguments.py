@@ -55,6 +55,8 @@ class ConsoleArguments():
                             help='Mode for PredNet <prediction|error>')
         parser.add_argument('--plot', '-P', action='store_true',
                             help='Plot backpropagation graph (Default: False)')
+        parser.add_argument('--extrapolate', '-E', type=int,
+                            help='Extrapolate t+n images into future.')
         
         self.args = parser.parse_args()
 
@@ -159,3 +161,9 @@ class ConsoleArguments():
         Return plot value
         """
         return self.args.plot
+
+    def get_extrapolate(self):
+        """
+        Return extrapolation value
+        """
+        return self.args.extrapolate

@@ -55,6 +55,7 @@ def init_device():
     """
     Initialize the device (GPU or CPU)
     """
+    gpu = False
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if device.type == 'cuda':
         gpu = True
@@ -63,7 +64,7 @@ def init_device():
 
 
 def init_model(channels, kernel, padding, stride, dropout,
-               peephole, pixel_max, mode, gpu):
+               peephole, pixel_max, mode, extrapolate, gpu):
     """
     Initialize PredNet with arguments from yml file
 
@@ -75,10 +76,11 @@ def init_model(channels, kernel, padding, stride, dropout,
     peephole := LSTM using peephole
     pixel_max := maximum pixel value in input image
     mode := mode model uses <prediction|error>
+    extrapolate := extrapolate t+n images into future
     gpu := model uses gpu
     """   
     model = PredNet(channels, kernel, padding, stride, dropout,
-                    peephole, pixel_max, mode, gpu)
+                    peephole, pixel_max, mode, extrapolate, gpu)
 
     return model
 
@@ -305,6 +307,7 @@ def main():
                        args['prednet']['peephole'],
                        args['prednet']['pixel_max'],
                        console.get_mode(),
+                       console.get_extrapolate(),
                        gpu).to(device)
 
     debug = args['debug']
