@@ -21,7 +21,8 @@ class PredNet(nn.Module):
     """
     """
     def __init__(self, channels, kernel, padding, stride,
-                 dropout, peephole, pixel_max, mode, gpu=False):
+                 dropout, peephole, pixel_max, mode,
+                 extrapolate=0, gpu=False):
         """
         Initialize PredNet module
         
@@ -33,6 +34,7 @@ class PredNet(nn.Module):
         peephole := use ConvLSTM with or without peephole
         pixel_max := max value of input image
         mode := Mode for PredNet <prediction|error>
+        extrapolate := Multi-frame prediction t+n into future
         gpu := GPU or CPU
         """
         super(PredNet, self).__init__()
@@ -46,6 +48,7 @@ class PredNet(nn.Module):
         self.peephole = peephole
         self.pixel_max = pixel_max
         self.mode = mode
+        self.extrapolate = extrapolate
         self.gpu = gpu
         self.input = nn.ModuleList()
         self.prediction = nn.ModuleList()
@@ -123,9 +126,11 @@ class PredNet(nn.Module):
         A, Ah, E, R, H = self._init(x.size(1), x.size(3), x.size(4))
         error = list()
         A[0] = x
+        output = 0
+        t, i = 0, 0
 
         # loop through the time series
-        for t in range(len(x)):
+        while t < len(x):
             # loop through the layer
             # top-down pass
             for l in range(self.layer - 1, -1, -1):
@@ -164,8 +169,20 @@ class PredNet(nn.Module):
                                                    keepdim=True) for e in E], 1)
                 error.append(mean_error)
 
+            if self.extrapolate > i and t == (len(x)-1):
+                if i == 0:
+                    output = Ah[0]
+                else:
+                    output.append(Ah[0][-1])
+                A[0] = torch.cat((A[0][1:], Ah[0][-1][None,:,:,:,:]))
+                i += 1
+                t = -1
+                Ah[0] = list()
+
+            t += 1
+
         if self.mode == 'prediction':
-            return Ah[0]
+            return output
         elif self.mode == 'error':
             error = torch.stack(error, 2)
             return error
