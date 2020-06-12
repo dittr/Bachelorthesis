@@ -137,12 +137,14 @@ def get_dataloader(dataset, batch, shuffle, drop):
             dataloader.append(torch.utils.data.DataLoader(dataset=dataset[i],
                                                           batch_size=batch,
                                                           shuffle=shuffle,
-                                                          drop_last=drop))
+                                                          drop_last=drop,
+                                                          num_workers=4))
         else:
             dataloader.append(torch.utils.data.DataLoader(dataset=dataset[i],
                                                           batch_size=batch,
                                                           shuffle=not shuffle,
-                                                          drop_last=drop))
+                                                          drop_last=drop,
+                                                          num_workers=4))
 
     return dataloader
 
