@@ -64,7 +64,7 @@ def init_device():
 
 
 def init_model(channels, kernel, padding, stride, dropout,
-               peephole, pixel_max, mode, extrapolate, gpu):
+               peephole, pixel_max, mode, predrnn, extrapolate, gpu):
     """
     Initialize PredNet with arguments from yml file
 
@@ -76,11 +76,12 @@ def init_model(channels, kernel, padding, stride, dropout,
     peephole := LSTM using peephole
     pixel_max := maximum pixel value in input image
     mode := mode model uses <prediction|error>
+    predrnn := Use ConvLSTM or ST_ConvLSTM
     extrapolate := extrapolate t+n images into future
     gpu := model uses gpu
     """   
     model = PredNet(channels, kernel, padding, stride, dropout,
-                    peephole, pixel_max, mode, extrapolate, gpu)
+                    peephole, pixel_max, mode, predrnn, extrapolate, gpu)
 
     return model
 
@@ -307,6 +308,7 @@ def main():
                        args['prednet']['peephole'],
                        args['prednet']['pixel_max'],
                        console.get_mode(),
+                       console.get_predrnn(),
                        console.get_extrapolate(),
                        gpu).to(device)
 
