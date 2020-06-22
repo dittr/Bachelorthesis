@@ -8,6 +8,8 @@
 @description: PredNet module
 """
 
+#import matplotlib.pyplot as plt
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as f
@@ -15,14 +17,15 @@ import torch.nn.functional as f
 from model.modules.input import InputLayer
 from model.modules.prediction import PredictionLayer
 from model.modules.error import ErrorLayer
-from model.modules.conv_lstm import CONV_LSTM as LstmLayer
+from model.modules.conv_lstm import CONV_LSTM
+from model.modules.predrnn import PredRNN
 
 class PredNet(nn.Module):
     """
     """
     def __init__(self, channels, kernel, padding, stride,
                  dropout, peephole, pixel_max, mode,
-                 extrapolate=0, gpu=False):
+                 predrnn=True, extrapolate=0, gpu=False):
         """
         Initialize PredNet module
         
@@ -54,30 +57,39 @@ class PredNet(nn.Module):
         self.prediction = nn.ModuleList()
         self.error = nn.ModuleList()
         self.lstm = nn.ModuleList()
-        
+
         self.channels.append(0)
-        
+
         for i in range(self.layer - 1):
             self.input.append(InputLayer(channel_in=self.channels[i] * 2,
                                          channel_out=self.channels[i+1],
                                          kernel_size=self.kernel,
                                          padding=self.padding,
                                          stride=self.stride))
-        
+
         for i in range(self.layer):
             self.prediction.append(PredictionLayer(channel_in=self.channels[i],
                                                    channel_out=self.channels[i],
                                                    kernel_size=self.kernel,
                                                    padding=self.padding))
             self.error.append(ErrorLayer())
-            self.lstm.append(LstmLayer(depth=1, channel_in=self.channels[i] \
-                                       * 2 + self.channels[i+1],
-                                       channel_hidden=self.channels[i],
-                                       kernel_size=self.kernel,
-                                       dropout=self.dropout,
-                                       rec_dropout=self.dropout,
-                                       peephole=self.peephole,
-                                       gpu=self.gpu))
+            if not predrnn:
+                self.lstm.append(CONV_LSTM(depth=1, channel_in=self.channels[i] \
+                                           * 2 + self.channels[i+1],
+                                           channel_hidden=self.channels[i],
+                                           kernel_size=self.kernel,
+                                           dropout=self.dropout,
+                                           rec_dropout=self.dropout,
+                                           peephole=self.peephole,
+                                           gpu=self.gpu))
+            else:
+                self.lstm.append(PredRNN(depth=1, channel_in=self.channels[i] \
+                                         * 2 + self.channels[i+1],
+                                         channel_hidden=self.channels[i],
+                                         kernel_size=self.kernel,
+                                         dropout=self.dropout,
+                                         rec_dropout=self.dropout,
+                                         gpu=self.gpu))
         self.upsample = nn.Upsample(scale_factor=2)
 
 
@@ -94,7 +106,7 @@ class PredNet(nn.Module):
         E = [[] for i in range(self.layer)]
         R = [[] for i in range(self.layer)]
         H = [[] for i in range(self.layer)]
-        
+
         for i in range(self.layer):
             if self.gpu:
                 E[i].append(torch.zeros(batch, self.channels[i] * 2,
@@ -110,7 +122,7 @@ class PredNet(nn.Module):
                 R[i].append(torch.zeros(batch, self.channels[i],
                                         height // 2**i,
                                         width // 2**i))
-        
+
         return A, Ah, E, R, H
 
 
@@ -119,14 +131,12 @@ class PredNet(nn.Module):
         Forward method
         
         x := input timeseries
-        
-        todo: Adding multi-frame prediction.
         """
         # initialize all variables
         A, Ah, E, R, H = self._init(x.size(1), x.size(3), x.size(4))
         error = list()
         A[0] = x
-        output = 0
+        output = list()
         t, i = 0, 0
 
         # loop through the time series
@@ -158,12 +168,19 @@ class PredNet(nn.Module):
                                             self.pixel_max))
                 else:
                     Ah[l].append(self.prediction[l](R[l][t+1]))
+#                print('Layer: ' + str(l+1) + ' Values: ' + str(Ah[l][-1].max()))
                 # compute errors
                 E[l].append(self.error[l](Ah[l][t], A[l][t]))
-
+#                print('Layer: ' + str(l+1) + ' Error: ' + str(E[l][-1]))
+#                plt.imshow(Ah[0][t][0][0].detach().cpu())
+#                plt.show()
+                # using MovingMNIST needs check when starting with normalized images
+#                if Ah[0][t][0][0].max() == 0:
+#                    raise Exception('Retry, because network will not learn!')
+                
                 if l < self.layer - 1:
                     A[l+1].append(self.input[l](E[l][t+1]))
-            
+
             if self.mode == 'error':              
                 mean_error = torch.cat([torch.mean(e[-1].view(e[-1].size(0), -1), 1,
                                                    keepdim=True) for e in E], 1)
@@ -171,7 +188,7 @@ class PredNet(nn.Module):
 
             if self.extrapolate > i and t == (len(x)-1):
                 if i == 0:
-                    output = Ah[0]
+                    output.append(Ah[0])
                 else:
                     output.append(Ah[0][-1])
                 A[0] = torch.cat((A[0][1:], Ah[0][-1][None,:,:,:,:]))
@@ -182,7 +199,10 @@ class PredNet(nn.Module):
             t += 1
 
         if self.mode == 'prediction':
-            return output
+            if len(output) > 0:
+                return output
+            else:
+                return Ah[0]
         elif self.mode == 'error':
             error = torch.stack(error, 2)
             return error
