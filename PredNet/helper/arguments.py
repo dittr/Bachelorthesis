@@ -57,6 +57,8 @@ class ConsoleArguments():
                             help='Plot backpropagation graph (Default: False)')
         parser.add_argument('--extrapolate', '-E', type=int,
                             help='Extrapolate t+n images into future.')
+        parser.add_argument('--predrnn', '-R', action='store_true',
+                            help='False: ConvLSTM, True: ST_ConvLSTM (Default: False)')
         
         self.args = parser.parse_args()
 
@@ -167,3 +169,9 @@ class ConsoleArguments():
         Return extrapolation value
         """
         return self.args.extrapolate
+
+    def get_predrnn(self):
+        """
+        Return predrnn value
+        """
+        return self.args.predrnn
