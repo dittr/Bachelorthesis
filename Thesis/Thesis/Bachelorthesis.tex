@@ -1,4 +1,4 @@
-\documentclass[11pt, a4paper]{article}
+\documentclass[12pt, a4paper]{article}
 
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
@@ -41,6 +41,7 @@
 \begin{document}
  \bibliographystyle{alphadin}
  
+ % Abstract
  \begin{titlepage}
   \maketitle
   \thispagestyle{empty}
@@ -48,6 +49,14 @@
    \input{sections/abstract}
   \end{abstract}
  \end{titlepage}
+ 
+ % Table of contents
+ \tableofcontents
+ \newpage
+ 
+ % question
+ \input{sections/questions}
+ \newpage
  
  % introduction
  \input{sections/introduction}
@@ -72,6 +81,9 @@
  
  % conclusion
  \input{sections/conclusion}
+ 
+ % Explanation of self written thesis
+ \input{sections/explanation} 
  
  % literature
 % \newpage

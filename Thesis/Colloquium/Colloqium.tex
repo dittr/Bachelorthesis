@@ -1,1 +1,86 @@
+\documentclass[12pt, a4paper]{beamer}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref, bookmark}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+
+% set images
+\usepackage{float}
+
+% pseudocode
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Images next to each other
+\usepackage{subfig}
+
+% citing
+\usepackage[square,numbers]{natbib}
+\bibliographystyle{dinat}
+
+\mode<presentation> {
+ \usetheme{Madrid}
+ \usecolortheme{whale}
+}
  
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Bachelorthesis Colloqium]{Comparing different state-of-the-art solutions for image prediction using time-series analysis}
+
+\author{Sören Dittrich} % Your name
+\institute[] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+Uni Hildesheim \\ % Your institution for the title page
+}
+\date{September 2020} % Date, can be changed to a custom date
+
+\AtBeginSection[]
+{
+    \begin{frame}
+        \frametitle{Contents}
+        \tableofcontents[currentsection]
+    \end{frame}
+}
+
+\begin{document}
+ % Title page
+ \begin{frame}
+ \titlepage % Print the title page as the first slide
+ \end{frame}
+ % Table of contents
+ \begin{frame}
+ \frametitle{Table of contents} % Table of contents slide, comment this block out to remove it
+ \tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+ \end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+ % introduction
+ \input{sections/introduction}
+
+ % related work
+ \input{sections/related}
+ 
+ % algorithm
+ \input{sections/implementation}
+ 
+ % usage
+ \input{sections/methodology}
+ 
+ % experiments
+ \input{sections/experiments}
+ 
+ % discussion
+ \input{sections/discussion}
+ 
+ % conclusion
+ \input{sections/conclusion}
+
+\end{document} 
