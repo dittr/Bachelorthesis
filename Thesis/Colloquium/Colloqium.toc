@@ -8,6 +8,8 @@
 \beamer@subsectionintoc {1}{6}{PyTorch}{9}{0}{1}
 \beamer@sectionintoc {2}{Image Prediction Architectures}{10}{0}{2}
 \beamer@subsectionintoc {2}{1}{LSTM Autoencoder}{11}{0}{2}
-\beamer@subsectionintoc {2}{2}{ConvLSTM Autoencoder}{17}{0}{2}
-\beamer@subsectionintoc {2}{3}{Spatio-temporal Video Autoencoder}{21}{0}{2}
-\beamer@subsectionintoc {2}{4}{PredNet}{22}{0}{2}
+\beamer@subsectionintoc {2}{2}{ConvLSTM Autoencoder}{18}{0}{2}
+\beamer@subsectionintoc {2}{3}{Spatio-temporal Video Autoencoder}{23}{0}{2}
+\beamer@subsectionintoc {2}{4}{PredNet}{27}{0}{2}
+\beamer@subsectionintoc {2}{5}{PredRNN}{28}{0}{2}
+\beamer@subsectionintoc {2}{6}{PredRNN++}{29}{0}{2}

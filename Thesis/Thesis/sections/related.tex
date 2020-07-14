@@ -3,7 +3,7 @@
  This section will describe a range of state-of-the-art architectures for image prediction. Image prediction is a very broad field, but almost all state-of-the-art solutions
  for image prediction share one common part, the recurrent module. LSTM's are the most used modules in image prediction, as they are able to store information over a long period of time, despite
  the standard RNN (recurrent neural network). All algorithms described here have a different way to perform image prediction, but all use a type of LSTM to store the time-series information.
- It is very common for this type of papers, that the authors start their experiments by using a synthetic dataset, in the most cases this is MovingMNIST \cite{LeCun1998} and then afterwards performing
+ It is very common for this type of papers, that the authors start their experiments by using a synthetic dataset. In the most cases this is MovingMNIST \cite{LeCun1998} and then afterwards performing
  tests on natural images. For natural images, the authors often use action-recognition datasets, because the camera is fixed and only objects/people in the scenery are moving. Another approach
  is using natural image datasets, where the camera is also moving through the scenery, for example Kitti dataset \cite{Geiger2013}. This dataset consists of natural images from different car
  drives through the city and residential area of Karlsruhe. Therefore not only objects in the scenery are moving, but also the camera has a self-motion, which can be very tricky for image prediction
@@ -82,13 +82,33 @@
  % subsection
  \subsection{PredNet}
   The paper \glqq Deep Predictive Coding Networks For Video Prediction And Unsupervised Learning\grqq by Lotter et. al. \cite{Lotter2016} composes an architecture, which is informally named
-  \textbf{PredNet}. It describes a network architecture based on the concept of \glqq predictive coding\grqq \cite{Rao1999}, \cite{Friston2005}.
+  \textbf{PredNet}. It describes a network architecture based on the concept of \glqq predictive coding\grqq \cite{Rao1999}, \cite{Friston2005}. It is the baseline for the experiments performed
+  in section~\ref{section::experiments}. The network consists of an arbitrary amount of layers, the amount of layers (depth of the network) can be treated as a hyperparameter. Every layer consists
+  of an input module $A{_l}^t$, prediction module $\hat{A{_l}^t}$, representation module $R{_l}^t$ and error module $E{_l}^t$. $l$ is the corresponding layer, $t$ the timestamp.
   \begin{figure}[H]
    \includegraphics[width=0.65\textwidth]{../Images/lotter.png}
    \centering
-   \caption{PredNet \cite{Lotter2016}}
+   \caption{\textbf{Left:} PredNet architecture with two layers, \textbf{Right:} \glqq Module operations for case of video sequences\grqq \cite{Lotter2016}}
    \label{fig:lotter_architecture}
   \end{figure}
+  \begin{equation}
+   A{_l}^t = \begin{cases} x_t & l = 0 \\ MaxPool(ReLU(Conv(E_{l-1}^t))) & l > 0 \end{cases}
+  \end{equation}
+  \begin{equation}
+   \hat{A_l^t} = ReLU(Conv(R_l^t)
+  \end{equation}
+  \begin{equation}
+   E_l^t = [ReLU(\hat{A_l^t} - A_l^t); ReLU(A_l^t - \hat{A_l^t})]
+  \end{equation}
+  \begin{equation}
+   R_l^t = ConvLSTM(E_l^{t-1}, R_l^{t-1}, Upsample(R_{l+1}^t)
+  \end{equation}
  
  
-  The chosen implementation for the experiments~\ref{section::experiments}.
+ % subsection
+ \subsection{PredRNN}
+  The paper \glqq PredRNN: Recurrent Neural Networks for Predictive Learning using Spatiotemporal LSTMs\grqq by Wang et. al. \cite{Wang2017}.
+ 
+ % subsection
+ \subsection{PredRNN++}
+  The paper \glqq PredRNN++: Towards A Resolution of the Deep-in-Time Dilemma inSpatiotemporal Predictive Learning\grqq by Wang et. al. \cite{Wang2018}.

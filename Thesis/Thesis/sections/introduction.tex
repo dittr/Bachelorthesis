@@ -2,14 +2,13 @@
 \section{Introduction} \label{section::introduction}
  The thesis will compare different state-of-the-art solutions for image prediction \ref{subsection::imageprediction}.
  The main module, which is a core aspect of this work, is the LSTM (Long short-term memory). \ref{subsection::convlstm}.
- This module was invented by Hochreiter and Schmidhuber  \cite{Hochreiter1997} in 1997 and is used heavily in the field of image prediction since then, e.g. in Srivastave et. al. 
+ This module was invented by Hochreiter and Schmidhuber  \cite{Hochreiter1997} in 1997 and is used heavily in the field of image prediction since then, e.g. in Srivastava et. al. 
  \cite{Srivastava2015}.
  During the time the module got many different add-ons and changes, which are described in different papers (\cite{Patraucean2015}, \cite{Lotter2016}, \cite{Wang2017}, \cite{Wang2018} and many 
  more.). This work is implementing one specific network architecture (PredNet \cite{Lotter2016}).
  It uses the Shi et. al. \glqq standard\grqq ConvLSTM \cite{Shi2015} as recurrent sub-module, which is changed during the experiments
  with other (more advanced) solutions. The PredNet algorithm is re-implemented in PyTorch \cite{Paszke2019}, as well as the \glqq standard\grqq ConvLSTM and PredRNN.
- Practical experiments are performed on the PredNet using the \glqq standard\grqq ConvLSTM
- and on PredNet using PredRNN instead.
+ Practical experiments are performed on the PredNet using the \glqq standard\grqq ConvLSTM and on PredNet using PredRNN instead.
  
  % subsection
  \subsection{Deep Learning} \label{subsection::deeplearning}
