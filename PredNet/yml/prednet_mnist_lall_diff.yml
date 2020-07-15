@@ -1,0 +1,29 @@
+prednet:
+    size:
+        - 64
+        - 64
+    layer: 4
+    pooling:
+        stride: 2
+    kernel: 3
+    padding: 1
+    stride: 2
+    channels:
+        - 1
+        - 48
+        - 96
+        - 192
+    dropout: 0
+    peephole: False
+    pixel_max: 1
+    layer_weight:
+        - 1.0
+        - 0.1
+    seq_weight:
+        - 0.0
+        - 1.0
+mdl_path: 'mdl/'
+log_path: 'log/'
+data_path: 'data/files/'
+plot_path: 'graph/'
+debug: True
