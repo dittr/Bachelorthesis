@@ -14,10 +14,11 @@ from helper.transformation import normalize, binarize
 from helper.loss import loss as Loss
 
 
-def test(model, iteration, lossp, dataloader, logger, device, norm, binar):
+def test(name, model, iteration, lossp, dataloader, logger, device, norm, binar):
     """
     Testing the model
     
+    name := name of the model
     model := initialized network model
     iteration := iterations to run
     lossp := name of loss to use <mae|mse|bce|bcel>
@@ -41,11 +42,13 @@ def test(model, iteration, lossp, dataloader, logger, device, norm, binar):
         if binar:
             x = binarize(x)
 
-        # forward pass
-        output = torch.stack(model(x))
-
-        # compute loss
-        loss = Loss(output[1:len(x)], x[1:len(x)], lossp)
+        # forward pass & compute loss
+        if name == 'prednet':
+            output = torch.stack(model(x))
+            loss = Loss(output[1:len(x)], x[1:len(x)], lossp)
+        else:
+            output = model(x)
+            loss = Loss(output, x[-1], lossp)
 
         it += 1
 
@@ -54,10 +57,13 @@ def test(model, iteration, lossp, dataloader, logger, device, norm, binar):
 
         # log images
         x = x.permute(1,0,2,3,4)[0]
-        output = output.permute(1,0,2,3,4)[0]
-
         logger.plot_images('ground_truth', x)
-        logger.plot_images('predicted', output)
+        
+        if name == 'prednet':
+            output = output.permute(1,0,2,3,4)[0]
+            logger.plot_images('predicted', output)
+        else:
+            logger.plot_image('predicted', output[0])
 
         if batch_id >= iteration and iteration > 0:
             break

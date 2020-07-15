@@ -12,14 +12,16 @@ from validate import validation
 
 from helper.transformation import normalize, binarize
 from helper.loss import error_loss as Loss
+from helper.loss import loss as LOSS
 
 
-def train(model, optim, schedule, lossp, dataloader, device, logger,
+def train(name, model, optim, schedule, lossp, dataloader, device, logger,
           epoch, iteration, save, validate, depoch, diteration, norm, binar,
           time_weight, layer_weight, debug=False):
     """
     Training the model
     
+    name := name of the model
     model := initialized network model
     optim := initialized optimizer
     schedule := initialized lr scheduler
@@ -63,11 +65,13 @@ def train(model, optim, schedule, lossp, dataloader, device, logger,
             # clear optimizer
             optim.zero_grad()
 
-            # forward pass
-            output = model(x)
-
-            # compute loss
-            loss = Loss(time_weight, layer_weight, len(time_weight), output)
+            # forward pass & compute loss
+            if name == 'prednet':
+                output = model(x)
+                loss = Loss(time_weight, layer_weight, len(time_weight), output)
+            else:
+                output = model(x[:-1])
+                loss = LOSS(output, x[-1], lossp)
             
             bloss += loss
 

@@ -23,6 +23,8 @@ class ConsoleArguments():
 
         parser.add_argument('--parameter', '-p', type=str,
                             help='Path to yml parameter file')
+        parser.add_argument('--model', '-M', type=str,
+                            help='Name of the model <prednet|convlstm|spatio>')
         parser.add_argument('--dataset', '-d', type=str,
                             help='Dataset to use <mnist|kth|kitti>')
         parser.add_argument('--epoch', '-e', type=int,
@@ -67,6 +69,12 @@ class ConsoleArguments():
         Return yml file path
         """
         return self.args.parameter
+
+    def get_model(self):
+        """
+        Return model name
+        """
+        return self.args.model
 
     def get_dataset(self):
         """
