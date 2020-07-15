@@ -14,6 +14,7 @@ import torch.optim as Optim
 
 # net import
 from model.prednet import PredNet
+from model.autoenc import AutoENC
 
 # datasets
 from dataset.MovingMNIST import MovingMNIST
@@ -63,8 +64,8 @@ def init_device():
     return device, gpu
 
 
-def init_model(channels, kernel, padding, stride, dropout,
-               peephole, pixel_max, mode, predrnn, extrapolate, gpu):
+def init_prednet(channels, kernel, padding, stride, dropout,
+                 peephole, pixel_max, mode, predrnn, extrapolate, gpu):
     """
     Initialize PredNet with arguments from yml file
 
@@ -76,7 +77,7 @@ def init_model(channels, kernel, padding, stride, dropout,
     peephole := LSTM using peephole
     pixel_max := maximum pixel value in input image
     mode := mode model uses <prediction|error>
-    predrnn := Use ConvLSTM or ST_ConvLSTM
+    predrnn := Use ConvLSTM or PredRNN
     extrapolate := extrapolate t+n images into future
     gpu := model uses gpu
     """   
@@ -85,6 +86,33 @@ def init_model(channels, kernel, padding, stride, dropout,
 
     return model
 
+
+def init_convlstm(depth, channel, kernel, padding, dropout,
+                  peephole, predrnn, extrapolate, gpu):
+    """
+    Initialize ConvLSTM with arguments from yml file
+
+    depth := depth of the autoencoder
+    channel := list of channel
+    kernel := kernel size
+    padding := padding size
+    dropout := percentage [0,1]
+    peephole := LSTM using peephole
+    predrnn := Use ConvLSTM or PredRNN
+    extrapolate := extrapolate t+n images into future
+    gpu := model uses gpu
+    """
+    model = AutoENC(depth, channel, kernel,
+                    padding, predrnn, gpu)
+
+    return model
+
+
+def init_spatio():
+    """
+    """
+    return None
+    
 
 def print_model(model):
     """
@@ -202,13 +230,14 @@ def load_model(model, optimizer, device, dataset, path, debug=False):
     return model, params.epoch, params.iteration, optimizer, params.loss
 
 
-def compute(testing, model, optimizer, scheduler, loss, dataloader,
+def compute(name, testing, model, optimizer, scheduler, loss, dataloader,
             device, logger, epoch, iteration, depoch, diteration, save, validate,
             normalize, binarize, time_weight, layer_weight, debug=False):
     """
     Compute test or training, given the flag testing
 
-    testing := If true perform testing, otherwise training
+    testing := if true perform testing, otherwise training
+    name := name of the model
     model := initialized network model
     optimizer := initialized optimizer
     scheduler := initialized scheduler
@@ -229,11 +258,11 @@ def compute(testing, model, optimizer, scheduler, loss, dataloader,
     debug := debug value
     """
     if not testing:
-        train(model, optimizer, scheduler, loss, dataloader, device, logger,
-              epoch, iteration, save, validate, depoch, diteration, normalize,
-              binarize, time_weight, layer_weight, debug)
+        train(name, model, optimizer, scheduler, loss, dataloader, device,
+              logger, epoch, iteration, save, validate, depoch, diteration,
+              normalize, binarize, time_weight, layer_weight, debug)
     else:
-        test(model, iteration, loss, dataloader[0], logger, device,
+        test(name, model, iteration, loss, dataloader[0], logger, device,
              normalize, binarize)
 
 
@@ -289,6 +318,7 @@ def main():
     """
     # 1. Initialize console arguments
     console = init_arguments()
+    name = console.get_model()
 
     # 2. Initialize yml parameter
     args = init_yml(console.get_parameter())
@@ -299,25 +329,41 @@ def main():
     # 4. Initialize device (GPU or CPU)
     device, gpu = init_device()
 
+    if args['debug']:
+        print('Model will run on: ' + str(device))
+
     # 5. Initialize model
-    model = init_model(args['prednet']['channels'],
-                       args['prednet']['kernel'],
-                       args['prednet']['padding'],
-                       args['prednet']['stride'],
-                       args['prednet']['dropout'],
-                       args['prednet']['peephole'],
-                       args['prednet']['pixel_max'],
-                       console.get_mode(),
-                       console.get_predrnn(),
-                       console.get_extrapolate(),
-                       gpu).to(device)
+    if name == 'prednet':   
+        model = init_prednet(args[name]['channels'],
+                             args[name]['kernel'],
+                             args[name]['padding'],
+                             args[name]['stride'],
+                             args[name]['dropout'],
+                             args[name]['peephole'],
+                             args[name]['pixel_max'],
+                             console.get_mode(),
+                             console.get_predrnn(),
+                             console.get_extrapolate(),
+                             gpu).to(device)
+    elif name == 'convlstm':
+        model = init_convlstm(args[name]['depth'],
+                              args[name]['channel'],
+                              args[name]['kernel'],
+                              args[name]['padding'],
+                              args[name]['dropout'],
+                              args[name]['peephole'],
+                              console.get_predrnn(),
+                              console.get_extrapolate(),
+                              gpu).to(device)
+    else:
+        model = init_spatio()
 
     debug = args['debug']
     if debug:
         print_model(model)
 
     if console.get_plot():
-        plot_graph(model, args['prednet']['size'], args['plot_path'], gpu)
+        plot_graph(model, args[name]['size'], args['plot_path'], gpu)
 
     # 6. Initialize dataset
     dataset = init_dataset(console.get_dataset(), args['data_path'],
@@ -353,7 +399,7 @@ def main():
 
     # 12. Build error weights, if training
     time_weight, layer_weight = None, None
-    if not console.get_testing():
+    if not console.get_testing() and name == 'prednet':
         time_weight, layer_weight = create_error_weights(args['prednet']['seq_weight'],
                                                          args['prednet']['layer_weight'],
                                                          console.get_sequence(),
@@ -361,11 +407,12 @@ def main():
                                                          gpu)
 
     # 13. Train/Test the model
-    compute(console.get_testing(), model, optim, schedule, console.get_loss(),
-            dataloader, device, tensorlog, console.get_epoch(),
-            console.get_iteration(), depoch, diteration, console.get_save(),
-            console.get_validate(), console.get_normalize(),
-            console.get_binarize(), time_weight, layer_weight, debug)
+    compute(name, console.get_testing(), model, optim, schedule,
+            console.get_loss(), dataloader, device, tensorlog,
+            console.get_epoch(), console.get_iteration(), depoch,
+            diteration, console.get_save(), console.get_validate(),
+            console.get_normalize(), console.get_binarize(),
+            time_weight, layer_weight, debug)
 
     # 14. Close logger
     tensorlog.close_writer()
