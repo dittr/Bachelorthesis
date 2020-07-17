@@ -1,0 +1,41 @@
+spatiotemp:
+    encoder:
+        depth_in: 1
+        depth_out: 32
+        kernel:
+            - 7
+            - 2
+    lstm:
+        depth_in: 32
+        depth_out: 45
+        kernel: 7
+        peephole: False
+    flow:
+        depth_in: 45
+        depth_out: 2
+        kernel:
+            - 15
+            - 1
+        clamp: 0.5
+        size:
+            x: 30
+            y: 40
+    huber:
+        kernel: 3
+        mu: 0.001
+        l1: 0.01
+    grid:
+        size:
+            x: 30
+            y: 40
+    decoder:
+        depth_in: 32
+        depth_out: 1
+        kernel: 7
+        scale: 2
+mdl_path: 'mdl/'
+log_path: 'log/'
+data_path: 'data/files/'
+plot_path: 'graph/'
+debug: False
+ 
