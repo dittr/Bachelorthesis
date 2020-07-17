@@ -32,15 +32,13 @@ class AutoENC(nn.Module):
         
         for i in range(self.depth):
             if self.predrnn:
-                self.encoder.append(PredRNN(channel_in=channel[i],
+                self.encoder.append(PredRNN(depth=1, channel_in=channel[i],
                                             channel_hidden=channel[i+1],
-                                            kernel=kernel,
-                                            padding=padding,
+                                            kernel_size=kernel,
                                             gpu=gpu))
-                self.decoder.append(PredRNN(channel_in=channel[-1 - i],
+                self.decoder.append(PredRNN(depth=1, channel_in=channel[-1 - i],
                                             channel_hidden=channel[-1 - (i+1)],
-                                            kernel=kernel,
-                                            padding=padding,
+                                            kernel_size=kernel,
                                             gpu=gpu))
             else:
                 self.encoder.append(CONV_LSTM(depth=1, channel_in=channel[i],
