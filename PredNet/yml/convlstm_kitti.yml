@@ -1,0 +1,19 @@
+convlstm:
+    size:
+        - 128
+        - 160
+    depth: 2
+    kernel: 3
+    padding: 1
+    channel:
+        - 1
+        - 32
+        - 64
+    dropout: 0
+    peephole: False
+mdl_path: 'mdl/'
+log_path: 'log/'
+data_path: 'data/files/'
+plot_path: 'graph/'
+debug: True
+ 
