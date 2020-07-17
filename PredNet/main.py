@@ -15,6 +15,7 @@ import torch.optim as Optim
 # net import
 from model.prednet import PredNet
 from model.autoenc import AutoENC
+from model.spatiotemp import AE_ConvLSTM_flow as SpatioTemp
 
 # datasets
 from dataset.MovingMNIST import MovingMNIST
@@ -108,10 +109,14 @@ def init_convlstm(depth, channel, kernel, padding, dropout,
     return model
 
 
-def init_spatio():
+def init_spatio(encoder, lstm, flow, huberp, grid, decoder,
+                peephole, predrnn, extrapolate, gpu):
     """
     """
-    return None
+    model = SpatioTemp(encoder, lstm, flow, huberp, grid, decoder,
+                       forecast=extrapolate+1, gpu=gpu, predrnn=predrnn)
+    
+    return model
     
 
 def print_model(model):
@@ -356,7 +361,16 @@ def main():
                               console.get_extrapolate(),
                               gpu).to(device)
     else:
-        model = init_spatio()
+        model = init_spatio(args[name]['encoder'],
+                            args[name]['lstm'],
+                            args[name]['flow'],
+                            args[name]['huber'],
+                            args[name]['grid'],
+                            args[name]['decoder'],
+                            args[name]['lstm']['peephole'],
+                            console.get_predrnn(),
+                            console.get_extrapolate(),
+                            gpu).to(device)
 
     debug = args['debug']
     if debug:
