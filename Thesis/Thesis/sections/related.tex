@@ -6,20 +6,20 @@
  It is very common for this type of papers, that the authors start their experiments by using a synthetic dataset. In the most cases this is MovingMNIST \cite{LeCun1998} and then afterwards performing
  tests on natural images. For natural images, the authors often use action-recognition datasets, because the camera is fixed and only objects/people in the scenery are moving. Another approach
  is using natural image datasets, where the camera is also moving through the scenery, for example Kitti dataset \cite{Geiger2013}. This dataset consists of natural images from different car
- drives through the city and residential area of Karlsruhe. Therefore not only objects in the scenery are moving, but also the camera has a self-motion, which can be very tricky for image prediction
- algorithms to predict.
+ drives through the city and residential area of Karlsruhe in Germany.
+ In this dataset not only objects in the scenery are moving, but also the camera has a self-motion, which can be very tricky for image prediction algorithms to \glqq understand\grqq.
  
  % subsection
  \subsection{LSTM Autoencoder} \label{subsection::lstm_autoencoder}
   The paper \glqq Unsupervised Learning of Video Representations using LSTMs\grqq by Srivastava et. al. \cite{Srivastava2015} is using the standard LSTM~\ref{subsection::lstm} in an autoencoder
   architecture~\ref{subsection::autoencoder} for image reconstruction and future image prediction.
   The architecture is often used as a baseline in newer and more advanced architectures, because it consists of the standard LSTM as recurrent module.
-  Due to the fact, that the LSTM module is not able to handle multi-dimensional data as is, the images need to be vectorized. The authors use
-  MovingMNIST \cite{LeCun1998} as synthetic dataset, where every image is of size $64 \times 64 \times 1$. Therefore the image is vectorized into $64 \cdot 64 \times 1$ $=$ $4096 \times 1$.
+  Due to the fact, that the LSTM module is not able to handle multi-dimensional data as is, the images need to be reshaped at the input and also at the output again. The authors use
+  MovingMNIST \cite{LeCun1998} as synthetic dataset, where every image is of size $(64 \times 64 \times 1)$. Therefore the image is vectorized into $(64 \cdot 64 \times 1)$ $=$ $(4096 \times 1)$.
   This MovingMNIST implementation consists of two digits inside every frame. The authors input $10$ images and output the next $10$ images.
   The model is end-to-end differentiable and trained using BPTT (backpropagation through time) \cite{Werbos1990}.
   For the synthetic dataset, the model is trained using cross-entropy loss with logits~\ref{subsection::pytorch}, for natural image
-  datasets with MSE (mean-squared error) \cite{Zhao2017}.
+  datasets using MSE (mean-squared error) \cite{Zhao2017}.
   \begin{figure}[H]
    \includegraphics[width=0.45\textwidth]{../Images/srivastava.png}
    \centering
@@ -108,7 +108,4 @@
  % subsection
  \subsection{PredRNN}
   The paper \glqq PredRNN: Recurrent Neural Networks for Predictive Learning using Spatiotemporal LSTMs\grqq by Wang et. al. \cite{Wang2017}.
- 
- % subsection
- \subsection{PredRNN++}
-  The paper \glqq PredRNN++: Towards A Resolution of the Deep-in-Time Dilemma inSpatiotemporal Predictive Learning\grqq by Wang et. al. \cite{Wang2018}.
+  

@@ -1,27 +1,46 @@
 % section
 \section{Introduction} \label{section::introduction}
- The thesis will compare different state-of-the-art solutions for image prediction \ref{subsection::imageprediction}.
- The main module, which is a core aspect of this work, is the LSTM (Long short-term memory). \ref{subsection::convlstm}.
- This module was invented by Hochreiter and Schmidhuber  \cite{Hochreiter1997} in 1997 and is used heavily in the field of image prediction since then, e.g. in Srivastava et. al. 
+ The thesis will compare different state-of-the-art solutions for image-/video-prediction \ref{subsection::imageprediction}.
+ The main module of the solutions, which is the core aspect of this work, is the LSTM (Long short-term memory). \ref{subsection::lstm}.
+ This module was invented by Hochreiter and Schmidhuber  \cite{Hochreiter1997} in 1997 and is used heavily in the field of image-\& video-prediction since then, e.g. in Srivastava et. al. 
  \cite{Srivastava2015}.
  During the time the module got many different add-ons and changes, which are described in different papers (\cite{Patraucean2015}, \cite{Lotter2016}, \cite{Wang2017}, \cite{Wang2018} and many 
- more.). This work is implementing one specific network architecture (PredNet \cite{Lotter2016}).
- It uses the Shi et. al. \glqq standard\grqq ConvLSTM \cite{Shi2015} as recurrent sub-module, which is changed during the experiments
- with other (more advanced) solutions. The PredNet algorithm is re-implemented in PyTorch \cite{Paszke2019}, as well as the \glqq standard\grqq ConvLSTM and PredRNN.
- Practical experiments are performed on the PredNet using the \glqq standard\grqq ConvLSTM and on PredNet using PredRNN instead.
+ more.). To have a valid comparison, I implement three different state-of-the-art solutions for image-/video-prediction (\cite{Shi2015}, \cite{Patraucean2015} and \cite{Lotter2016}).
+ All of them use the Shi et. al. ConvLSTM \cite{Shi2015} (Or a slightly different version) as recurrent sub-module, which is changed during the experiments
+ with another, more advanced solution named PredRNN \cite{Wang2017}. The algorithms are re-implemented in PyTorch \cite{Paszke2019}, as well as the \glqq standard\grqq ConvLSTM and PredRNN.
+ This introduction will cover the basic knowledge, the reader should have to follow the rest of the thesis.
  
  % subsection
  \subsection{Deep Learning} \label{subsection::deeplearning}
  
  % subsection
- \subsection{Image Prediction} \label{subsection::imageprediction}
-  Image prediction is a field inside machine learning, where the key is to predict future images, given a sequence of image. The image sequence $X$ is of length $n$, ($x_0, \ldots, x_{n-1}$).
+ \subsection{Backpropagation} \label{subsection::backpropagation}
+ 
+ % subsection
+ \subsection{Backpropagation through time (BPTT)} \label{subsection::bptt}
+ 
+ % subsection
+ \subsection{Image Prediction / Video Prediction} \label{subsection::imageprediction}
+  Image-/Video-prediction is a field inside machine learning, where the key is to predict future images, given a sequence of image. The image sequence $X$ is of length $n$, ($x_0, \ldots, x_{n-1}$).
   One possible use-case is the one-frame prediction, where one predicts $x_n$, given the the sequence $X$. Another common use-case is multi-frame prediction, where the key is to predict $t$ many
   frames into the future. This is often performed using sequence-to-sequence learning \cite{Sutskever2014}. Obviously the first frames look much better then the last frames, as ground-truth is 
-  missing, and the predicted frames are approximated, which means they contain a certain level of error.
+  missing, and the predicted frames are only approximated, which means they contain a certain level of error.
 
  % subsection
  \subsection{Autoencoder} \label{subsection::autoencoder}
+  The autoencoder is a network architecture, which simply consists of two neural networks chained together. The first network is called \glqq Encoder\grqq. This part gets the input $x$ and outputs
+  the \glqq code\grqq h. Often the output layer of the \glqq Encoder\grqq is named bottleneck-layer. The second network is called \glqq Decoder\grqq. It gets the \glqq code\grqq $h$ as input
+  and outputs $\hat{x}$. This architecture is often used for reconstruction, where $x = \hat{x}$. To prevent the architecture to simply copy the input directly to the output (which would be an
+  interpolation, and not the goal of an autoencoder.), there are different techniques to have the autoencoder to instead approximate the output, given the \glqq code\grqq h.
+  The simplest autoencoder architecture is the so named \glqq undercomplete\grqq; autoencoder \cite{Goodfellow2016}, in which the output of the bottleneck-layer $h$ is smaller then the input $x$.
+  Therefore the architecture needs to learn how to extract useful features from the input $x$, because it is not able to simply copy the input $x$ to the output $\hat{x}$. There are many different
+  ideas of using an autoencoder architecture, which are described more in-depth in Goodfellow et. al. \cite{Goodfellow2016}.
+  \begin{figure}[H]
+   \includegraphics[width=0.4\textwidth]{../Images/autoencoder_schema.png}
+   \centering
+   \caption{Autoencoder schema \citep{wiki2019}}
+   \label{fig:lstm_architecture}
+  \end{figure}
 
  % subsection
  \subsection{RNN} \label{subsection::rnn}

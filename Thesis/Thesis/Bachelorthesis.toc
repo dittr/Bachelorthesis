@@ -2,23 +2,24 @@
 \contentsline {section}{\numberline {1}Scientific questions}{2}{section.1}% 
 \contentsline {section}{\numberline {2}Introduction}{3}{section.2}% 
 \contentsline {subsection}{\numberline {2.1}Deep Learning}{3}{subsection.2.1}% 
-\contentsline {subsection}{\numberline {2.2}Image Prediction}{3}{subsection.2.2}% 
-\contentsline {subsection}{\numberline {2.3}Autoencoder}{3}{subsection.2.3}% 
-\contentsline {subsection}{\numberline {2.4}RNN}{3}{subsection.2.4}% 
-\contentsline {subsection}{\numberline {2.5}LSTM}{3}{subsection.2.5}% 
-\contentsline {subsection}{\numberline {2.6}ConvLSTM}{4}{subsection.2.6}% 
-\contentsline {subsection}{\numberline {2.7}PyTorch}{4}{subsection.2.7}% 
-\contentsline {section}{\numberline {3}Image Prediction Architectures}{4}{section.3}% 
+\contentsline {subsection}{\numberline {2.2}Backpropagation}{3}{subsection.2.2}% 
+\contentsline {subsection}{\numberline {2.3}Backpropagation through time (BPTT)}{3}{subsection.2.3}% 
+\contentsline {subsection}{\numberline {2.4}Image Prediction / Video Prediction}{3}{subsection.2.4}% 
+\contentsline {subsection}{\numberline {2.5}Autoencoder}{3}{subsection.2.5}% 
+\contentsline {subsection}{\numberline {2.6}RNN}{4}{subsection.2.6}% 
+\contentsline {subsection}{\numberline {2.7}LSTM}{4}{subsection.2.7}% 
+\contentsline {subsection}{\numberline {2.8}ConvLSTM}{5}{subsection.2.8}% 
+\contentsline {subsection}{\numberline {2.9}PyTorch}{5}{subsection.2.9}% 
+\contentsline {section}{\numberline {3}Image Prediction Architectures}{5}{section.3}% 
 \contentsline {subsection}{\numberline {3.1}LSTM Autoencoder}{5}{subsection.3.1}% 
-\contentsline {subsection}{\numberline {3.2}ConvLSTM Autoencoder}{5}{subsection.3.2}% 
-\contentsline {subsection}{\numberline {3.3}Spatio-temporal Video Autoencoder}{6}{subsection.3.3}% 
-\contentsline {subsection}{\numberline {3.4}PredNet}{7}{subsection.3.4}% 
-\contentsline {subsection}{\numberline {3.5}PredRNN}{8}{subsection.3.5}% 
-\contentsline {subsection}{\numberline {3.6}PredRNN++}{8}{subsection.3.6}% 
-\contentsline {section}{\numberline {4}Implementation}{8}{section.4}% 
-\contentsline {section}{\numberline {5}Methodology}{8}{section.5}% 
-\contentsline {section}{\numberline {6}Training}{8}{section.6}% 
-\contentsline {section}{\numberline {7}Experiments}{8}{section.7}% 
-\contentsline {section}{\numberline {8}Discussion}{8}{section.8}% 
-\contentsline {section}{\numberline {9}Conclusion}{8}{section.9}% 
-\contentsline {section}{\numberline {10}Explanation}{8}{section.10}% 
+\contentsline {subsection}{\numberline {3.2}ConvLSTM Autoencoder}{6}{subsection.3.2}% 
+\contentsline {subsection}{\numberline {3.3}Spatio-temporal Video Autoencoder}{7}{subsection.3.3}% 
+\contentsline {subsection}{\numberline {3.4}PredNet}{8}{subsection.3.4}% 
+\contentsline {subsection}{\numberline {3.5}PredRNN}{9}{subsection.3.5}% 
+\contentsline {section}{\numberline {4}Implementation}{9}{section.4}% 
+\contentsline {section}{\numberline {5}Methodology}{9}{section.5}% 
+\contentsline {section}{\numberline {6}Training}{9}{section.6}% 
+\contentsline {section}{\numberline {7}Experiments}{9}{section.7}% 
+\contentsline {section}{\numberline {8}Discussion}{9}{section.8}% 
+\contentsline {section}{\numberline {9}Conclusion}{9}{section.9}% 
+\contentsline {section}{\numberline {10}Explanation}{9}{section.10}% 
