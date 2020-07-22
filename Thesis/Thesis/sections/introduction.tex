@@ -25,7 +25,7 @@
   The autoencoder is a network architecture, which consists of two neural networks chained together. The first network is called Encoder. This Encoder gets the input $x$ and outputs
   the code h. Often the output layer of the Encoder is named bottleneck-layer. The second network is called Decoder. It gets the code $h$ as input
   and outputs $x \prime$. This architecture is used for reconstruction, where $x \approx x \prime$. To prevent the architecture to simply copy the input directly to the output (which would be an
-  interpolation and not the goal of any machine learning algorithm.), there are different techniques to have the autoencoder to instead approximate the output.\\\\
+  interpolation and not the goal of any machine learning algorithm.), there are different techniques to have the autoencoder to instead approximate the output.
   \begin{equation}
    E(x) = h
   \end{equation}
@@ -102,7 +102,7 @@
    \caption{LSTM Architecture \cite{Olah2015}}
    \label{fig:lstm_architecture}
   \end{figure}\noindent
-  The given equations for the LSTM are for the very basic LSTM without peephole.\\\\
+  The given equations for the LSTM are for the very basic LSTM without peephole.\\
   The peephole is an idea from Gers and Schmidhuber from the year 2000 \cite{Gers2000}, where they augmented the LSTM
   with peephole connections, which gave them an advantage in learning spike trains$^{\ref{bottom::spiktetrain}}$, because a LSTM without peephole was not able to learn those spike trains.
   The equations looks very similar, with only few changes:
@@ -121,10 +121,9 @@
   \begin{equation}
    h_t = o_ttanh(c_t)
   \end{equation}
-  There are of course many other implementations, but those two are the most basic ones and typically used as baseline.\\
-  %\vfill
   \noindent\rule{\textwidth}{1pt}
   \label{bottom::spiktetrain} Spike trains are time series of $0$s and $1$s, where $1$ is defined as a spike.
+  
  % subsection
  \subsection{ConvLSTM} \label{subsection::convlstm}
   The convolutional LSTM, invented by Shi et. al. \cite{Shi2015} is a LSTM with peephole using convolutional layer instead of fully connected ones.
@@ -163,16 +162,16 @@
     \node[roundnodesmall] (x2) [below left=of circle] {$x_2$};
     \node[roundnodesmall] (y) [right=of circle] {$\hat{y}$};
     % Lines
-    \draw[->] (x1.east) -- (circle.west) node[left,above] {$w_1$};
-    \draw[->] (x2.east) -- (circle.west) node[left,below] {$w_2$};
-    \draw[->] (circle.east) -- (y);
+    \draw[->, bend left=45] (x1.east) -- (circle) node[above left=1.2cm] {$w_1$};
+    \draw[->] (x2.east) -- (circle) node[below left=1.2cm] {$w_2$};
+    \draw[->] (circle) -- (y);
    \end{tikzpicture}
   \end{center}
   The usage of backpropagation is very straight forward. Neural networks are representation learning algorithms, which means, that they learn the representation of the data over time, without
-  having the need of an expert doing pre-processing of anything. It only needs a valid training and testing dataset, where have ground-truth knowledge of the output of the data. One then leverages
+  having the need of an expert doing supervision. It only needs a valid training and testing dataset, where one has ground-truth knowledge of the output of the data. One then leverages
   the forward pass of the algorithm to produce our approximated output.
-  % todo: fix tikz graph
-  \textbf{Forward pass:}
+  \begin{enumerate}
+   \item \textbf{Forward pass:}
   \begin{equation}
    \hat{y} = \sigma(\sum_{i=1}^{2}x_iw_i)
   \end{equation}
@@ -180,9 +179,9 @@
   \begin{equation}
    L(y,\hat{y}) = \frac{1}{N}||y-\hat{y}||_2^2 = \frac{1}{N}\sum_{i=1}^{N}(y_i-\hat{y}_i)^2
   \end{equation}    
-  This error is then propagated back, using the chain-rule, through the
+  This error is then propagated back, using the chain-rule through the
   graph to update the weights of the network. This is done in the backward pass.\\
-  \textbf{Backward pass:}
+  \item \textbf{Backward pass:}
   \begin{equation}
    \frac{\partial L}{\partial \hat{y}} = \frac{2}{N}\sum_{i=1}^{N}(y_i-\hat{y}_i)
   \end{equation}
@@ -193,6 +192,16 @@
    \frac{\partial L}{\partial \sum_{i=1}^{2}x_iw_i} = \frac{\partial L}{\partial \hat{y}} \cdot \frac{\partial \hat{y}}{\partial \sum_{i=1}^{2}x_iw_i} = \frac{2}{N}\sum_{i=1}^{N}(y_i-\hat{y}_i) \cdot
    \sigma(\sum_{i=1}^{2}x_iw_i)(1-\sigma(\sum_{i=1}^{2}x_iw_i))
   \end{equation}
+  \begin{equation}
+   \frac{\partial L}{\partial w_1} = \ldots = \frac{2}{N}\sum_{i=1}^{N}(y_i-\hat{y}_i) \cdot \sigma(\sum_{i=1}^{2}x_iw_i)(1-\sigma(\sum_{i=1}^{2}x_iw_i)) \cdot x_1
+  \end{equation}
+  \item \textbf{Update weights using Gradient Descent:}
+  \begin{equation}
+   w_1 = w_1^{old} - \lambda \cdot \frac{\partial L}{\partial w_1}
+  \end{equation}
+  $\lambda$ is the learning rate and is set as a hyperparameter.
+  \end{enumerate}
+  Those three steps are performed iterative, as long as the error value is higher then an artificially set value $\epsilon$.
  
  % subsection
  \subsection{Backpropagation through time (BPTT)} \label{subsection::bptt}
