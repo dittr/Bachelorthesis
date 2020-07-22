@@ -11,8 +11,8 @@
  
  % subsection
  \subsection{LSTM Autoencoder} \label{subsection::lstm_autoencoder}
-  The paper \glqq Unsupervised Learning of Video Representations using LSTMs\grqq by Srivastava et. al. \cite{Srivastava2015} is using the standard LSTM~\ref{subsection::lstm} in an autoencoder
-  architecture~\ref{subsection::autoencoder} for image reconstruction and future image prediction.
+  The paper \glqq Unsupervised Learning of Video Representations using LSTMs\grqq by Srivastava et. al. \cite{Srivastava2015} is using a LSTM~\ref{subsection::lstm} from Graves et. al. 
+  \cite{Graves2013} in an autoencoder architecture~\ref{subsection::autoencoder} for image reconstruction and future image prediction.
   The architecture is often used as a baseline in newer and more advanced architectures, because it consists of the standard LSTM as recurrent module.
   Due to the fact, that the LSTM module is not able to handle multi-dimensional data as is, the images need to be reshaped at the input and also at the output again. The authors use
   MovingMNIST \cite{LeCun1998} as synthetic dataset, where every image is of size $(64 \times 64 \times 1)$. Therefore the image is vectorized into $(64 \cdot 64 \times 1)$ $=$ $(4096 \times 1)$.

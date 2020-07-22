@@ -14,6 +14,10 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 
+% graphs
+\usepackage {tikz}
+\usetikzlibrary{positioning}
+
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 
 % Images next to each other
@@ -27,7 +31,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \lhead{Bachelorthesis}
-\rhead{Universität Hildesheim}
+\rhead{University of Hildesheim}
 \rfoot{\thepage}
 
 % front page
@@ -51,8 +55,11 @@
  \end{titlepage}
  
  % Table of contents
+ \pagenumbering{Roman}
  \tableofcontents
  \newpage
+ \pagenumbering{arabic}
+ \setcounter{page}{1}
  
  % question
  \input{sections/questions}
@@ -60,24 +67,31 @@
  
  % introduction
  \input{sections/introduction}
+ \newpage
 
  % related work
  \input{sections/related}
+ \newpage
  
  % algorithm
  \input{sections/implementation}
+ \newpage
  
  % usage
  \input{sections/methodology}
+ \newpage
  
  % training
  \input{sections/training}
+ \newpage
  
  % experiments
  \input{sections/experiments}
+ \newpage
  
  % discussion
  \input{sections/discussion}
+ \newpage
  
  % conclusion
  \input{sections/conclusion}

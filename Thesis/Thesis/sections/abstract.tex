@@ -1,8 +1,9 @@
 % Abstract
-This thesis compares different state-of-the-art solutions for image prediction. Key aspect of the work is the comparison of different versions
-of the ConvLSTM \cite{Shi2015}. To be able to compare those different versions, an image prediction architecture, more explicit PredNet \cite{Lotter2016}, is implemented as baseline architecture.
-This architecture uses the ConvLSTM module as recurrent sub-module. This sub-module is then changed during the experiments with another implementation (PredRNN \cite{Wang2017}). Other comparisons
-are then performed theoretically The thesis introduces the reader about image prediction,
-convolutional LSTM's and other necessary parts to be able to follow. It then describes the PredNet architecture and idea and how this differs from other image prediction architectures. Then the
-performed experiments are described in-depth. Afterwards it gives a comprehensive discussion part, where the different sub-module performances are discussed very deeply, to understand the
-experimental results. Lastly there is a conclusion, which sums everything up.
+The thesis will compare different state-of-the-art solutions for image-/video-prediction \ref{subsection::imageprediction}.
+The main module of the solutions, which is the core aspect of this work, is the LSTM (Long short-term memory) \ref{subsection::lstm}.
+This module was invented by Hochreiter and Schmidhuber  \cite{Hochreiter1997} in 1997 and is used heavily in the field of image-\& video-prediction since then, e.g. in Srivastava et. al. 
+\cite{Srivastava2015}.
+During the time the module got many different add-ons and changes, which are described in different papers (\cite{Patraucean2015}, \cite{Lotter2016}, \cite{Wang2017}, \cite{Wang2018} and many 
+more.). To have a valid comparison, I implement three different state-of-the-art solutions for image-/video-prediction (\cite{Shi2015}, \cite{Patraucean2015} and \cite{Lotter2016}).
+All of them use the Shi et. al. ConvLSTM \cite{Shi2015} (Or a slightly different version) as recurrent sub-module, which is changed during the experiments
+with another, more advanced solution named PredRNN \cite{Wang2017}. The algorithms are re-implemented in PyTorch \cite{Paszke2019}, as well as the \glqq standard\grqq ConvLSTM and PredRNN.
