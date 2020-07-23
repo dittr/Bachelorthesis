@@ -32,9 +32,6 @@
   \begin{equation}
    D(h) = x \prime
   \end{equation}
-  \begin{equation}
-   D(E(x)) = x \prime
-  \end{equation}
   The simplest autoencoder architecture is the so named undercomplete autoencoder \cite{Goodfellow2016}, in which the output of the bottleneck-layer $h$ is smaller then the input $x$.
   Therefore the architecture needs to learn how to extract useful features from the input $x$, because it is not able to simply copy the input $x$ to the output $x \prime$, because $h$ is a reduced
   representation of $x$. There are many different ideas of using the autoencoder architecture, which are described more in-depth in e.g. Goodfellow et. al. \cite{Goodfellow2016}.
@@ -58,14 +55,14 @@
   Every approximated output $\hat{y}$ is only dependent of the input $x$ and the computation inside the network.
   The RNN looks like:
   \begin{equation}
-   \hat{y^t} = f_{\theta}(\hat{y^{t-1}};x^t) = f_{\theta}(f_{\theta}(\hat{y^{t-2}};x^{t-1});x^t) = \ldots
+   \hat{y}^t = f_{\theta}(\hat{y}^{t-1};x^t) = f_{\theta}(f_{\theta}(\hat{y}^{t-2};x^{t-1});x^t) = \ldots
   \end{equation}
-  The approximated output $\hat{y^t}$ depends on the input $x^t$, but also on all previous outputs.
+  The approximated output $\hat{y}^t$ depends on the input $x^t$, but also on all previous outputs.
   In the literature the RNN is often schemed using a folded and an unfolded graph, to illustrate how the network architecture works.
   \begin{figure}[H]
    \includegraphics[width=0.8\textwidth]{../Images/rnn.png}
    \centering
-   \caption{RNN schema \cite{Olah2015}}
+   \caption{RNN schema. \textbf{Left:} Folded graph, \textbf{Right:} Unfolded graph \cite{Olah2015}}
    \label{fig:lstm_architecture}
   \end{figure}\noindent
   The output of a RNN is often denoted as $h$ for hidden-unit, because it is not only the output of the time-step, but also the input for the next time-step. \label{sentence::hidden}\\
@@ -152,7 +149,8 @@
   
  % subsection
  \subsection{Backpropagation} \label{subsection::backpropagation}
-  Backpropagation should be already known to the reader, therefore I will only give a very simple example of it at the most simple neural network, the Perceptron \cite{Rosenblatt1957}.
+  Backpropagation, invented in 1986 by Rumelhart et. al. \cite{Rumelhart1986}, is the most used algorithm for training neural networks, due to it's simplicity.
+  The algorithm should be already known to the reader, therefore I will only give a very simple example of it at the most simple neural network, the Perceptron \cite{Rosenblatt1957}.
   \begin{center}
    \begin{tikzpicture}[roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=7mm},
   					 roundnodesmall/.style={circle, draw=green!60, fill=green!5, thick, minimum size=1mm}]
@@ -176,7 +174,7 @@
    \hat{y} = \sigma(\sum_{i=1}^{2}x_iw_i)
   \end{equation}
   After computing the regarding output, one will compare the computed output with the ground-truth output with some kind of error-function, e.g. \textbf{MSE}:
-  \begin{equation}
+  \begin{equation} \label{equation::mse}
    L(y,\hat{y}) = \frac{1}{N}||y-\hat{y}||_2^2 = \frac{1}{N}\sum_{i=1}^{N}(y_i-\hat{y}_i)^2
   \end{equation}    
   This error is then propagated back, using the chain-rule through the
@@ -185,7 +183,7 @@
   \begin{equation}
    \frac{\partial L}{\partial \hat{y}} = \frac{2}{N}\sum_{i=1}^{N}(y_i-\hat{y}_i)
   \end{equation}
-  \begin{equation}
+  \begin{equation} \label{equation::sigma_derivative}
    \frac{\partial \sigma(x)}{\partial x} = \sigma(x)(1-\sigma(x))
   \end{equation}
   \begin{equation}
@@ -201,10 +199,59 @@
   \end{equation}
   $\lambda$ is the learning rate and is set as a hyperparameter.
   \end{enumerate}
-  Those three steps are performed iterative, as long as the error value is higher then an artificially set value $\epsilon$.
+  Those three steps are performed iterative, as long as the error value is higher then an artificially set value $\epsilon$.\\
+  It is also useful to use a second derivative method e.g. Newton method, instead of Gradient Descent, but in most cases Gradient Descent is used,
+  due to it's simplicity and parallelization properties \cite{Rumelhart1986}.
  
  % subsection
- \subsection{Backpropagation through time (BPTT)} \label{subsection::bptt}
+ \subsection{BPTT} \label{subsection::bptt}
+  BPTT (Backpropagation through time), invented by Paul Werbos \cite{Werbos1990}, is a only slightly different algorithm, compared to simple backpropagation~\ref{subsection::backpropagation}.
+  This algorithm is explicitly designed for RNN's and as the name already denotes, able to backpropagate through the time. To make it even more clear, the algorithm does nothing more, then
+  unfolding the graph during the backward pass and backpropagates through all unfolded time-steps performed by the recurrent module. Let's make a simple example to fully understand the idea.
+  Therefore I will use a simple RNN architecture found in Goodfellow \cite{Goodfellow2016}. To have a basic comparison to the backpropagation in section~\ref{subsection::backpropagation}, I changed
+  the softmax function to $\sigma$, as this derivation is already known with equation~\ref{equation::sigma_derivative}.
+  \begin{enumerate}
+   \item \textbf{Forward pass:}
+   \begin{equation}
+    h_t = tanh(Wh_{t-1} + Ux_t + b_1)
+   \end{equation}
+   \begin{equation}
+    o_t = Vh_t + b_2
+   \end{equation}
+   \begin{equation}
+    \hat{y}_t = \sigma(o_t)
+   \end{equation}
+   $U,V,W$ are the weight matrices for input-to-hidden, hidden-to-output and hidden-to-hidden.\\
+   After computing the output, one again needs an error function, e.g. MSE (known from equation~\ref{equation::mse}.)\\
+   This time, it is also necessary to have this error function for every iteration.
+   \begin{equation}
+    L(y, \hat{y}) = \sum_{t}(L_t(y_t, \hat{y}_t))
+   \end{equation}
+   After computing the MSE for all time-steps and the overall error, one again starts the backward pass.
+   \item \textbf{Backward pass:}
+   \begin{equation}
+    \frac{\partial L}{\partial V} = \sum_t\frac{\partial L_t}{\partial V}
+   \end{equation}
+   \begin{equation}
+    \frac{\partial L_t}{\partial \hat{y}_t} = \frac{2}{N}\sum_{i=1}^{N}(y_t^i-\hat{y}_t^i)
+   \end{equation}
+   \begin{equation}
+    \frac{\partial L_t}{\partial o_t} = \frac{\partial L_t}{\partial \hat{y}_t} \cdot \frac{\partial \hat{y}_t}{\partial o_t} = \frac{2}{N}\sum_{i=1}^{N}(y_t^i-\hat{y}_t^i) \cdot \sigma(o_t)(1-
+    \sigma(o_t))
+   \end{equation}
+   \begin{equation}
+    \frac{\partial L_t}{\partial V} = \frac{\partial L_t}{\partial \hat{y}_t} \cdot \frac{\partial \hat{y}_t}{\partial o_t} \cdot \frac{\partial o_t}{\partial V} = \frac{2}{N}\sum_{i=1}^{N}(y_t^i-
+    \hat{y}_t^i) \cdot \sigma(o_t)(1-\sigma(o_t)) \cdot h_t
+   \end{equation}
+   \begin{equation}
+    \frac{\partial L}{\partial V} = \sum_t\frac{\partial L_t}{\partial V}
+   \end{equation}
+   \item \textbf{Update weights using Gradient Descent:}
+   \begin{equation}
+    V = V^{old} - \lambda \cdot \frac{\partial L}{\partial V}
+   \end{equation}
+  \end{enumerate}
   
  % subsection
  \subsection{PyTorch} \label{subsection::pytorch}
+  PyTorch \cite{Paszke2019} is a deep learning framework.
