@@ -1,9 +1,11 @@
 % Abstract
 The thesis will compare different state-of-the-art solutions for image-/video-prediction \ref{subsection::imageprediction}.
-The main module of the solutions, which is the core aspect of this work, is the LSTM (Long short-term memory) \ref{subsection::lstm}.
+The main module of those solutions, which is the core aspect of this work, is the LSTM (Long short-term memory) \ref{subsection::lstm}.
 This module was invented by Hochreiter and Schmidhuber  \cite{Hochreiter1997} in 1997 and is used heavily in the field of image-\& video-prediction since then, e.g. in Srivastava et. al. 
 \cite{Srivastava2015}.
 During the time the module got many different add-ons and changes, which are described in different papers (\cite{Patraucean2015}, \cite{Lotter2016}, \cite{Wang2017}, \cite{Wang2018} and many 
 more.). To have a valid comparison, I implement three different state-of-the-art solutions for image-/video-prediction (\cite{Shi2015}, \cite{Patraucean2015} and \cite{Lotter2016}).
-All of them use the Shi et. al. ConvLSTM \cite{Shi2015} (Or a slightly different version) as recurrent sub-module, which is changed during the experiments
-with another, more advanced solution named PredRNN \cite{Wang2017}. The algorithms are re-implemented in PyTorch \cite{Paszke2019}, as well as the \glqq standard\grqq ConvLSTM and PredRNN.
+All of them use a ConvLSTM solution as recurrent sub-module, which is changed during the experiments
+with another, more advanced solution named PredRNN \cite{Wang2017}. The algorithms are re-implemented in PyTorch \cite{Paszke2019}, as well as the \glqq standard\grqq ConvLSTM and PredRNN.\\\\
+The thesis starts by introducing necessary topics, followed by an in-depth comparison of different state-of-the-art solutions in the related work part. Then the implementation of the different baselines is described, followed by the experimental results. Afterwards there is a comprehensive discussion about the different
+approaches to perform image-/video-prediction and the experimental results. Lastly there is a summary to conclude the thesis.

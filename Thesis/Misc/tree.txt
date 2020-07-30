@@ -1,0 +1,90 @@
+PredNet
+├── data
+│   ├── files
+│   │   ├── caltech_test.hkl
+│   │   ├── caltech_test_sources.hkl
+│   │   ├── caltech_train.hkl
+│   │   ├── caltech_train_sources.hkl
+│   │   ├── kitti_sources_test.hkl
+│   │   ├── kitti_sources_train.hkl
+│   │   ├── kitti_sources_val.hkl
+│   │   ├── kitti_X_test.hkl
+│   │   ├── kitti_X_train.hkl
+│   │   ├── kitti_X_val.hkl
+│   │   ├── kth_dev.hkl
+│   │   ├── kth_test.hkl
+│   │   ├── kth_train.hkl
+│   │   ├── moving_mnist_test.hkl
+│   │   └── moving_mnist_train.hkl
+│   └── scripts
+│       ├── 00sequences.txt
+│       ├── data_utils_caltech.py
+│       ├── data_utils_kth.py
+│       ├── download_caltech.sh
+│       ├── download_kth.sh
+│       └── moving_mnist.py
+├── dataset
+│   ├── Caltech.py
+│   ├── __init__.py
+│   ├── Kitti.py
+│   ├── Kth.py
+│   └── MovingMNIST.py
+├── graph
+├── helper
+│   ├── arguments.py
+│   ├── datetime.py
+│   ├── __init__.py
+│   ├── logger.py
+│   ├── loss.py
+│   ├── mdl.py
+│   ├── plot_graph.py
+│   ├── tensorboard_log.py
+│   ├── transformation.py
+│   └── yaml_parser.py
+├── __init__.py
+├── log
+│   ├── convlstm
+│   ├── prednet
+│   └── spatiotemp
+├── main.py
+├── mdl
+├── model
+│   ├── autoenc.py
+│   ├── __init__.py
+│   ├── modules
+│   │   ├── activation.py
+│   │   ├── conv_lstm.py
+│   │   ├── error.py
+│   │   ├── grid_generator.py
+│   │   ├── huber_penalty.py
+│   │   ├── __init__.py
+│   │   ├── input.py
+│   │   ├── optical_flow.py
+│   │   ├── prediction.py
+│   │   ├── predrnn.py
+│   │   └── spatial_autoencoder.py
+│   ├── prednet.py
+│   └── spatiotemp.py
+├── output.txt
+├── README
+├── requirements.txt
+├── setup.py
+├── test.py
+├── train.py
+├── tree.txt
+├── validate.py
+└── yml
+    ├── convlstm_kitti.yml
+    ├── convlstm_kth.yml
+    ├── convlstm_mnist.yml
+    ├── prednet_kitti_l0.yml
+    ├── prednet_kitti_lall.yml
+    ├── prednet_kth_l0.yml
+    ├── prednet_kth_lall.yml
+    ├── prednet_mnist_l0_diff.yml
+    ├── prednet_mnist_l0.yml
+    ├── prednet_mnist_lall_diff.yml
+    ├── prednet_mnist_lall.yml
+    ├── spatiotemp_kitti.yml
+    ├── spatiotemp_kth.yml
+    └── spatiotemp_mnist.yml
