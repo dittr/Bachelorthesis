@@ -39,7 +39,7 @@
   should reconstruct.
   If the code is smaller then the input image, the network needs to abandon information from the input. The idea is, that during the training, the network learns
   what type of information is obsolete and what type of information is necessary and should be stored in the code, to get a useful approximated $x \prime$.  
-  There are many different ideas of using the autoencoder architecture, which are described more in-depth in e.g. Goodfellow et. al. \cite{Goodfellow2016}.
+  There are many different ideas of using the autoencoder architecture, which are described more in-depth in e.g. Goodfellow et al. \cite{Goodfellow2016}.
   \begin{figure}[H]
    \includegraphics[width=0.3\textwidth]{../Images/autoencoder_schema.png}
    \centering
@@ -167,7 +167,7 @@
   
  % subsection
  \subsection{ConvLSTM} \label{subsection::convlstm}
-  The convolutional LSTM, invented by Shi et. al. \cite{Shi2015} is a LSTM with peephole using convolutional layer instead of fully connected ones.
+  The convolutional LSTM, invented by Shi et al. \cite{Shi2015} is a LSTM with peephole using convolutional layer instead of fully connected ones.
   Therefore the formulas look very similar to the ones in section~\ref{subsection::lstm}.
   \begin{equation}
    i_t = \sigma(x_t \ast w_{x_i} + h_{t-1} \ast w_{h_i} + w_{i_b})
@@ -189,11 +189,11 @@
   \end{equation}
   $\ast$ is the commonly used sign for the convolution operation.\\
   $\odot$ is the hadamard product (point-wise multiplication).\\\\
-  There is also a ConvLSTM without peephole, which is used in Patraucean et. al. \cite{Patraucean2015}, which is implemented in section~\ref{section::implementation}.
+  There is also a ConvLSTM without peephole, which is used in Patraucean et al. \cite{Patraucean2015}, which is implemented in section~\ref{section::implementation}.
   
  % subsection
  \subsection{Backpropagation} \label{subsection::backpropagation}
-  Backpropagation, invented in 1986 by Rumelhart et. al. \cite{Rumelhart1986}, is the most used algorithm for training neural networks, due to it's simplicity.
+  Backpropagation, invented in 1986 by Rumelhart et al. \cite{Rumelhart1986}, is the most used algorithm for training neural networks, due to it's simplicity.
   The algorithm should be already known to the reader, therefore I will only give a very simple example of it at the most simple neural network, the Perceptron \cite{Rosenblatt1957}.
   \begin{center}
    \begin{tikzpicture}[roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=7mm},

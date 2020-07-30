@@ -1,7 +1,8 @@
 % section
 \section{Implementation} \label{section::implementation}
- This section will describe the implementation of the three baselines (Shi et. al. \cite{Shi2015}, Patraucean et. al. \cite{Patraucean2015}, Lotter et. al. 
- \cite{Lotter2016}) used in the experiment section~\ref{section::experiments}.
+ This section describes the structure and usage of the implemented baselines (Shi et al. \cite{Shi2015}, Patraucean et al. \cite{Patraucean2015},
+ Lotter et al. \cite{Lotter2016}), so that the reader is able to understand the given code and is able to redo the experiments and even extend the code to
+ his own needs.
   
  % subsection
  \subsection{Structure} \label{subsection::structure}
@@ -26,15 +27,16 @@
   the network parameter, where to store the model, and the logs, using debug mode and where the dataset files are stored. Those files are stored in the yml 
   folder. To log the training, validation and test results, I am using Tensorboard \cite{tensorflow2015}. Those files are stored in the log folder.
   Lastly one is able to create the backpropagation graph from the network one is using, this is outputted into the graph folder.
-  A tree graph of the actual structure is given in the appendix~\ref{section::appendix}.
+  A tree graph of the structure is given in the appendix~\ref{section::appendix}.
   
  % subsection
  \subsection{Usage}
-  The usage is also structured in a way, that everyone should able to change mostly every parameter without having the need of changing lines of code.
-  The user starts everything using the console and has plenty of different mandatory and optional parameters. I will demonstrate this, giving an example for
-  training and testing the PredNet model, using the ConvLSTM. The first important thing to do, is to check if one already has a valid yml-file in the yml folder.
+  The usage is also structured in a way, that everyone should be able to change mostly every parameter without having the need of changing lines of code.
+  The code is started using the console with plenty of different mandatory and optional parameters. I will demonstrate this, giving an example for
+  training and testing the PredNet model, using ConvLSTM. The first important thing to do, is to check if one already has a valid yml-file in the yml folder.
   As described in section~\ref{subsection::structure}, the user adds the network parameter, by adding a yml-file, which is then loaded by giving the corresponding 
-  file-path as console parameter. The training could look like:
+  file-path as console parameter.
+  The training could look like:
   \begin{lstlisting}
    python3.8 main.py -M 'prednet' -p 'yml/prednet_mnist_l0.yml' -d 'mnist'
             -e 1 -b 1 -s 10 -o 'adam' -L 'mse' -v 1 -m 'error' -r 0.001 -S

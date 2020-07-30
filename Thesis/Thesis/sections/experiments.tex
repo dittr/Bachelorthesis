@@ -1,3 +1,139 @@
 % section
 \section{Experiments} \label{section::experiments}
- The experiments performed on the implemented PredNet with ConvLSTM and PredNet with PredRNN will be described here. Also other theoretical comparisons will be covered in this section.
+ This section describes the experiments performed on the three networks and the results those experiments gave. The experiments were performed, to see if the 
+ implemented networks are able to perform better, when changing the recurrent sub-module with a more advanced recurrent module. The sections starts with the  
+ description of the experimental setup, followed by the experimental results.
+ 
+ % subsection
+ \subsection{Experimental Setup}
+  The experiments were performed on three different datasets. First of all, I started using a synthetic dataset. This has the advantage of having full knowledge
+  about the underlying structure of the data and that one has, in theory, an infinite amount of data for training and testing. This is also a very common approach
+  and performed in all papers, compared in section~\ref{section::related}.
+  For the synthetic dataset I used MovingMNIST, which is a dataset created using handwritten digits from the famous handwritten dataset MNIST
+  \cite{LeCun1998}. The idea is to use a pre-defined number of digits, which are spawned at a random position inside a given frame. Those digits are then moved 
+  through the frame, given a velocity and momentum. If a digit will touch the boundary of the frame, the digit will bounce back.\\
+  The other two used datasets are real datasets. The first one is KTH \cite{Schuldt2004}, an action recognition dataset, which consists of videos where people
+  do different actions, such as hand waving, running and jogging. The second one is Kitti \cite{Geiger2013}, which is an autonomous driving dataset, where
+  the authors drove a car through different areas in Karlsruhe, Germany. For example through residential areas and the city.\\\\
+  I pre-processed MovingMNIST, to have a frame size of $(1 \times 64 \times 64)$, two digits per frame and ten frames per sequence.
+  The training set consists of $10000$ sequences and the test set of $3000$ sequences.\\
+  KTH was pre-processed to gray-scaled images and cropped to the frame size $(1 \times 80 \times 60)$.\\
+  Kitti was also cropped to a specific frame size $(3 \times 160 \times 128)$.\\\\
+  To have a valid comparison, I decided to fix the amount of epochs and iterations per dataset, as well as all frames are normalized and having MSE as the
+  error function for training and testing.\\
+  For MovingMNIST, I used one epoch with $5000$ iterations, for KTH $20$ epochs with $500$ iterations per epoch and for Kitti $50$ epochs with $500$ iterations
+  per epoch. The values for MovingMNIST are inspired by Elsayed et al. \cite{Elsayed2018}, where they develop a novel ConvLSTM module for PredNet and train
+  PredNet on the MovingMNIST dataset (Which is not done by the PredNet authors.). The values for KTH and Kitti are inspired by Lotter et al. \cite{Lotter2016}.
+  In the PredNet paper the authors use $150$ epochs with $500$ iterations per epoch to train PredNet on Kitti dataset, but I reduced the amount of epochs to
+  $50$ because the training would otherwise take more then $20$ hours, which was not applicable for me. Because KTH is a more \glqq simple\grqq dataset (Only 
+  objects in the scenery are moving, not the scenery as in Kitti.), I artificially chose $20$ as the amount of epochs. In general those are very important
+  hyperparameters and one would need to implement concepts like early-stopping to get the correct amount of epochs to train the net on.\\\\
+  I used Adam \cite{Kingma2015} as optimizer for all networks, always with the same learning rate, of $0.001$, and the same learning rate scheduler (Dividing the 
+  learning rate by factor ten after $50$\% of epochs.), even tho 
+  Patraucean et al. \cite{Patraucean2015} are using RMSProp \cite{Ruder2016}, in their paper, as optimizer and a different learning rate scheduler.
+  The values are used by Lotter et al. \cite{Lotter2016} for PredNet, so I chose them as the hyperparameter for this experiment.
+  But the idea behind those fixed values is simply, that all networks get the same amount of data with the same optimizer, the same learning rate scheduler 
+  without any unfair advantage, because the experiment is the comparison of the network using two different recurrent submodules. So both implementations
+  have the same starting point, even tho the hyperparameter might not be the best for the network to reach the best performance.\\\\
+  In general there would be so many different additions to add to the experiments, such as the already named early stopping, random restarts, grid- or random-
+  search, the usage of dropout and trying different optimizer and learning rate scheduler, but all those additions take plenty of computing time, which was not 
+  applicable for me and the scope of this thesis.
+  
+ % subsection
+ \subsection{Experimental Results}
+  This section is divided into the three different datasets, but all those subsections is structured the same way. It starts by comparing the amount of paramters
+  for the dataset, because the amount of parameters is directly correlated to the computing time, the network needs for training and testing. It then shows
+  some training graphs, to proove that the networks really learned something, followed by examples of the testing output at the end and a table of mean MSE error. 
+ 
+  % subsubsection
+  \subsubsection{MovingMNIST}
+   \begin{table}[H]
+    \begin{center}
+     \begin{tabular}{| l | l | l |}\hline
+      \textbf{Model} & \textbf{ConvLSTM} & \textbf{PredRNN} \\\hline
+      Autoencoder (Depth $2$) & $537.411$ & $773.018$ \\\hline
+      PredNet & $6.909.818$ & $12.421.090$ \\\hline
+      Spatiotemp & $1.001.324$ & $1.415.639$ \\\hline
+     \end{tabular}
+    \end{center}
+    \caption{Number of trainable parameter for MovingMNIST.}
+   \end{table}\noindent
+   \begin{table}[H]
+    \begin{center}
+     \begin{tabular}{| l | l | l |}\hline
+      \textbf{Model} & \textbf{ConvLSTM} & \textbf{PredRNN} \\\hline
+      Autoencoder (Depth $2$) & $0.027$ & $0.028$ \\\hline
+      PredNet & $0.035$ & $0.041$ \\\hline
+      Spatiotemp & $0.024$ & $0.022$ \\\hline
+     \end{tabular}
+    \end{center}
+    \caption{Mean MSE for MovingMNIST.}
+   \end{table}
+   
+  % subsubsection
+  \subsubsection{KTH}
+   \begin{table}[H]
+    \begin{center}
+     \begin{tabular}{| l | l | l |}\hline
+      \textbf{Model} & \textbf{ConvLSTM} & \textbf{PredRNN} \\\hline
+      Autoencoder (Depth $2$) & $542.531$ & $781.760$ \\\hline
+      PredNet & $850.325$ & $1.285.730$ \\\hline
+      Spatiotemp & $1.007.598$ & $1.421.913$ \\\hline
+     \end{tabular}
+    \end{center}
+    \caption{Number of trainable parameter for KTH.}
+   \end{table}\noindent
+   \begin{figure}[H]
+    \includegraphics[width=0.7\textwidth]{../Images/prednet_kth_groundtruth.png}
+    \centering
+    \caption{Ground truth frames}
+    \label{fig:prednet_kth_groundtruth}
+   \end{figure}\noindent
+   \begin{figure}[H]
+    \includegraphics[width=0.7\textwidth]{../Images/prednet_kth_convlstm.png}
+    \centering
+    \caption{Predicted frames using ConvLSTM}
+    \label{fig:prednet_kth_convlstm}
+   \end{figure}\noindent
+   \begin{figure}[H]
+    \includegraphics[width=0.7\textwidth]{../Images/prednet_kth_predrnn.png}
+    \centering
+    \caption{Predicted frames using PredRNN}
+    \label{fig:prednet_kth_predrnn}
+   \end{figure}\noindent
+   \begin{table}[H]
+    \begin{center}
+     \begin{tabular}{| l | l | l |}\hline
+      \textbf{Model} & \textbf{ConvLSTM} & \textbf{PredRNN} \\\hline
+      Autoencoder (Depth $2$) & $1.55e-3$ & $0.05$ (didn't converged) \\\hline
+      PredNet & $1.95e-3$ & $1.93e-3$ \\\hline
+      Spatiotemp & $3.1e-3$ & $0.025$ (didn't converged) \\\hline
+     \end{tabular}
+    \end{center}
+    \caption{Mean MSE for KTH.}
+   \end{table}
+  
+  % subsubsection
+  \subsubsection{Kitti}
+   \begin{table}[H]
+    \begin{center}
+     \begin{tabular}{| l | l | l |}\hline
+      \textbf{Model} & \textbf{ConvLSTM} & \textbf{PredRNN} \\\hline
+      Autoencoder (Depth $2$) & $542.531$ & $781.760$ \\\hline
+      PredNet & $8.222.559$ & $12.430.626$ \\\hline
+      Spatiotemp & $1.640.321$ & $2.200.641$ \\\hline
+     \end{tabular}
+    \end{center}
+    \caption{Number of trainable parameter for Kitti.}
+   \end{table}\noindent
+   \begin{table}[H]
+    \begin{center}
+     \begin{tabular}{| l | l | l |}\hline
+      \textbf{Model} & \textbf{ConvLSTM} & \textbf{PredRNN} \\\hline
+      Autoencoder (Depth $2$) & $0.02$ & $0.013$ \\\hline
+      PredNet & $0.019$ & $0.02$ \\\hline
+      Spatiotemp & $0.018$ & $0.017$ \\\hline
+     \end{tabular}
+    \end{center}
+    \caption{Mean MSE for Kitti.}
+   \end{table}

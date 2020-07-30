@@ -11,7 +11,7 @@
  
  % subsection
  \subsection{LSTM Autoencoder} \label{subsection::lstm_autoencoder}
-  The paper \glqq Unsupervised Learning of Video Representations using LSTMs\grqq by Srivastava et. al. \cite{Srivastava2015} is using a LSTM~\ref{subsection::lstm} from Graves 
+  The paper \glqq Unsupervised Learning of Video Representations using LSTMs\grqq by Srivastava et al. \cite{Srivastava2015} is using a LSTM~\ref{subsection::lstm} from Graves 
   \cite{Graves2013} in an autoencoder architecture~\ref{subsection::autoencoder} for image reconstruction and future image prediction.
   The architecture is often used as a baseline in newer and more advanced architectures, because it consists of the standard LSTM as recurrent module.
   Due to the fact, that the LSTM module is not able to handle multi-dimensional data as is, the images need to be reshaped at the input and also at the output again. The authors use
@@ -35,10 +35,10 @@
 
  % subsection
  \subsection{ConvLSTM Autoencoder} \label{subsection::convlstm_autoencoder}
-  The paper \glqq Convolutional LSTM Network: A Machine Learning Approach for Precipitation Nowcasting\grqq by Shi et. al. \citep{Shi2015} is using a similar architecture as Srivastava et. al. in
+  The paper \glqq Convolutional LSTM Network: A Machine Learning Approach for Precipitation Nowcasting\grqq by Shi et al. \citep{Shi2015} is using a similar architecture as Srivastava et al. in
   section~\ref{fig:lstm_architecture}, but instead of using the standard LSTM, they use a novel ConvLSTM~\ref{subsection::convlstm}. The ConvLSTM used in this architecture is with 
   peephole~\ref{subsection::convlstm_peephole}.
-  This architecture outperforms the implementation of Srivastava et. al., because it \glqq captures spatiotemporal correlations better\grqq.
+  This architecture outperforms the implementation of Srivastava et al., because it \glqq captures spatiotemporal correlations better\grqq.
   This model is, same as LSTM Autoencoder~\ref{subsection::lstm_autoencoder} end-to-end differentiable and trained using BPTT. It also uses the cross-entropy loss with logits for the synthetic dataset 
   (MovingMNIST) experiment. In this MovingMNIST implementation, every frame consists of three digits. As in the architecture above, the authors here input $10$ images and output $10$.
   \begin{figure}[H]
@@ -56,12 +56,12 @@
  
  % subsection
  \subsection{Spatio-temporal Video Autoencoder}
-  The paper \glqq Spatio-temporal Video Autoencoder With Differentiable Memory\grqq by Patraucean et. al. \cite{Patraucean2015} describes a more complex architecture, in which the authors
+  The paper \glqq Spatio-temporal Video Autoencoder With Differentiable Memory\grqq by Patraucean et al. \cite{Patraucean2015} describes a more complex architecture, in which the authors
   nest a temporal autoencoder inside a spatial autoencoder. The spatial autoencoder is a simple undercomplete autoencoder~\ref{subsection::autoencoder}, where the decoder uses nearest-neighbor
   upsampling to get the output image size correct. The temporal autoencoder consists of a ConvLSTM (A ConvLSTM without peephole~\ref{subsection::convlstm_nopeephole}, which works as the temporal 
   encoder and and an optical flow convolutional module, which works
   as the temporal decoder. The network idea is to insert the image sequence $X$, which will create an optical flow map. This optical flow map is then applied on the last given image, to shift every
-  pixel to it's new position. This will create the next image. The idea behind this is given in \glqq Spatial Transformer Networks\grqq by Jadeberg et. al. \cite{Jadeberg2015}.
+  pixel to it's new position. This will create the next image. The idea behind this is given in \glqq Spatial Transformer Networks\grqq by Jadeberg et al. \cite{Jadeberg2015}.
   The model is end-to-end differentiable and trained using BPTT. The authors also used MovingMNIST as synthetic dataset and use the cross-entropy loss with logits as reconstruction error for it. The 
   MovingMNIST implementation is the same as in LSTM Autoencoder~\ref{subsection::lstm_autoencoder} (With two digits per frame.).
   In contrast to the other algorithms, this architecture is only capable of doing one-frame prediction as is. The authors input $19$ images and output $1$ image.
@@ -81,7 +81,7 @@
  
  % subsection
  \subsection{PredNet}
-  The paper \glqq Deep Predictive Coding Networks For Video Prediction And Unsupervised Learning\grqq by Lotter et. al. \cite{Lotter2016} composes an architecture, which is informally named
+  The paper \glqq Deep Predictive Coding Networks For Video Prediction And Unsupervised Learning\grqq by Lotter et al. \cite{Lotter2016} composes an architecture, which is informally named
   \textbf{PredNet}. It describes a network architecture based on the concept of \glqq predictive coding\grqq \cite{Rao1999}, \cite{Friston2005}. It is the baseline for the experiments performed
   in section~\ref{section::experiments}. The network consists of an arbitrary amount of layers, the amount of layers (depth of the network) can be treated as a hyperparameter. Every layer consists
   of an input module $A{_l}^t$, prediction module $\hat{A{_l}^t}$, representation module $R{_l}^t$ and error module $E{_l}^t$. $l$ is the corresponding layer, $t$ the timestamp.
@@ -107,5 +107,5 @@
  
  % subsection
  \subsection{PredRNN}
-  The paper \glqq PredRNN: Recurrent Neural Networks for Predictive Learning using Spatiotemporal LSTMs\grqq by Wang et. al. \cite{Wang2017}.
+  The paper \glqq PredRNN: Recurrent Neural Networks for Predictive Learning using Spatiotemporal LSTMs\grqq by Wang et al. \cite{Wang2017}.
   
