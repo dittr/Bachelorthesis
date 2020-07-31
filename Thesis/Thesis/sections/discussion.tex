@@ -1,2 +1,16 @@
 % section
 \section{Discussion} \label{section::discussion}
+ %
+ For more advanced experiments one should always perform hyperparameter optimization, grid-/ random-search, using dropout and early stopping to really get the
+ best setup for every network. This was not performed here, because the goal was not to show the advantage or disadvantage of the network to any supervised
+ state-of-the-art solution, but the comparison of ConvLSTM and PredRNN. The experiments were fair, because every network had the same prerequisites and they only
+ differed with the recurrent module, so this was the only submodule which had influence to the test.\\\\
+ %
+ %
+ I believe, that using the best setups for every network, for example not using Adam but RMSProp for Spatiotemp, would give better mean MSE for testing, but
+ in general a networks output should not depend on the optimizer, but on the architecture itself. If the architecture is superior, the optimizer choice shouldn't
+ be the most important choice for the researcher. On the other hand, the right optimizer choice should give the network a peek.\\\\
+ %
+ %
+ The experiments showed, what I was already hypothesizing, that we don't have an advantage using PredRNN over ConvLSTM in setups, where the depth is not greater then
+ one.\\\\
