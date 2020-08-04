@@ -45,7 +45,7 @@ class AE_ConvLSTM_flow(nn.Module):
                              kernel_size=lstm['kernel'],
                              gpu=gpu)
         else:
-            self.lstm = PredRNN(channel_in=lstm['depth_in'],
+            self.lstm = PredRNN(depth=1, channel_in=lstm['depth_in'],
                                 channel_hidden=lstm['depth_out'],
                                 kernel_size=lstm['kernel'],
                                 gpu=gpu)
@@ -105,10 +105,9 @@ class AE_ConvLSTM_flow(nn.Module):
         
             # ConvLSTM
             out, _ = self.lstm(torch.stack(enc))
-        
+
             # Flow prediction
-            out = self.flow(out[-1][None,:,:,:])
-            flow = out.clone().detach()
+            out = self.flow(out)
 
             if self.huber:
                 # Huber penalty

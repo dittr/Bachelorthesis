@@ -8,7 +8,10 @@
 @description: Train file
 """
 
+import torch
+
 from validate import validation
+import numpy as np
 
 from helper.transformation import normalize, binarize
 from helper.loss import error_loss as Loss
@@ -45,6 +48,7 @@ def train(name, model, optim, schedule, lossp, dataloader, device, logger,
         print('[DEBUG] Start training.')
 
     it = 0
+    val_loss = np.inf
 
     # run through the epochs, omit some if pre-trained
     for i in range(depoch, epoch):
@@ -86,16 +90,22 @@ def train(name, model, optim, schedule, lossp, dataloader, device, logger,
             # log scalar values
             logger.plot_loss('error', loss, it)
 
-            if batch_id >= iteration and iteration > 0:
+            if it >= iteration and iteration > 0:
                 break
 
         # validation every n epochs
         if (i+1) % validate == 0:
             if len(dataloader) > 1:
-                validation(model, lossp, dataloader[1], logger, device,
-                           normalize, binarize)
-            else:
-                print('Epoch: {} Mean loss: {:.6f}'.format(i+1, bloss / (batch_id + 1)))
+                val_loss_old = val_loss
+                with torch.no_grad():
+                    val_loss = validation(name, model, lossp, dataloader[1], logger, device,
+                                          normalize, binarize)
+#                print('Epoch: {} Mean loss: {:.6f}'.format(i+1, bloss / (batch_id + 1)))
+                print('Epoch: {} Validation loss: {:.6f}'.format(i+1, val_loss))
+                
+                # early stopping (Could be advanced over more then one epoch etc.)
+                if val_loss >= val_loss_old:
+                    return
 
         if i > 0:
             # perform scheduler update

@@ -14,10 +14,11 @@ from helper.transformation import normalize, binarize
 from helper.loss import loss as Loss
 
 
-def validation(model, lossp, dataloader, logger, device, norm, binar):
+def validation(name, model, lossp, dataloader, logger, device, norm, binar):
     """
     Validate the model
     
+    name := name of the model
     model := initialized network model
     lossp := name of loss to use <mae|mse|bce|bcel>
     dataloader := initialized dataloader
@@ -29,23 +30,27 @@ def validation(model, lossp, dataloader, logger, device, norm, binar):
     # set model in evaluation mode
     model.eval()
     logger.set_mode('validate')
+    bloss = 0.0
 
     it = 0
 
     # run through all batches in the dataloader
     for batch_id, data in enumerate(dataloader):
-        # get sequence and target (This is only for gray-scaled images.)
-        x = data.to(device).permute(1,0,2,3,4)
+        x = data.to(device).float().permute(1,0,2,3,4)
         if norm or binar:
             x = normalize(x)
         if binar:
             x = binarize(x)
 
-        # forward pass
-        output = torch.stack(model(x))
+        # forward pass & compute loss
+        if name == 'prednet':
+            output = torch.stack(model(x))
+            loss = Loss(output[1:len(x)], x[1:len(x)], lossp)
+        else:
+            output = model(x[:-1])
+            loss = Loss(output, x[-1], lossp)
 
-        # compute loss
-        loss = Loss(output, x, lossp)
+        bloss += loss
 
         it += 1
 
@@ -54,7 +59,15 @@ def validation(model, lossp, dataloader, logger, device, norm, binar):
 
         # log images
         x = x.permute(1,0,2,3,4)[0]
-        output = output.permute(1,0,2,3,4)[0]
-
         logger.plot_images('ground_truth', x)
-        logger.plot_images('predicted', output)
+
+        if name == 'prednet':
+            output = output.permute(1,0,2,3,4)[0]
+            logger.plot_images('predicted', output)
+        else:
+            if lossp == 'bcel':
+                logger.plot_image('predicted', torch.sigmoid(output[0]))
+            else:
+                logger.plot_image('predicted', output[0])
+
+    return bloss / it

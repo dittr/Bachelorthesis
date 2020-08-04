@@ -58,6 +58,7 @@ def init_device():
     Initialize the device (GPU or CPU)
     """
     gpu = False
+#    device = torch.device("cpu")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if device.type == 'cuda':
         gpu = True
@@ -143,19 +144,35 @@ def init_dataset(dataset, root, testing, seq_len, download=True):
     """
     data = []
     
-    if dataset == 'mnist':
-        data.append(MovingMNIST(root, seq_len, testing))
-    elif dataset == 'kitti':
-        data.append(Kitti(root, seq_len, testing))
-    elif dataset == 'kth':
-        data.append(Kth(root, seq_len, testing))
-    elif dataset == 'caltech':
-        data.append(Caltech(root, seq_len, testing))
+    if not testing:
+        if dataset == 'mnist':
+            data.append(MovingMNIST(root, seq_len, testing))
+            data.append(MovingMNIST(root, seq_len, testing, True))
+        elif dataset == 'kitti':
+            data.append(Kitti(root, seq_len, testing))
+            # todo
+        elif dataset == 'kth':
+            data.append(Kth(root, seq_len, testing))
+            # todo
+        elif dataset == 'caltech':
+            data.append(Caltech(root, seq_len, testing))
+            # todo
+        else:
+            raise IOError('[ERROR] Choose a valid dataset <mnist|kitti|kth|caltech>')
     else:
-        raise IOError('[ERROR] Choose a valid dataset <mnist|kitti|kth|caltech>')
+        if dataset == 'mnist':
+            data.append(MovingMNIST(root, seq_len, testing))
+        elif dataset == 'kitti':
+            data.append(Kitti(root, seq_len, testing))
+        elif dataset == 'kth':
+            data.append(Kth(root, seq_len, testing))
+        elif dataset == 'caltech':
+            data.append(Caltech(root, seq_len, testing))
+        else:
+            raise IOError('[ERROR] Choose a valid dataset <mnist|kitti|kth|caltech>')
 
     return data
-
+    
 
 def get_dataloader(dataset, batch, shuffle, drop):
     """
@@ -185,18 +202,19 @@ def get_dataloader(dataset, batch, shuffle, drop):
     return dataloader
 
 
-def init_optimizer(optim, model, lr):
+def init_optimizer(optim, model, lr, decay=0.9):
     """
     Initialize the optimizer
 
     optim := name of optimizer <adam|rmsprop>
     model := initialized network model
     lr := learning rate
+    decay := weight decay for RMSProp
     """
     if optim == 'adam':
         optimizer = Optim.Adam(model.parameters(), lr)
     elif optim == 'rmsprop':
-        optimizer = Optim.RMSProp(model.parameters(), lr)    
+        optimizer = Optim.RMSprop(model.parameters(), lr, weight_decay=decay)    
     else:
         raise IOError('[ERROR] Choose a valid optimizer <adam|rmsprop>')
 
@@ -267,8 +285,9 @@ def compute(name, testing, model, optimizer, scheduler, loss, dataloader,
               logger, epoch, iteration, save, validate, depoch, diteration,
               normalize, binarize, time_weight, layer_weight, debug)
     else:
-        test(name, model, iteration, loss, dataloader[0], logger, device,
-             normalize, binarize)
+        with torch.no_grad():
+            test(name, model, iteration, loss, dataloader[0], logger, device,
+                 normalize, binarize)
 
 
 def save_model(model, optimizer, dataset, path, debug=False):
