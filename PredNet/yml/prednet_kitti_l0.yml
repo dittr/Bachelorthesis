@@ -26,5 +26,5 @@ mdl_path: 'mdl/'
 log_path: 'log/'
 data_path: 'data/files/'
 plot_path: 'graph/'
-debug: False
+debug: True
  

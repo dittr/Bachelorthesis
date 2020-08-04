@@ -32,6 +32,7 @@ def test(name, model, iteration, lossp, dataloader, logger, device, norm, binar)
     model.eval()
 
     it = 0
+    bloss = 0.0
 
     # run through all batches in the dataloader
     for batch_id, data in enumerate(dataloader):
@@ -51,6 +52,8 @@ def test(name, model, iteration, lossp, dataloader, logger, device, norm, binar)
             loss = Loss(output, x[-1], lossp)
 
         it += 1
+        
+        bloss += loss
 
         # log scalar values
         logger.plot_loss(lossp, loss.item(), it)
@@ -63,7 +66,12 @@ def test(name, model, iteration, lossp, dataloader, logger, device, norm, binar)
             output = output.permute(1,0,2,3,4)[0]
             logger.plot_images('predicted', output)
         else:
-            logger.plot_image('predicted', output[0])
+            if lossp == 'bcel':
+                logger.plot_image('predicted', torch.sigmoid(output[0]))
+            else:
+                logger.plot_image('predicted', output[0])
 
         if batch_id >= iteration and iteration > 0:
             break
+
+    print('Mean loss: {:.6f}'.format(bloss / (batch_id + 1)))
