@@ -17,7 +17,8 @@
    \caption{Usage of Implementation}
    \label{fig:tree}
   \end{figure}\noindent
- \newpage 
+ \newpage
+
  % subsection
  \subsection*{Class diagram}
   \begin{figure}[H]
@@ -27,6 +28,7 @@
    used.)}
    \label{fig:tree}
   \end{figure}\noindent
+
  % subsection
  \subsection*{Package diagram}
   \begin{figure}[H]
@@ -35,6 +37,60 @@
    \caption{Package diagram, automatically provided by \href{https://pypi.org/project/pyreverse/}{pyreverse}}
    \label{fig:tree}
   \end{figure}\noindent
+
+ % subsection  
+ \subsection*{Experiments}
+  \begin{center}
+  \begin{turn}{90}
+   \begin{tikzpicture}[font=\small, edge from parent fork down, level distance=1.75cm,
+   every node/.style=
+    {top color=white,
+    bottom color=blue!25,
+    rectangle,rounded corners,
+    minimum height=8mm,
+    draw=blue!75,
+    very thick,
+    drop shadow,
+    align=center,
+    text depth = 0pt
+    },
+	edge from parent/.style=
+    {draw=blue!50,
+    thick
+    }]
+	\Tree [.Experiments
+        [.{Autoencoder}
+            [.{ConvLSTM}
+            	[.{MNIST} ]
+            	[.{KTH} ]
+            	[.{Kitti} ] ]
+            [.{PredRNN}
+            	[.{MNIST} ]
+            	[.{KTH} ]
+            	[.{Kitti} ] ] ] 
+        [.{PredNet}
+            [.{ConvLSTM}
+            	[.{MNIST} ]
+            	[.{KTH} ]
+            	[.{Kitti} ] ]
+            [.{PredRNN}
+            	[.{MNIST} ]
+            	[.{KTH} ]
+            	[.{Kitti} ] ] ] 
+        [.{Spatiotemp}
+		    [.{ConvLSTM}
+            	[.{MNIST} ]
+            	[.{KTH} ]
+            	[.{Kitti} ] ]
+            [.{PredRNN}
+            	[.{MNIST} ]
+            	[.{KTH} ]
+            	[.{Kitti} ] ] ] 
+]
+\end{tikzpicture}  
+  \end{turn}
+  \end{center}
+  
  % subsection
  \subsection*{Experimental Results}
   % subsubsection
@@ -105,3 +161,24 @@
    \caption{Test results for Spatio-temporal Autoencoder on Kitti.}
    \label{figure::spatiotemp_kitti_results}
    \end{figure}\noindent 
+
+ % subsection
+ \subsection*{Backpropagation graphs}
+  \begin{figure}[H]
+   \includegraphics[width=1.0\textwidth]{../Images/convlstm_backgraph.png}
+   \centering
+   \caption{Backpropagation graph Autoencoder}
+   \label{fig:backprop_autoenc}
+  \end{figure}\noindent
+  \begin{figure}[H]
+   \includegraphics[width=1.0\textwidth]{../Images/prednet_backgraph.png}
+   \centering
+   \caption{Backpropagation graph PredNet}
+   \label{fig:backprop_prednet}
+  \end{figure}\noindent
+  \begin{figure}[H]
+   \includegraphics[width=1.0\textwidth]{../Images/spatiotemp_backgraph.png}
+   \centering
+   \caption{Backpropagation graph Spatiotemp}
+   \label{fig:backprop_spatio}
+  \end{figure}\noindent

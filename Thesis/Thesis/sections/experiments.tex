@@ -38,58 +38,8 @@
   The network parameters, e.g. the depth of the autoencoder, were chosen from the corresponding papers.\\\\
   In general there would be so many different additions to add to the experiments, such as early stopping, random restarts, grid- or random-
   search, the usage of dropout and trying different optimizer and learning rate scheduler, but all those additions take plenty of computing time, which was not 
-  applicable for me and the scope of this thesis.
-  \begin{center}
-   \begin{tikzpicture}[roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=7mm},
-  					 roundnodesmall/.style={circle, draw=green!60, fill=green!5, thick, minimum size=1mm, node distance=0.2cm}]
-    % Node
-    \node[roundnodesmall] (root) {};
-
-    \node[roundnodesmall] (Autoencoder) [below left=0.5cm and 0.5cm of root] {};
-    \node[roundnodesmall] (PredNet) [below=0.4cm of root] {};
-    \node[roundnodesmall] (Spatiotemp) [below right=0.5cm and 0.5cm of root] {};
-
-    \node[roundnodesmall] (convlstm_autoenc) [below left=of Autoencoder] {};
-    \node[roundnodesmall] (predrnn_autoenc) [below right=of Autoencoder] {};
-    \node[roundnodesmall] (convlstm_prednet) [below left=of PredNet] {};
-    \node[roundnodesmall] (predrnn_prednet) [below right=of PredNet] {};
-    \node[roundnodesmall] (convlstm_spatiotemp) [below left=of Spatiotemp] {};
-    \node[roundnodesmall] (predrnn_spatiotemp) [below right=of Spatiotemp] {};
-
-	\node[roundnodesmall] (convlstm_autoenc_mnist) [below left=of convlstm_autoenc] {};
-	\node[roundnodesmall] (convlstm_autoenc_kth) [below=of convlstm_autoenc] {};
-	\node[roundnodesmall] (convlstm_autoenc_kitti) [below right=of convlstm_autoenc] {};	
-	\node[roundnodesmall] (predrnn_autoenc_mnist) [below left=of predrnn_autoenc] {};
-	\node[roundnodesmall] (predrnn_autoenc_kth) [below=of predrnn_autoenc] {};
-	\node[roundnodesmall] (predrnn_autoenc_kitti) [below right=of predrnn_autoenc] {};
-	\node[roundnodesmall] (convlstm_prednet_mnist) [below left=of convlstm_prednet] {};
-	\node[roundnodesmall] (convlstm_prednet_kth) [below=of convlstm_prednet] {};
-	\node[roundnodesmall] (convlstm_prednet_kitti) [below right=of convlstm_prednet] {};
-	\node[roundnodesmall] (predrnn_prednet_mnist) [below left=of predrnn_prednet] {};
-	\node[roundnodesmall] (predrnn_prednet_kth) [below=of predrnn_prednet] {};
-	\node[roundnodesmall] (predrnn_prednet_kitti) [below right=of predrnn_prednet] {};
-	\node[roundnodesmall] (convlstm_spatiotemp_mnist) [below left=of convlstm_spatiotemp] {};
-	\node[roundnodesmall] (convlstm_spatiotemp_kth) [below=of convlstm_spatiotemp] {};
-	\node[roundnodesmall] (convlstm_spatiotemp_kitti) [below right=of convlstm_spatiotemp] {};
-	\node[roundnodesmall] (predrnn_spatiotemp_mnist) [below left=of predrnn_spatiotemp] {};
-	\node[roundnodesmall] (predrnn_spatiotemp_kth) [below=of predrnn_spatiotemp] {};
-	\node[roundnodesmall] (predrnn_spatiotemp_kitti) [below right=of predrnn_spatiotemp] {};
-    % Lines
-    \draw[->] (root) -- (Autoencoder);
-    \draw[->] (root) -- (PredNet);
-    \draw[->] (root) -- (Spatiotemp);
-    
-    \draw[->] (Autoencoder) -- (convlstm_autoenc);
-    \draw[->] (Autoencoder) -- (predrnn_autoenc);
-    \draw[->] (PredNet) -- (convlstm_prednet);
-    \draw[->] (PredNet) -- (predrnn_prednet);
-    \draw[->] (Spatiotemp) -- (convlstm_spatiotemp);
-    \draw[->] (Spatiotemp) -- (predrnn_spatiotemp);
-    %\draw[->, bend left=45] (x1.east) -- (circle) node[above left=1.2cm] {$w_1$};
-    %\draw[->] (x2.east) -- (circle) node[below left=1.2cm] {$w_2$};
-    %\draw[->] (circle) -- (y);
-   \end{tikzpicture}
-  \end{center}
+  applicable for me and the scope of this thesis.\\
+  
   
  % subsection
  \subsection{Experimental Results}
@@ -97,8 +47,9 @@
   for the dataset, because the amount of parameters is directly correlated to the computing time, the network needs for training and testing. It then shows
   some training graphs, to proove that the networks really learned something, followed by examples of the testing output at the end and a table of mean MSE error.
   The number of parameters directly correlates to the performance\footnote{In computer science, the performance directly correlates with the computing time.}, 
-  therefore is a smaller amount always better, because the network will train faster and is also faster at test time.
- 
+  therefore is a smaller amount always better, because the network will train faster and is also faster at test time. A tree graph of the performed experiments
+  can be found in the appendix~\ref{section::appendix}.
+  
   % subsubsection
   \subsubsection{MovingMNIST}
    \begin{table}[H]
@@ -133,7 +84,8 @@
   \end{figure}\noindent
   Here one can see a problem, that was always present during training. The values for MovingMNIST were vanishing very fast, which often resulted in empty images,
   for ConvLSTM and PredRNN. This is due to the fact, that PyTorch is vanishing gradients faster then Keras \cite{chollet2015}, and that Lotter et al. used 
-  Matplotlib \cite{Hunter2007}, which is able to catch much smaller values then Tensorboard is.
+  Matplotlib \cite{Hunter2007}, which is able to catch much smaller values then Tensorboard is (I had to multiply the values with factor ten, to even get some
+  output.).
     
   This is one case of using random restarts to have a network which is not vanishing.
    \begin{table}[H]

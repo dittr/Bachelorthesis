@@ -17,6 +17,9 @@
 % code snippets
 \usepackage{listings}
 
+% rotate
+\usepackage{rotating}
+
 % graphs
 \usepackage {tikz}
 \usepackage{tikz-qtree}
@@ -33,6 +36,9 @@
 
 % Txt files
 \usepackage{verbatim}
+
+% Pdf files
+\usepackage{pdfpages}
 
 % general page design
 \pagestyle{fancy}
@@ -62,31 +68,33 @@
  \end{titlepage}
  
  % Table of contents
- \pagenumbering{Roman}
+ \pagenumbering{Roman} % page numbering I,II,III,...
  \tableofcontents
  \newpage
- \pagenumbering{arabic}
- \setcounter{page}{1}
  
  % question
  \input{sections/questions}
  \newpage
  
+ % Change page numbering to 1,2,3,...
+ \pagenumbering{arabic}
+ \setcounter{page}{1}
+ 
  % introduction
  \input{sections/introduction}
+ \newpage
+ 
+ % theory
+ \input{sections/theory}
  \newpage
 
  % related work
  \input{sections/related}
  \newpage
  
- % algorithm
- \input{sections/implementation}
+ % methodology
+ \input{sections/methodology}
  \newpage
- 
- % usage
- %\input{sections/methodology}
- %\newpage
  
  % training
  %\input{sections/training}
@@ -112,6 +120,10 @@
  \pdfbookmark[section]{Bibliography}{Bibliography}
  \bibliography{../Bibliography/bibliography.bib} \label{section::literature}
  \newpage
+ 
+ % Change page numbering to a,b,c,...
+ \pagenumbering{alph}
+% \setcounter{page}{a}
  
  % appendix
  \input{sections/appendix}
