@@ -2,7 +2,8 @@
 \section{Machine Learning Theory} \label{section::theory}
  The task of this chapter is to give the reader the basic knowledge, which is necessary to follow the rest of the thesis. In general, the reader should have basic 
  knowledge about machine learning and neural networks.
- As this thesis is in the field of machine learning, more explicit neural networks and image-/video-prediction, this chapter will start giving basic knowledge about image-/video-prediction
+ As this thesis is in the field of machine learning, more explicit neural networks and image-/video-prediction, this chapter will give basic knowledge about 
+ image-/video-prediction
  and specific neural network architectures, which are used in the thesis.\\\\
  The necessary neural network architectures are Autoencoder~\ref{subsection::autoencoder}, CNN~\ref{subsection::cnn} RNN~\ref{subsection::rnn}, 
  LSTM~\ref{subsection::lstm} and ConvLSTM~\ref{subsection::convlstm}, they are described briefly for the reader.
@@ -17,8 +18,8 @@
   One possible use-case is the \textbf{one-frame prediction}, where one predicts $x_n$, given the the sequence $X$. Another common use-case is \textbf{multi-frame prediction}, where the key is to 
   predict $t > 1$ many frames into the future ($x_n, \ldots, x_{n+t-1}$).
   This is often performed using sequence-to-sequence learning \cite{Sutskever2014}. The first frames will look much better then the last frames, as 
-  ground-truth is missing, The predicted frames are only approximated, which means they contain a certain level of error, so using them as input to perform \textbf{multi-frame prediction} will
-  increase the level of error for the following frames.
+  ground-truth is missing. The predicted frames are only approximated, which means they contain a certain level of error, so using them as input, in a
+  feedback loop, to perform \textbf{multi-frame prediction} will increase the level of error for the following frames.
 
  % subsection
  \subsection{Autoencoder} \label{subsection::autoencoder}
@@ -35,11 +36,12 @@
   The simplest autoencoder architecture is the so named undercomplete autoencoder \cite{Goodfellow2016}, in which the output of the bottleneck-layer $h$ is smaller then the input $x$.
   Therefore the architecture needs to learn how to extract useful features from the input $x$, because it is not able to simply copy the input $x$ to the output $x \prime$, because $h$ is a reduced
   representation of $x$.
-  For example a undercomplete convolutional autoencoder, which is just the autoencoder architecture using convolutional layer, gets an input image, which it 
-  should reconstruct.
-  If the code is smaller then the input image, the network needs to abandon information from the input. The idea is, that during the training, the network learns
-  what type of information is obsolete and what type of information is necessary and should be stored in the code, to get a useful approximated $x \prime$.  
-  There are many different ideas of using the autoencoder architecture, which are described more in-depth in e.g. Goodfellow et al. \cite{Goodfellow2016}.
+  For example an undercomplete convolutional autoencoder, which is just the autoencoder architecture using convolutional layer. This autoencoder gets an input 
+  image, which it should reconstruct.
+  If the code is smaller then the input image, the network needs to abandon information from the input image. The idea is, that during the training the network 
+  learns
+  what type of information is obsolete and what type of information is necessary and should be stored in the code to get a useful approximation $x \prime$.  
+  In general there are many different ideas of using the autoencoder architecture, which are described more in-depth in e.g. Goodfellow et al. \cite{Goodfellow2016}.
   \begin{figure}[H]
    \includegraphics[width=0.4\textwidth]{../Images/autoencoder_schema.png}
    \centering
@@ -52,13 +54,14 @@
   CNN (Convolutional neural network) is a type of network, which uses the mathematical operation convolution, instead of multiplication and addition.
   A CNN typically consists of three stages:
   \begin{enumerate}
-   \item Convolutional operation
+   \item Convolutional layer
    \item Non-linearity (ReLU, sigmoid, $\ldots$)
-   \item Pooling
+   \item Pooling layer
   \end{enumerate}
   The convolutional operation used is more precisely a discrete convolutional operation.
-  Convolutional operations are applicable on two or three dimensional data. As this thesis will always stick to image data, the equation is given for the
-  two dimensional convolution. In general the network is useful for e.g. time-series, as they can be represented in two or three dimensional tensors and images.
+  Convolutional operations are applicable on two or three dimensional data. The equation is given for the
+  two dimensional convolution. In general the network is useful for e.g. images and time-series, as they can be represented in two or three dimensional tensors 
+  and images.
   \begin{equation}
    (I \ast K)(i, j) = \sum_m\sum_nI(m,n)K(i-m,j-n)
   \end{equation}
@@ -67,12 +70,12 @@
   $\ast$ is the commonly used sign for the convolution operation.\\
   The first stage looks like:
   \begin{figure}[H]
-   \includegraphics[width=0.35\textwidth]{../Images/kernel.png}
+   \includegraphics[width=0.45\textwidth]{../Images/kernel.png}
    \centering
    \caption{Two dimensional convolutional operation performed using a kernel \cite{Goodfellow2016}}
    \label{fig:kernel}
   \end{figure}\noindent
-  In figure~\ref{fig:kernel}, one can see the idea of applying the kernel on the input data. In this example the stride is $0$ and the padding is $0$.\\
+  In figure~\ref{fig:kernel}, one can see the idea of applying the kernel on the input data.\\
   The second stage is applying a non-linear function on the output, e.g. ReLU or simgoid.
   Lastly there is the pooling layer, in which a pooling function is applied on the output of the second stage. This is done to make the output of the second
   stage invariant to the input. The pooling layer reduces the output size by at least two. For example, an input image of size $(32 \times 32 \times 1)$,
@@ -82,12 +85,14 @@
    \centering
    \caption{Stages of a CNN \cite{Goodfellow2016}}
    \label{fig:cnn_stage}
-  \end{figure}
+  \end{figure}\noindent
+  CNN's were invented in the early 1990 and are used heavily in the field of computer vision, because the architecture is inspired from the visual neuroscience
+  and is able to handle two- and three-dimensional data, without having the need of reshaping the data. 
   
  % subsection
  \subsection{RNN} \label{subsection::rnn}
   RNN (Recurrent neural network) is a network type, which is able to handle sequential data $X = (x_0, \ldots, x_{t-1})$, $|X| = t$. Therefore this type of network is used for e.g. time-series 
-  analysis and image-/video-prediction~\ref{subsection::imageprediction}.\\\\
+  analysis and image-/video-prediction~\ref{subsection::imageprediction}.
   Despite a standard feed-forward neural network, a RNN will not only get a new input at a time-step, but also the output
   of the RNN of the last time-step. This requires a RNN to be initialized at start, because there is no output of the last time-step available. This last time-step input is often initialized as $0$.
   A standard feed-forward neural network looks like:
@@ -148,7 +153,7 @@
   The peephole is an idea from Gers and Schmidhuber from the year 2000 \cite{Gers2000}, where they augmented the LSTM
   with peephole connections, which gave them an advantage in learning spike trains\footnote[1]{Spike trains are time series of $0$s and $1$s, where $1$ is 
   defined as a spike.}, because a LSTM without peephole was not able to learn those spike trains.
-  The equations looks very similar, with only few changes:
+  The equations for the LSTM with peephole looks very similar, with only few changes:
   \begin{equation}
    i_t = \sigma(w_{x_i}x_t + w_{c_i}c_{t-1} + b_i)
   \end{equation}
@@ -193,7 +198,7 @@
   
  % subsection
  \subsection{Backpropagation} \label{subsection::backpropagation}
-  Backpropagation, invented in 1986 by Rumelhart et al. \cite{Rumelhart1986}, is the most used algorithm for training neural networks, due to it's simplicity.
+  Backpropagation, invented in 1986 by Rumelhart et al. \cite{Rumelhart1986}, is the most used algorithm for training neural networks due to it's simplicity.
   The algorithm should be already known to the reader, therefore I will only give a very simple example of it at the most simple neural network, the Perceptron \cite{Rosenblatt1957}.
   \begin{center}
    \begin{tikzpicture}[roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=7mm},
@@ -209,9 +214,8 @@
     \draw[->] (circle) -- (y);
    \end{tikzpicture}
   \end{center}
-  The usage of backpropagation is very straight forward. Neural networks are representation learning algorithms, which means, that they learn the representation of the data over time, without
-  having the need of an expert doing supervision. It only needs a valid training and testing dataset, where one has ground-truth knowledge of the output of the data. One then leverages
-  the forward pass of the algorithm to produce our approximated output.
+  The usage of backpropagation is very straight forward. Neural networks are representation learning algorithms, which means that they learn the representation of the data over time, without
+  having the need of an expert doing supervision. It only needs a valid training and testing dataset, where one has ground-truth knowledge of the output of the data. One then leverages the forward pass of the algorithm to produce our approximated output.
   \begin{enumerate}
    \item \textbf{Forward pass:}
   \begin{equation}
@@ -243,15 +247,17 @@
   \end{equation}
   $\lambda$ is the learning rate and is set as a hyperparameter.
   \end{enumerate}
-  Those three steps are performed iterative, as long as the error value is higher then an artificially set value $\epsilon$.\\
-  It is also useful to use a second derivative method e.g. Newton method, instead of Gradient Descent, but in most cases Gradient Descent is used,
+  Those three steps are performed iterative, as long as the error value is higher then an artificially set value $\epsilon$.\\\\
+  It is also useful to use a second derivative method e.g. Newton method, instead of Gradient Descent, but in most cases Gradient Descent is used
   due to it's simplicity and parallelization properties \cite{Rumelhart1986}.
  
  % subsection
  \subsection{BPTT} \label{subsection::bptt}
-  BPTT (Backpropagation through time), invented by Paul Werbos \cite{Werbos1990}, is a only slightly different algorithm, compared to simple backpropagation~\ref{subsection::backpropagation}.
-  This algorithm is explicitly designed for RNN's and as the name already denotes, able to backpropagate through the time. To make it even more clear, the algorithm does nothing more, then
-  unfolding the graph during the backward pass and backpropagates through all unfolded time-steps performed by the recurrent module. Let's make a simple example to fully understand the idea.
+  BPTT (Backpropagation through time), invented by Paul Werbos \cite{Werbos1990}, is an only slightly different algorithm compared to simple backpropagation~\ref{subsection::backpropagation}.
+  This algorithm is explicitly designed for RNN's and as the name already denotes, able to backpropagate through the time. To make it even more clear, the algorithm does nothing more then
+  unfolding the graph during the backward pass and backpropagates through all unfolded time-steps performed by the recurrent module.
+  \\\\  
+  Let's make a simple example to fully understand the idea.
   Therefore I will use a simple RNN architecture found in Goodfellow \cite{Goodfellow2016}. To have a basic comparison to the backpropagation in section~\ref{subsection::backpropagation}, I changed
   the softmax function to $\sigma$, as this derivation is already known with equation~\ref{equation::sigma_derivative}.
   \begin{enumerate}

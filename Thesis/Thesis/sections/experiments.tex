@@ -1,50 +1,54 @@
 % section
 \section{Experiments} \label{section::experiments}
- This section describes the experiments performed on the three networks and the results those experiments gave. The experiments were performed, to see if the 
- implemented networks are able to perform better, when changing the recurrent sub-module with a more advanced recurrent module. The sections starts with the  
- description of the experimental setup, followed by the experimental results.
+ This section describes the experiments performed on the three implemented networks and the experimental results. The experiments were performed, to see 
+ if the implemented networks are able to perform better, when changing the recurrent module with a more advanced recurrent module. The sections starts with 
+ the description of the experimental setup, followed by the experimental results.
  
  % subsection
  \subsection{Experimental Setup}
   The experiments were performed on three different datasets. First of all, I started using a synthetic dataset. This has the advantage of having full knowledge
-  about the underlying structure of the data and that one has, in theory, an infinite amount of data for training and testing. This is also a very common approach
+  about the underlying structure of the data and that one has, in theory, an infinite amount of data for training and testing. This is a very common approach
   and performed in all papers, compared in section~\ref{section::related}.
+  \\\\
   For the synthetic dataset I used MovingMNIST, which is a dataset created using handwritten digits from the famous handwritten dataset MNIST
   \cite{LeCun1998}. The idea is to use a pre-defined number of digits, which are spawned at a random position inside a given frame. Those digits are then moved 
-  through the frame, given a velocity and momentum. If a digit will touch the boundary of the frame, the digit will bounce back.\\
+  through the frame, given a velocity and momentum. If a digit will touch the boundary of the frame, the digit will bounce back.
+  \\\\  
   The other two used datasets are real datasets\footnote{Camera images or videos from the real world.}.
   The first one is KTH \cite{Schuldt2004}, an action recognition dataset, which consists of videos where people
   do different actions, such as hand waving, running and jogging. The second one is Kitti \cite{Geiger2013}, which is an autonomous driving dataset, where
-  the authors drove a car through different areas in Karlsruhe, Germany. For example through residential areas and the city.\\\\
+  the authors drove a car through different areas in Karlsruhe, Germany. For example through residential areas and the city.
+  \\\\
   I pre-processed MovingMNIST, to have a frame size of $(1 \times 64 \times 64)$, two digits per frame and ten frames per sequence.
   The training set consists of $10000$ sequences and the test set of $3000$ sequences.\\
   KTH was pre-processed to gray-scaled images and cropped to the frame size $(1 \times 80 \times 60)$.\\
-  Kitti was also cropped to a specific frame size $(3 \times 160 \times 128)$.\\\\
-  To have a valid comparison, I decided to fix the amount of epochs and iterations per dataset, as well as all frames are normalized and having MSE as the
-  error function for training and testing.\\
+  Kitti was also cropped to a specific frame size $(3 \times 160 \times 128)$.
+  \\\\
+  For the first experiments, I decided to fix several hyperparameters, simply because the network already needs several hours to train, so hyperparameter 
+  optimization was not intended, because it would have blown the experiments by a wide margin.
+  I decided to fix the amount of epochs and iterations per dataset, as well as using image normalization and having MSE as the
+  error function for training and testing.
+  \\\\
   For MovingMNIST, I used one epoch with $5000$ iterations, for KTH $20$ epochs with $500$ iterations per epoch and for Kitti $50$ epochs with $500$ iterations
   per epoch. The values for MovingMNIST are inspired by Elsayed et al. \cite{Elsayed2018}, where they develop a novel ConvLSTM module for PredNet and train
   PredNet on the MovingMNIST dataset (Which is not done by the PredNet authors.). The values for KTH and Kitti are inspired by Lotter et al. \cite{Lotter2016}.
   In the PredNet paper the authors use $150$ epochs with $500$ iterations per epoch to train PredNet on Kitti dataset, but I reduced the amount of epochs to
   $50$ because the training would otherwise take more then $20$ hours, which was not applicable for me. Because KTH is a more \glqq simple\grqq dataset (Only 
   objects in the scenery are moving, not the scenery as in Kitti.), I artificially chose $20$ as the amount of epochs.\\\\
-  I used Adam \cite{Kingma2015} as optimizer for all networks, always with the same learning rate, of $0.001$, and the same learning rate scheduler (Dividing the 
+  I used Adam \cite{Kingma2015} as optimizer for all networks, always with the same learning rate of $0.001$, and the same learning rate scheduler (Dividing the 
   learning rate by factor ten after $50$\% of epochs.), even tho 
   Patraucean et al. \cite{Patraucean2015} are using RMSProp \cite{Ruder2016}, in their paper, as optimizer and a different learning rate scheduler.
   The values are used by Lotter et al. \cite{Lotter2016} for PredNet, so I chose them as the hyperparameter for this experiment.
-  But the idea behind those fixed values is simply, that all networks get the same amount of data with the same optimizer, the same learning rate scheduler 
-  without any unfair advantage, because the experiment is the comparison of the network using two different recurrent submodules. So both implementations
-  have the same starting point, even tho the hyperparameter might not be the best for the network to reach the best performance.
-  The network parameters, e.g. the depth of the autoencoder, were chosen from the corresponding papers.\\\\
-  In general there would be so many different additions to add to the experiments, such as early stopping, random restarts, grid- or random-
-  search, the usage of dropout and trying different optimizer and learning rate scheduler, but all those additions take plenty of computing time, which was not 
-  applicable for me and the scope of this thesis.\\
-  
+  \\\\
+  All other parameters, such as kernel-size, padding-size, channel, depth, etc. can be found in the implementation, in the yml-folder.  
+  %
+  For the second experiments, I decided to add hyperparameter optimization, early stopping and used \glqq optimal values\grqq given by the authors in the papers.
+  Due to the complexity and effort of the training of those complex neural network, I decided to only show one example of the second experiments.
   
  % subsection
  \subsection{Experimental Results}
-  This section is divided into the three different datasets, but all those subsections is structured the same way. It starts by comparing the amount of paramters
-  for the dataset, because the amount of parameters is directly correlated to the computing time, the network needs for training and testing. It then shows
+  This section is divided into the three different datasets and all subsections are structured the same way. It starts by comparing the amount of paramters
+  for the dataset, because the amount of parameters is directly correlated to the computing time the network needs for training and testing. It then shows
   some training graphs, to proove that the networks really learned something, followed by examples of the testing output at the end and a table of mean MSE error.
   The number of parameters directly correlates to the performance\footnote{In computer science, the performance directly correlates with the computing time.}, 
   therefore is a smaller amount always better, because the network will train faster and is also faster at test time. A tree graph of the performed experiments
