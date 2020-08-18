@@ -40,7 +40,8 @@
   image, which it should reconstruct.
   If the code is smaller then the input image, the network needs to abandon information from the input image. The idea is, that during the training the network 
   learns
-  what type of information is obsolete and what type of information is necessary and should be stored in the code to get a useful approximation $x \prime$.  
+  what type of information is obsolete and what type of information is necessary and should be stored in the code to get a useful approximation $x \prime$.
+  \\\\ 
   In general there are many different ideas of using the autoencoder architecture, which are described more in-depth in e.g. Goodfellow et al. \cite{Goodfellow2016}.
   \begin{figure}[H]
    \includegraphics[width=0.4\textwidth]{../Images/autoencoder_schema.png}
@@ -51,7 +52,7 @@
   
  % subsection
  \subsection{CNN} \label{subsection::cnn}
-  CNN (Convolutional neural network) is a type of network, which uses the mathematical operation convolution, instead of multiplication and addition.
+  CNN (Convolutional neural network) is a type of network, which uses the mathematical operation convolution, instead of multiplication and addition.\\
   A CNN typically consists of three stages:
   \begin{enumerate}
    \item Convolutional layer
@@ -59,7 +60,8 @@
    \item Pooling layer
   \end{enumerate}
   The convolutional operation used is more precisely a discrete convolutional operation.
-  Convolutional operations are applicable on two or three dimensional data. The equation is given for the
+  Convolutional operations are applicable on two or three dimensional data.\\
+  The equation is given for the
   two dimensional convolution. In general the network is useful for e.g. images and time-series, as they can be represented in two or three dimensional tensors 
   and images.
   \begin{equation}

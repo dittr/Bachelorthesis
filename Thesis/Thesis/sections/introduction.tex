@@ -1,8 +1,31 @@
 % section
-\section{Introduction} \label{section::introduction} 
- The key of this work is to get an overview of different state-of-the-art solutions for image-/video-prediction and to
- understand the importance of the right choice of the recurrent sub-module for image-/video-prediction algorithms. Therefore this thesis
- gives an overview of different state-of-the-art solutions for image-/video-prediction and implements different algorithms as baselines to change the used recurrent
- sub-module with a more advanced recurrent sub-module. 
- An important part of the work is the implementation of the chosen baseline networks in PyTorch.
- This implementation is used to perform the experiments on.
+\section{Introduction} \label{section::introduction}
+ This thesis gives an overview of different state-of-the-art solutions for image-/video-prediction and implements different algorithms as baselines to change the 
+ used recurrent sub-module with a more advanced recurrent module, to see if a peformance improvement can be achieved.
+ \\\\
+ Chapter~\ref{section::theory} gives an overview of necessary machine learning theory. It starts with the general idea of
+ image-/video-prediction~\ref{subsection::imageprediction} and what different types of prediction exist. Then it describes relevant neural network architectures, the 
+ Autoencoder~\ref{subsection::autoencoder}, CNN~\ref{subsection::cnn}, RNN~\ref{subsection::rnn}, LSTM~\ref{subsection::lstm} and
+ ConvLSTM~\ref{subsection::convlstm}, as they are used in the different state-of-the-art solutions. The Chapter closes with
+ a description of the most important learning algorithms for neural networks, the backpropagation algorithm~\ref{subsection::backpropagation} and the more advanced 
+ BPTT~\ref{subsection::bptt} algorithm.
+ \\\\
+ After that, Chapter~\ref{section::related} gives a comprehensive overview about a variety of different state-of-the-art solutions for image-/video-prediction,
+ to answer the question of what different types of image-/video-prediction algorithms exist, how they differ and what might be similar. All papers are explained
+ in a way, so that the reader is able to understand the architecture and the synthetic experiments performed in the papers.
+ \\\\
+ Chapter~\ref{section::implementation} briefly describes the structure and usage of the re-implemented image-/video-prediction architectures or the experiments. 
+ This is done, because many authors only upload
+ their code base, but doesn't have a solid description of how the code is structured and how one is able to use the code, for e.g. redo the performed experiments.
+ \\\\
+ After that, Chapter~\ref{section::methodology} describes the idea of the experiments in Chapter~\ref{section::experiments}, to answer the question, if
+ the more advanced PredRNN~\ref{subsection::PredRNN} architecture is able to outperform the standard ConvLSTM~\ref{subsection::convlstm} in different
+ state-of-the-art image-/video-prediction algorithms.
+ \\\\
+ Afterwards, Chapter~\ref{section::experiments} gives an overview about the performed experiments. It starts with the experimental 
+ setup~\ref{subsection::exp_setup}
+ where the setup for the performed experiments is defined, such as the used datasets and the choice of hyperparameters. Then it concludes with the
+ experimental results~\ref{subsection::exp_results}, where the results of the performed experiments are described and shown.
+ \\\\
+ Finally, the results are discussed in Chapter~\ref{section::discussion} and advantages and disadvantages of the performed experiments are mentioned.
+ Lastly, the thesis gets concluded and has a future outlook in Chapter~\ref{section::conclusion}.
