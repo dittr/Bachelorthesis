@@ -1,17 +1,30 @@
 % section
 \section{Discussion} \label{section::discussion}
+ The related work showed, how differently state-of-the-art architectures for image-/video-prediction get to the same result, but also how they rely on the same
+ recurrent module to achieve this results. It also showed how previous work in a field is used to adapt and overcome issues and reach better accuracy.\\
+ In this example the paper from Shi et al. \cite{Shi2015}, where they used the previous published work from Srivastava et al. \cite{Srivastava2015}, but invented 
+ a novel LSTM module, which used in the Autoencoder architecture outperforms the inital architecture. Both paper showed, how impressive the usage of an 
+ Autoencoder architecture is for image-/video-prediction, so possibly Patraucean et al. \cite{Patraucean2015} decided therefore to use a ConvLSTM architecture and 
+ an Autoencoder scheme, but additional brought optical flow into the research field, as well as the idea to split the sequence information into space and time. 
+ Lotter et al. \cite{Lotter2016} showed, that a concept known from the neuroscience literature can be used in a slightly adapted way,
+ using also a LSTM module, to let a neural network perform nearly the same way, a human beeing performs.\\There are several discussions regarding this paper, if
+ the authors really re-modeled the idea of predictive coding, this is shortly discussed by Sinapayen and Noda \cite{Sinapayen2019} and very deeply by Rane et al. 
+ \cite{Rane2019}. Wang et al. \cite{Wang2017} then invented a novel ConvLSTM module, which not only has temporal memory, but also a spatiotemporal memory.
+ \\\\
  %
- The related work showed, that the architectures use the same approach of having some kind of autoencoder and using a recurrent sub-module. %%%% 
- For more advanced experiments one should always perform hyperparameter optimization, grid-/ random-search, using dropout and early stopping to really get the
- best setup for every network. This was not performed here, because the goal was not to show the advantage or disadvantage of the network to any supervised
- state-of-the-art solution, but the comparison of ConvLSTM and PredRNN. The experiments were fair, because every network had the same prerequisites and they only
- differed with the recurrent module, so this was the only submodule which had influence to the test.\\\\
+ The implementation of the networks showed, how important it is nowadays for a machine learning researcher to have a very good understanding of a variety of deep 
+ learning frameworks, such as PyTorch \cite{Paszke2019}.\\During the implementation of the networks and the review of relevant sources,
+ I read several code bases which
+ were not written very comprehensive and adaptable and in several different deep learning frameworks, which sometimes differ very strongly.
+ This might be, due to the reason that the code should only work for the researches themselves, the researches use the framework which they are most
+ comfortable with and is therefore not described that well, but I believe that this should be done always, especially for people not working everyday with such a 
+ programming language or deep learning framework.
+ \\\\
  %
- %
- I believe, that using the best setups for every network, for example not using Adam but RMSProp for Spatiotemp, would give better mean MSE for testing, but
- in general a networks output should not depend on the optimizer, but on the architecture itself. If the architecture is superior, the optimizer choice shouldn't
- be the most important choice for the researcher. On the other hand, the right optimizer choice should give the network a peek.\\\\
- %
- %
- The experiments showed, what I was already hypothesizing, that we don't have an advantage using PredRNN over ConvLSTM in setups, where the depth is not greater then
- one.\\\\
+ The first experiments, were all hyperparameter were fixed, showed a problem, which is fundamental in machine learning, hyperparameter optimization. Looking at
+ the results from the first experiments, one can clearly see, that changing the standard ConvLSTM module with the more advanced PredRNN module didn't
+ showed any performance boost.\\In contrast, the change only increased the number of trainable parameter in the networks, which will lead to a worse performance
+ of the network. Thinking about embedded systems, with only few resources per task, this is very important, even for neural networks, which are expensive during
+ training, but cheap for execution. After performing hyperparameter optimization as last task of the experiments, a simple example already showed a performance
+ boost of $> 40\%$. Seeing this results, it would be interesting to also perform hyperparamter optimization for all $18$ setups and perform the tests again to
+ see the full results afterwars. This was not unfortunately not applicable due to the limited time of the bachelorthesis.

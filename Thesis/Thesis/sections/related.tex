@@ -95,13 +95,13 @@
   sequence. Therefore the network should be also trained for one-frame prediction and then simply used for multi-frame prediction. The architecture is also used
   as one of the baselines in the experiments~\ref{section::experiments}.
   \begin{figure}[H]
-   \includegraphics[width=0.8\textwidth]{../Images/patraucean.png}
+   \includegraphics[width=0.7\textwidth]{../Images/patraucean.png}
    \centering
    \caption{Spatio-temporal Video Autoencoder \cite{Patraucean2015}}
    \label{fig:spatiotemp_architecture}
   \end{figure}
   \begin{figure}[H]
-   \includegraphics[width=0.5\textwidth]{../Images/patraucean_results_mnist.png}
+   \includegraphics[width=0.45\textwidth]{../Images/patraucean_results_mnist.png}
    \centering
    \caption{Results for MovingMNIST. \textbf{conv:} Is a simple convolutional autoencoder, without recurrent module, \textbf{fcLSTM:} LSTM Autoencoder~\ref{subsection::lstm_autoencoder},
    \textbf{cLSTM:} ConvLSTM Autoencoder~\ref{subsection::convlstm_autoencoder}, \textbf{cLSTM-flow:} Spatio-temporal Video Autoencoder with extra output of flow-map. \cite{Patraucean2015}}
@@ -118,7 +118,7 @@
   of an input module $A{_l}^t$, prediction module $\hat{A{_l}^t}$, representation module $R{_l}^t$ and error module $E{_l}^t$.\\
   $l$ is the corresponding layer, $t$ the timestamp.
   \begin{figure}[H]
-   \includegraphics[width=0.65\textwidth]{../Images/lotter.png}
+   \includegraphics[width=0.55\textwidth]{../Images/lotter.png}
    \centering
    \caption{\textbf{Left:} PredNet architecture with two layers, \textbf{Right:} \glqq Module operations for case of video sequences\grqq \cite{Lotter2016}}
    \label{fig:lotter_architecture}
@@ -170,7 +170,7 @@
  \subsection{PredRNN} \label{subsection::PredRNN}
   The paper \glqq PredRNN: Recurrent Neural Networks for Predictive Learning using Spatiotemporal LSTMs\grqq by Wang et al. \cite{Wang2017} describes a novel
   LSTM module, named Spatiotemporal LSTM (ST-LSTM) and an architecture build from this sub-module named PredRNN.
-  This model consists of the typical temporal memory, but extends this by having an additional spatiotemporal memory.
+  This ST-LSTM consists of the typical temporal memory, but extends this by having an additional spatiotemporal memory.
   \begin{equation}
    g_t = tanh(W_{xg} \ast X_t + W_{hg} \ast H_{t-1}^l + b_g)
   \end{equation}
@@ -216,3 +216,15 @@
    \caption{Results for MovingMNIST \cite{Wang2017}.}
    \label{fig:predrnn_mnist}
   \end{figure}\noindent
+\\\\
+All of the seen algorithms in this section have different approaches or ideas to get to a similar result.
+Srivastava et al. \cite{Srivastava2015} start, by leveraging the LSTM in an Autoencoder architecture to achieve state-of-the-art image-/video-prediction.
+Shi et al. \cite{Shi2015} then invent a ConvLSTM module, which is placed in the previous Autoencoder architecture to achieve state-of-the-art performance.
+Patraucean et al. \cite{Patraucean2015} then leverage optical flow as a new approach for image-/video-prediction and also start splitting information in space and time, but also stick to a ConvLSTM module as recurrent module and the overall Autoencoder architecture.
+Lotter et al. \cite{Lotter2016} introduce the neuro-scientific topic of
+predictive coding to image-/video-prediction, which also uses a ConvLSTM module as recurrent module but isn't an Autoencoder architecture.
+Wang et al. \cite{Wang2017} invent a novel LSTM module, named ST-LSTM and also the novel state-of-the-art image-/video-prediction architecture named PredRNN, in
+which they implement their newly invented ST-LSTM module.
+\\\\
+It emerges from the seen papers, that all of the approaches share
+the idea of using a recurrent module, the LSTM and many of them also use the Autoencoder architecture to perform state-of-the-art image-/video-prediction.

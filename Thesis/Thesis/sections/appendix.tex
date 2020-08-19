@@ -182,3 +182,27 @@
    \caption{Backpropagation graph Spatiotemp}
    \label{fig:backprop_spatio}
   \end{figure}\noindent
+
+\newpage
+
+ % subsection
+ \subsection*{Command line}
+  % subsubsection
+  \subsubsection*{Training}
+   \begin{lstlisting}[language=bash]
+   python3 main.py -M 'convlstm' -p 'yml/convlstm_mnist.yml' -d 'mnist'
+   -e 10 -b 1 -s 10 -o 'adam' -L 'mse' -v 1 -m 'error' -r 0.001 -S -i 0
+   -E 0 -n -z 2
+  \end{lstlisting}\noindent
+  This will start the training for the Autoencoder using the standard ConvLSTM module, using normalized MovingMNIST dataset, for ten epochs with batch size of one 
+  and a sequence length of ten. The optimizer is adam with a learning rate of $0.001$. The used loss function is the mean squared error (MSE), the network will be 
+  saved after ending the training and every epoch will use the whole training dataset. It is used for one-frame prediction and validates the network after every 
+  epoch. The new code is using early stopping with a tolerance of two epochs.
+  % subsubsection
+  \subsubsection*{Testing}
+   \begin{lstlisting}[language=bash]
+   python3 main.py -M 'convlstm' -p 'yml/convlstm_mnist.yml' -d 'mnist'
+   -e 10 -b 1 -s 10 -o 'adam' -L 'mse' -v 1 -m 'prediction' -r 0.001 -l
+   -i 0 -E 0 -n -t
+  \end{lstlisting}\noindent
+  This will start the testing for the Autoencoder using the standard ConvLSTM module, using the previously saved model.
