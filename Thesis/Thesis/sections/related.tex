@@ -44,7 +44,8 @@
    \centering
    \caption{Results for MovingMNIST \cite{Srivastava2015}}
    \label{fig:lstm_results}
-  \end{figure}
+  \end{figure}\noindent
+  The results show, that the deeper network is performing much better, especially in the later predicted images.
 
  % subsection
  \subsection{ConvLSTM Autoencoder} \label{subsection::convlstm_autoencoder}
@@ -53,7 +54,7 @@
   figure~\ref{fig:lstm_architecture}, but instead of using the standard LSTM, they use a novel ConvLSTM~\ref{subsection::convlstm}. The ConvLSTM used in this 
   architecture is with peephole connection~\ref{subsection::convlstm}.
   \\\\
-  This architecture outperforms the implementation of Srivastava et al., because it \glqq captures spatiotemporal correlations better\grqq.
+  This architecture outperforms the implementation of Srivastava et al., because it \glqq captures spatiotemporal correlations better\grqq \cite{Shi2015}.
   This model is, same as LSTM Autoencoder~\ref{subsection::lstm_autoencoder} end-to-end differentiable and trained using BPTT. It also uses the cross-entropy loss with logits for the synthetic dataset 
   (MovingMNIST) experiment. In this MovingMNIST implementation, every frame consists of three digits. As in the architecture above, the authors here input $10$ images and output $10$. This architecture is only used for forecasting by the authors, but due to the architecture choice could be also useful for image
   reconstruction. This architecture is used as one of the baselines for the performed experiments in section~\ref{section::experiments}.
@@ -68,12 +69,17 @@
    \centering
    \caption{Results for MovingMNIST. \textbf{First Row:} 10 input images, \textbf{Second Row:} Ground truth next images, \textbf{Third Row:} Prediction of 3-layer implementation \cite{Shi2015}}
    \label{fig:convlstm_results}
-  \end{figure}
+  \end{figure}\noindent
+  Seeing only the results of the performed experiment, one might not get the idea of saying that this network architecture outperforms the architecture by
+  Srivastava et al. \cite{Srivastava2015}.\\
+  But the authors performed all the tests on the MovingMNIST implementation using three digits per frame and the
+  cross-entropy for this architecture, as well as the number of parameters for the network, is much smaller.
  
  % subsection
  \subsection{Spatio-temporal Video Autoencoder}
-  The paper \glqq Spatio-temporal Video Autoencoder With Differentiable Memory\grqq by Patraucean et al. \cite{Patraucean2015} describes a more complex architecture, in which the authors
-  nest a temporal autoencoder inside a spatial autoencoder.
+  The paper \glqq Spatio-temporal Video Autoencoder With Differentiable Memory\grqq by Patraucean et al. \cite{Patraucean2015} describes a more complex 
+  architecture, in which the authors
+  nest a temporal autoencoder inside a spatial autoencoder, visible in figure~\ref{fig:spatiotemp_architecture}.
   \\\\  
   The spatial autoencoder is a simple undercomplete autoencoder~\ref{subsection::autoencoder}, where the decoder uses nearest-neighbor
   upsampling to get the output image size correct. The temporal autoencoder consists of a ConvLSTM (without peephole), which works as the temporal 
@@ -82,37 +88,42 @@
   \\\\
   The network idea is to insert the image sequence $X$, which will create an optical flow map. This optical flow map is then applied on the last given image, to 
   shift every pixel to it's new position. This will create the next image. The idea behind this is given in \glqq Spatial Transformer Networks\grqq by Jadeberg et 
-  al. \cite{Jadeberg2015}, where they invent an image sampler to apply a projective transformation on an image to e.g. rotate and rescale it. Despite the initial 
-  idea
-  of Jadeberg et al., the authors here use the image sampler with the optical flow map, which can be seen as a projective transformation, but different for every 
-  pixel, instead of having one transformation for the whole image.
+  al. \cite{Jadeberg2015}, where they invent a grid generator and image sampler to apply a projective transformation on an image to e.g. rotate and rescale it.\\
+  Despite the initial idea
+  of Jadeberg et al., the authors here use the grid generator to normalize the optical flow map and the image sampler with the optical flow map, which can be seen 
+  as a projective transformation, but different for every pixel, instead of having one transformation for the whole image.
   \\\\
-  The model is end-to-end differentiable and trained using BPTT. The authors also used MovingMNIST as synthetic dataset and use the cross-entropy loss with logits as reconstruction error for it. The 
+  The model is end-to-end differentiable and trained using BPTT. The authors also used MovingMNIST as synthetic dataset and used the cross-entropy loss with 
+  logits as reconstruction error for it. The 
   MovingMNIST implementation is the same as in LSTM Autoencoder~\ref{subsection::lstm_autoencoder} (With two digits per frame.).
-  \\\\
+  \\
   In contrast to the other two algorithms, this architecture is only capable of doing one-frame prediction as is. The authors input $19$ images and output one 
-  image. It is possible to have multi-frame prediction, by e.g. adding a feedback loop, in which the output of the network is used as the next frame in the input 
+  image.
+  \\\\
+  It is possible to have multi-frame prediction, by e.g. adding a feedback loop, in which the output of the network is used as the next frame in the input 
   sequence. Therefore the network should be also trained for one-frame prediction and then simply used for multi-frame prediction. The architecture is also used
   as one of the baselines in the experiments~\ref{section::experiments}.
   \begin{figure}[H]
-   \includegraphics[width=0.7\textwidth]{../Images/patraucean.png}
+   \includegraphics[width=0.8\textwidth]{../Images/patraucean.png}
    \centering
    \caption{Spatio-temporal Video Autoencoder \cite{Patraucean2015}}
    \label{fig:spatiotemp_architecture}
-  \end{figure}
+  \end{figure}\noindent
   \begin{figure}[H]
    \includegraphics[width=0.45\textwidth]{../Images/patraucean_results_mnist.png}
    \centering
    \caption{Results for MovingMNIST. \textbf{conv:} Is a simple convolutional autoencoder, without recurrent module, \textbf{fcLSTM:} LSTM Autoencoder~\ref{subsection::lstm_autoencoder},
    \textbf{cLSTM:} ConvLSTM Autoencoder~\ref{subsection::convlstm_autoencoder}, \textbf{cLSTM-flow:} Spatio-temporal Video Autoencoder with extra output of flow-map. \cite{Patraucean2015}}
    \label{fig:spatiotemp_results}
-  \end{figure}
+  \end{figure}\noindent
  
  % subsection
  \subsection{PredNet}
   The paper \glqq Deep Predictive Coding Networks For Video Prediction And Unsupervised Learning\grqq by Lotter et al. \cite{Lotter2016} composes an architecture, which is informally named
-  \textbf{PredNet}. It describes a network architecture based on the concept of \glqq predictive coding\grqq \cite{Rao1999}, \cite{Friston2005}. It is also one of the baselines for the experiments performed
-  in section~\ref{section::experiments}.
+  \textbf{PredNet}.\\
+  It describes a network architecture based on the concept of \glqq predictive coding\grqq \cite{Rao1999}, \cite{Friston2005}.
+  Predictive coding is the neuro-scientific task of \glqq continually making predictions of incoming sensory stimuli\grqq \cite{Lotter2016}.
+  This network architecture is also one of the baselines for the experiments performed in section~\ref{section::experiments}.
   \\\\  
   The network consists of an arbitrary amount of layers, the amount of layers (depth of the network) can be treated as a hyperparameter. Every layer consists
   of an input module $A{_l}^t$, prediction module $\hat{A{_l}^t}$, representation module $R{_l}^t$ and error module $E{_l}^t$.\\
@@ -138,12 +149,16 @@
  Despite the other algorithms, this architecture is doing the prediction in every step the network does. The typical way (at least for the already described 
  algorithms), is to insert the full input sequence and after computing through the whole sequence outputting the predicted next frame. This architecture will go
  through every image of the sequence, but for every input of the input sequence, the network already outputs the predicted next frame. This can be seen in the
- predicted images, because the first predicted image doesn't have any information about the sequence at all, but is just randomly distributed in some
- kind of gray-scale.
+ predicted images. In the first time-step, the network doesn't have any information about the sequence at all and $R_l$ and $E_l$ are initialized with zero, 
+ therefore \glqq [\ldots] due to the convolutional nature of the network, means that the initial prediction is spatially uniform.\grqq \cite{Lotter2016}.
+ \\\\
+ The network flow starts with computing the $R_l^t$ states in the top-down pass and then in the forward pass the $\hat{A}_l^t$ states and the corresponding
+ layer error. Lastly, if the current layer is not the lowest layer, in which the dataset is given as $A_0^t$, $A_{l}^t$ is computed.
  \\\\
  Another very important difference, is that the network is not using a type of reconstruction error as the networks above do. Here they compose the model to
  have different output modes. One is for error computation, the other for prediction. During the error computation, the network uses a loss function, which takes
- the given amount of layer and time into account. Regarding the authors, this is done, same as in Predictive Coding.
+ the given amount of layer and time into account. Regarding the authors, this is done, same as in Predictive Coding.\\
+ The network is end-to-end differentiable and trained using backpropagation.
  \begin{equation}
   L_t = \sum_{t}\lambda_t \sum_l \frac{\lambda_l}{n_l} \sum_{n_l}E_l^t
  \end{equation}
@@ -200,22 +215,23 @@
   \end{equation}
   \begin{equation}
    H_t^l = o_t \odot tanh(W_{1 \times 1} \ast [C_t^l, M_t^l])
-  \end{equation}
+  \end{equation}\noindent\\
   \begin{figure}[H]
    \includegraphics[width=0.8\textwidth]{../Images/wang.png}
    \centering
    \caption{\textbf{Left:} ST-LSTM architecture, \textbf{Right:} PredRNN architecture \cite{Wang2017}}
    \label{fig:wang_architecture}
   \end{figure}\noindent
-  The model is end-to-end differentiable and trained using BPTT. The authors use MovingMNIST as synthetic dataset, with 20 images per sequence, where ten images
-  are used as input and the other ten as output. They also use two digits per frame with an image size of $(64 \times 64 \times 1)$.
-  This architecture is the baseline, which replaces the ConvLSTM's in the previous architectures, in the experiments~\ref{section::experiments}.
+  The model is end-to-end differentiable and trained using BPTT. The authors use MovingMNIST as synthetic dataset, with ten images
+  used as input and output ten images. They also use two digits per frame with an image size of $(64 \times 64 \times 1)$.
+  This architecture is the baseline, which replaces the ConvLSTM modules in the previous architectures, in the experiments~\ref{section::experiments}.\\
   \begin{figure}[H]
    \includegraphics[width=1.0\textwidth]{../Images/predrnn_mnist.png}
    \centering
    \caption{Results for MovingMNIST \cite{Wang2017}.}
    \label{fig:predrnn_mnist}
   \end{figure}\noindent
+\\\\
 \\\\
 All of the seen algorithms in this section have different approaches or ideas to get to a similar result.
 Srivastava et al. \cite{Srivastava2015} start, by leveraging the LSTM in an Autoencoder architecture to achieve state-of-the-art image-/video-prediction.
