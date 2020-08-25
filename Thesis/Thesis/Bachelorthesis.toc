@@ -18,13 +18,13 @@
 \contentsline {section}{\numberline {4}Implementation}{18}{section.4}%
 \contentsline {subsection}{\numberline {4.1}Structure}{18}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}Usage}{19}{subsection.4.2}%
-\contentsline {section}{\numberline {5}Methodology}{20}{section.5}%
-\contentsline {section}{\numberline {6}Experiments}{21}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Experimental Setup}{21}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Experimental Results}{22}{subsection.6.2}%
-\contentsline {subsubsection}{\numberline {6.2.1}MovingMNIST}{22}{subsubsection.6.2.1}%
-\contentsline {subsubsection}{\numberline {6.2.2}KTH}{24}{subsubsection.6.2.2}%
-\contentsline {subsubsection}{\numberline {6.2.3}Kitti}{25}{subsubsection.6.2.3}%
-\contentsline {section}{\numberline {7}Discussion}{26}{section.7}%
-\contentsline {section}{\numberline {8}Conclusion}{27}{section.8}%
-\contentsline {section}{\numberline {9}Appendix}{a}{section.9}%
+\contentsline {section}{\numberline {5}Experiments}{20}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Experimental Setup}{20}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Experimental Results (First setup)}{21}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}MovingMNIST}{21}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}KTH}{23}{subsubsection.5.2.2}%
+\contentsline {subsubsection}{\numberline {5.2.3}Kitti}{24}{subsubsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.3}Experimental Results (Second setup)}{25}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Discussion}{26}{section.6}%
+\contentsline {section}{\numberline {7}Conclusion}{27}{section.7}%
+\contentsline {section}{\numberline {8}Appendix}{a}{section.8}%

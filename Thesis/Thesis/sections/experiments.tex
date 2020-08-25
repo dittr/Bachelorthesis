@@ -6,7 +6,7 @@
  
  % subsection
  \subsection{Experimental Setup} \label{subsection::exp_setup}
-  The experiments were performed on three different datasets. First experiments are performed on a synthetic dataset. This has the advantage of having full 
+  The experiments were performed on three different datasets. Initial experiments are performed on a synthetic dataset. This has the advantage of having full 
   knowledge
   about the underlying structure of the data and that one has, in theory, an infinite amount of data for training and testing. This is a very common approach
   and performed in all papers, compared in section~\ref{section::related}.
@@ -46,11 +46,12 @@
   \\\\
   All other parameters, such as kernel-size, padding-size, channel, depth, etc. can be found in the implementation, in the yml-folder.  
   \\\\
-  For the second experiments hyperparameter optimization, early stopping and used \glqq optimal values\grqq given by the authors in the papers was added.
+  For the second experiments hyperparameter optimization, early stopping and used \glqq optimal values\grqq given by the authors in the papers was added,
+  to show that using those important topics can totally change a decision.
   Due to the complexity and effort of the training of those complex neural network, it was decided to only show one example of the second experiments.
   
  % subsection
- \subsection{Experimental Results} \label{subsection::exp_results}
+ \subsection{Experimental Results (First setup)} \label{subsection::exp_results}
   This section is divided into the three different datasets and all subsections are structured the same way. It starts by comparing the amount of paramters
   for the dataset, because the amount of parameters is directly correlated to the computing time the network needs for training and testing. It then shows
   examples of the testing output and a table of mean MSE error.
@@ -177,4 +178,33 @@
      \end{tabular}
     \end{center}
     \caption{Mean MSE for Kitti.}
-   \end{table}
+   \end{table}\noindent
+ \\\\
+ The experiments showed, that using this kind of setup, the PredRNN as recurrent module does not lead to a significant performance boost, but instead only
+ increases the number of trainable parameter. Therefore, using this setup, PredRNN is not the superior sub-module and should not be used. But, as this experiments
+ are performed with any kind of hyperparameter optimization, this results are not valid to make a real decision if PredRNN is really not superior to the standard
+ ConvLSTM module.
+
+ % subsection
+ \subsection{Experimental Results (Second setup)} \label{subsection::second_exp}
+  This test was only performed on the KTH dataset, with an optimal learning rate of $0.0001$ for the Autoencoder.
+  \begin{figure}[H]
+   \includegraphics[width=0.6\textwidth]{../Images/exp2_training_error.png}
+   \centering
+   \caption{Training Autoencoder with ConvLSTM (red) and PredRNN (gray) on KTH using hyperparameter optimization and early stopping.}
+   \label{fig:autoenc_exp2_training}
+  \end{figure}\noindent
+  The mean test mse error for the Autoencoder using the standard ConvLSTM module is: $0.0013$ and for the Autoencoder using the PredRNN module: $0.00072$.
+  This means, that PredRNN was able to boost the performance of the Autoencoder by more then $80$ percent.
+  \begin{figure}[H]
+   \centering
+   \subfloat[Ground truth]{{\includegraphics[width=0.65\textwidth]{../Images/exp2_test_ground.png} }} 
+   \qquad
+   \subfloat[ConvLSTM]{{\includegraphics[width=0.1\textwidth]{../Images/exp2_test_convlstm.png} }} 
+   \qquad
+   \subfloat[PredRNN]{{\includegraphics[width=0.1\textwidth]{../Images/exp2_test_predrnn.png} }}
+   \caption{Test results for Autoencoder on KTH using hyperparameter optimization and early stopping.}
+   \label{figure::prednet_mnist_results}
+  \end{figure}\noindent
+  This experiment showed the importance of hyperparameter optimization and early stopping and why it should be used always in terms of learning neural networks.
+  A more explicit analysis of this result is given in the discussion~\ref{section::discussion}.
