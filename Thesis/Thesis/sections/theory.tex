@@ -7,13 +7,13 @@
  and specific neural network architectures, which are used in the thesis.\\\\
  The necessary neural network architectures are Autoencoder~\ref{subsection::autoencoder}, CNN~\ref{subsection::cnn} RNN~\ref{subsection::rnn}, 
  LSTM~\ref{subsection::lstm} and ConvLSTM~\ref{subsection::convlstm}, they are described briefly for the reader.
- Afterward, the backpropagation algorithm~\ref{subsection::backpropagation} and BPTT~\ref{subsection::bptt} are described at a very basic level.
+ Afterwards, the backpropagation algorithm~\ref{subsection::backpropagation} and BPTT~\ref{subsection::bptt} are described at a very basic level.
  Those two algorithms are the most used algorithms in training neural networks and are used in this thesis.
 
  % subsection
  \subsection{Image-Prediction / Video-Prediction} \label{subsection::imageprediction}
-  Image-/Video-prediction is a field inside machine learning, where the key is to predict future images, given a sequence of images. The image sequence $X$ is of 
-  length $n$, ($x_0, \ldots, x_{n-1}$).
+  Image-/Video-prediction is a field inside machine learning and computer vision, where the key is to predict future images, given a sequence of images. The image 
+  sequence $X$ is of length $n$, ($x_0, \ldots, x_{n-1}$).
   \\\\
   One possible use-case is the \textbf{one-frame prediction}, where one predicts $x_n$, given the the sequence $X$. Another common use-case is \textbf{multi-frame prediction}, where the key is to 
   predict $t > 1$ many frames into the future ($x_n, \ldots, x_{n+t-1}$).
@@ -26,7 +26,7 @@
   The autoencoder is a network architecture, which consists of two neural networks chained together. The first network is called Encoder. This Encoder gets the input $x$ and outputs
   the code h. Often the output layer of the Encoder is named bottleneck-layer. The second network is called Decoder. It gets the code $h$ as input
   and outputs $x \prime$. This architecture is used for reconstruction, where $x \approx x \prime$. To prevent the architecture to simply copy the input directly to the output (which would be an
-  interpolation and not the goal of any machine learning algorithm.), there are different techniques to have the autoencoder to instead approximate the output.
+  interpolation and not the goal of any machine learning algorithm), there are different techniques to have the autoencoder to instead approximate the output.
   \begin{equation}
    E(x) = h
   \end{equation}
@@ -77,10 +77,24 @@
    \caption{Two dimensional convolutional operation performed using a kernel \cite{Goodfellow2016}}
    \label{fig:kernel}
   \end{figure}\noindent
-  In figure~\ref{fig:kernel}, one can see the idea of applying the kernel on the input data.\\
-  The second stage is applying a non-linear function on the output, e.g. ReLU or simgoid.
-  Lastly there is the pooling layer, in which a pooling function is applied on the output of the second stage. This is done to make the output of the second
-  stage invariant to the input. The pooling layer reduces the output size by at least two. For example, an input image of size $(32 \times 32 \times 1)$,
+  In figure~\ref{fig:kernel}, one can see the idea of applying the kernel on the input data (The Padding\footnote{Padding is the idea of adding layers of zeros
+  to the current image, so the kernel has more space to cover the image.} size is zero and the stride\footnote{Stride is the parameter of movement of the kernel 
+  through the image.} is one.).\\
+  The second stage is applying a non-linear function on the output, e.g. ReLU:
+  \begin{equation}
+   R(x) = max(0, x)
+  \end{equation}
+  Lastly there is the pooling layer, in which a pooling function is applied on the output of the second stage. This is done to aggregate the output and to make 
+  the output invariant to the input.\\
+  The standard pooling nowadays is Max-Pooling \cite{Zhou1988}. The idea is simple, as using a kernel with a given size and
+  and a stride over the output of the second stage, and take always only the highest value within the given area, the kernel currently inspects.
+  \begin{figure}[H]
+   \includegraphics[width=0.6\textwidth]{../Images/max_pooling.png}
+   \centering
+   \caption{Simple example of Max-Pooling (Filter $:=$ Kernel)\cite{savyakhosla2019}}
+   \label{fig:max_pooling}
+  \end{figure}\noindent
+  The pooling layer reduces the output size by at least two. For example, an input image of size $(32 \times 32 \times 1)$,
   $(Height \times Width \times Channel)$ is then outputted at a maximum size of $(16 \times 16 \times 1)$.
   \begin{figure}[H]
    \includegraphics[width=0.25\textwidth]{../Images/convlayer.png}
@@ -89,7 +103,7 @@
    \label{fig:cnn_stage}
   \end{figure}\noindent
   CNN's were invented in the early 1990 and are used heavily in the field of computer vision, because the architecture is inspired from the visual neuroscience
-  and is able to handle two- and three-dimensional data, without having the need of reshaping the data. It is also very popular, because it is more sparse, then
+  and is able to handle two- and three-dimensional data, without having the need of reshaping the data. It is also very popular, because it is more sparse then
   a typical feed-forward neural network.
   
  % subsection
@@ -97,7 +111,7 @@
   RNN (Recurrent neural network) is a network type, which is able to handle sequential data $X = (x_0, \ldots, x_{t-1})$, $|X| = t$. Therefore this type of network is used for e.g. time-series 
   analysis and image-/video-prediction~\ref{subsection::imageprediction}.
   Despite a standard feed-forward neural network, a RNN will not only get a new input at a time-step, but also the output
-  of the RNN of the last time-step. This requires a RNN to be initialized at start, because there is no output of the last time-step available. This last time-step input is often initialized as $0$.
+  of the RNN of the last time-step. This requires a RNN to be initialized at start, because there is no output of the last time-step available. This last time-step input is often initialized as zero.
   A standard feed-forward neural network looks like:
   \begin{equation}
    \hat{y} = f_{\theta}(x)
@@ -202,7 +216,8 @@
  % subsection
  \subsection{Backpropagation} \label{subsection::backpropagation}
   Backpropagation, invented in 1986 by Rumelhart et al. \cite{Rumelhart1986}, is the most used algorithm for training neural networks due to it's simplicity.
-  The algorithm should be already known to the reader, therefore I will only give a very simple example of it at the most simple neural network, the Perceptron \cite{Rosenblatt1957}.
+  The algorithm should be already known to the reader, therefore this thesis will only give a very simple example of it at the most simple neural network, the 
+  Perceptron \cite{Rosenblatt1957}.
   \begin{center}
    \begin{tikzpicture}[roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=7mm},
   					 roundnodesmall/.style={circle, draw=green!60, fill=green!5, thick, minimum size=1mm}]
@@ -223,6 +238,10 @@
    \item \textbf{Forward pass:}
   \begin{equation}
    \hat{y} = \sigma(\sum_{i=1}^{2}x_iw_i)
+  \end{equation}
+  $\sigma$ is the sigmoid function, which is defined as:
+  \begin{equation}
+   \sigma(x) = \frac{1}{1+e^{-x}}
   \end{equation}
   After computing the regarding output, one will compare the computed output with the ground-truth output with some kind of error-function, e.g. \textbf{MSE}:
   \begin{equation} \label{equation::mse}

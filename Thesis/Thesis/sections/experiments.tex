@@ -35,7 +35,7 @@
   train PredNet on the MovingMNIST dataset (Which is not done by the PredNet authors.).
   The values for KTH and Kitti are inspired by Lotter et al. \cite{Lotter2016}.
   In the PredNet paper the authors use $150$ epochs with $500$ iterations per epoch to train PredNet on Kitti dataset, but here the amount of epochs is reduced to
-  $50$ because the training would otherwise take more then $20$ hours, which was not applicable for this thesis. Because KTH is a more \glqq simple\grqq dataset 
+  $50$ because the training would otherwise take more then $20$ hours, which was not applicable for this thesis. Because KTH is a more \glqq simple\grqq{} dataset 
   (Only 
   objects in the scenery are moving, not the scenery as in Kitti.), the epoch size was artificially chosen to be $20$.
   \\\\
@@ -46,7 +46,7 @@
   \\\\
   All other parameters, such as kernel-size, padding-size, channel, depth, etc. can be found in the implementation, in the yml-folder.  
   \\\\
-  For the second experiments hyperparameter optimization, early stopping and used \glqq optimal values\grqq given by the authors in the papers was added,
+  For the second experiments hyperparameter optimization, early stopping and used \glqq optimal values\grqq{} given by the authors in the papers was added,
   to show that using those important topics can totally change a decision.
   Due to the complexity and effort of the training of those complex neural network, it was decided to only show one example of the second experiments.
   
@@ -182,8 +182,8 @@
  \\\\
  The experiments showed, that using this kind of setup, the PredRNN as recurrent module does not lead to a significant performance boost, but instead only
  increases the number of trainable parameter. Therefore, using this setup, PredRNN is not the superior sub-module and should not be used. But, as this experiments
- are performed with any kind of hyperparameter optimization, this results are not valid to make a real decision if PredRNN is really not superior to the standard
- ConvLSTM module.
+ are performed without any kind of hyperparameter optimization, this results are not valid to make a real decision if PredRNN is really not superior to the 
+ standard ConvLSTM module.
 
  % subsection
  \subsection{Experimental Results (Second setup)} \label{subsection::second_exp}

@@ -1,6 +1,6 @@
 % section
 \section{Related work} \label{section::related}
- This section will describe a range of state-of-the-art architectures for \glqq unsupervised\grqq image-/video-prediction. Image-/video-prediction is a very broad 
+ This section will describe a range of state-of-the-art architectures for \glqq unsupervised\grqq{} image-/video-prediction. Image-/video-prediction is a very broad 
  field, but almost all (investigated for this thesis) state-of-the-art solutions
  for image-/video-prediction share one common part, the recurrent module. LSTM's are the most used modules in image-/video-prediction, as they are able to store information over a long period of time, despite
  the standard RNN (recurrent neural network). All algorithms described here have a different way to perform image prediction, but all use a type of LSTM to store the time-series information.
@@ -14,7 +14,7 @@
  
  % subsection
  \subsection{LSTM Autoencoder} \label{subsection::lstm_autoencoder}
-  The paper \glqq Unsupervised Learning of Video Representations using LSTMs\grqq by Srivastava et al. \cite{Srivastava2015} is using a LSTM~\ref{subsection::lstm} from Graves 
+  The paper \glqq Unsupervised Learning of Video Representations using LSTMs\grqq{} by Srivastava et al. \cite{Srivastava2015} is using a LSTM~\ref{subsection::lstm} from Graves 
   \cite{Graves2013} in an autoencoder architecture~\ref{subsection::autoencoder} for image reconstruction and future image prediction.
   The architecture for image reconstruction and image prediction is the same, the necessary behavior is achieved only through the different training.
   For image reconstruction, the network will get the already seen image sequence to compare and compute the error for. For image prediction, the network gets
@@ -31,8 +31,8 @@
   multi-frame prediction.
   \\\\
   The model is end-to-end differentiable and trained using BPTT.
-  For the synthetic dataset, the model is trained using cross-entropy loss with logits (which is just the cross-entropy loss followed by a sigmoid function), for 
-  natural image datasets using MSE (mean-squared error) \cite{Zhao2017}.
+  For the synthetic dataset, the model is trained using cross-entropy loss with logits (which is just the cross-entropy\footnote{$CE(p,q) = -\sum_xp(x)logq(x)$} 
+  loss followed by a sigmoid function), for natural image datasets using MSE (mean-squared error) \cite{Zhao2017}.
   \begin{figure}[H]
    \includegraphics[width=0.45\textwidth]{../Images/srivastava.png}
    \centering
@@ -49,12 +49,12 @@
 
  % subsection
  \subsection{ConvLSTM Autoencoder} \label{subsection::convlstm_autoencoder}
-  The paper \glqq Convolutional LSTM Network: A Machine Learning Approach for Precipitation Nowcasting\grqq by Shi et al. \citep{Shi2015} is using a similar 
+  The paper \glqq Convolutional LSTM Network: A Machine Learning Approach for Precipitation Nowcasting\grqq{} by Shi et al. \citep{Shi2015} is using a similar 
   architecture as Srivastava et al. in
   figure~\ref{fig:lstm_architecture}, but instead of using the standard LSTM, they use a novel ConvLSTM~\ref{subsection::convlstm}. The ConvLSTM used in this 
   architecture is with peephole connection~\ref{subsection::convlstm}.
   \\\\
-  This architecture outperforms the implementation of Srivastava et al., because it \glqq captures spatiotemporal correlations better\grqq \cite{Shi2015}.
+  This architecture outperforms the implementation of Srivastava et al., because it \glqq captures spatiotemporal correlations better\grqq{} \cite{Shi2015}.
   This model is, same as LSTM Autoencoder~\ref{subsection::lstm_autoencoder} end-to-end differentiable and trained using BPTT. It also uses the cross-entropy loss with logits for the synthetic dataset 
   (MovingMNIST) experiment. In this MovingMNIST implementation, every frame consists of three digits. As in the architecture above, the authors here input $10$ images and output $10$. This architecture is only used for forecasting by the authors, but due to the architecture choice could be also useful for image
   reconstruction. This architecture is used as one of the baselines for the performed experiments in section~\ref{section::experiments}.
@@ -77,7 +77,7 @@
  
  % subsection
  \subsection{Spatio-temporal Video Autoencoder}
-  The paper \glqq Spatio-temporal Video Autoencoder With Differentiable Memory\grqq by Patraucean et al. \cite{Patraucean2015} describes a more complex 
+  The paper \glqq Spatio-temporal Video Autoencoder With Differentiable Memory\grqq{} by Patraucean et al. \cite{Patraucean2015} describes a more complex 
   architecture, in which the authors
   nest a temporal autoencoder inside a spatial autoencoder, visible in figure~\ref{fig:spatiotemp_architecture}.
   \\\\  
@@ -87,7 +87,7 @@
   as the temporal decoder.
   \\\\
   The network idea is to insert the image sequence $X$, which will create an optical flow map. This optical flow map is then applied on the last given image, to 
-  shift every pixel to it's new position. This will create the next image. The idea behind this is given in \glqq Spatial Transformer Networks\grqq by Jadeberg et 
+  shift every pixel to it's new position. This will create the next image. The idea behind this is given in \glqq Spatial Transformer Networks\grqq{} by Jadeberg et 
   al. \cite{Jadeberg2015}, where they invent a grid generator and image sampler to apply a projective transformation on an image to e.g. rotate and rescale it.\\
   Despite the initial idea
   of Jadeberg et al., the authors here use the grid generator to normalize the optical flow map and the image sampler with the optical flow map, which can be seen 
@@ -119,10 +119,10 @@
  
  % subsection
  \subsection{PredNet}
-  The paper \glqq Deep Predictive Coding Networks For Video Prediction And Unsupervised Learning\grqq by Lotter et al. \cite{Lotter2016} composes an architecture, which is informally named
+  The paper \glqq Deep Predictive Coding Networks For Video Prediction And Unsupervised Learning\grqq{} by Lotter et al. \cite{Lotter2016} composes an architecture, which is informally named
   \textbf{PredNet}.\\
-  It describes a network architecture based on the concept of \glqq predictive coding\grqq \cite{Rao1999}, \cite{Friston2005}.
-  Predictive coding is the neuro-scientific task of \glqq continually making predictions of incoming sensory stimuli\grqq \cite{Lotter2016}.
+  It describes a network architecture based on the concept of \glqq predictive coding\grqq{} \cite{Rao1999}, \cite{Friston2005}.
+  Predictive coding is the neuro-scientific task of \glqq continually making predictions of incoming sensory stimuli\grqq{} \cite{Lotter2016}.
   This network architecture is also one of the baselines for the experiments performed in section~\ref{section::experiments}.
   \\\\  
   The network consists of an arbitrary amount of layers, the amount of layers (depth of the network) can be treated as a hyperparameter. Every layer consists
@@ -131,7 +131,7 @@
   \begin{figure}[H]
    \includegraphics[width=0.55\textwidth]{../Images/lotter.png}
    \centering
-   \caption{\textbf{Left:} PredNet architecture with two layers, \textbf{Right:} \glqq Module operations for case of video sequences\grqq \cite{Lotter2016}}
+   \caption{\textbf{Left:} PredNet architecture with two layers, \textbf{Right:} \glqq Module operations for case of video sequences\grqq{} \cite{Lotter2016}}
    \label{fig:lotter_architecture}
   \end{figure}
   \begin{equation}
@@ -150,7 +150,7 @@
  algorithms), is to insert the full input sequence and after computing through the whole sequence outputting the predicted next frame. This architecture will go
  through every image of the sequence, but for every input of the input sequence, the network already outputs the predicted next frame. This can be seen in the
  predicted images. In the first time-step, the network doesn't have any information about the sequence at all and $R_l$ and $E_l$ are initialized with zero, 
- therefore \glqq [\ldots] due to the convolutional nature of the network, means that the initial prediction is spatially uniform.\grqq \cite{Lotter2016}.
+ therefore \glqq [\ldots] due to the convolutional nature of the network, means that the initial prediction is spatially uniform.\grqq{} \cite{Lotter2016}.
  \\\\
  The network flow starts with computing the $R_l^t$ states in the top-down pass and then in the forward pass the $\hat{A}_l^t$ states and the corresponding
  layer error. Lastly, if the current layer is not the lowest layer, in which the dataset is given as $A_0^t$, $A_{l}^t$ is computed.
@@ -183,7 +183,7 @@
  
  % subsection
  \subsection{PredRNN} \label{subsection::PredRNN}
-  The paper \glqq PredRNN: Recurrent Neural Networks for Predictive Learning using Spatiotemporal LSTMs\grqq by Wang et al. \cite{Wang2017} describes a novel
+  The paper \glqq PredRNN: Recurrent Neural Networks for Predictive Learning using Spatiotemporal LSTMs\grqq{} by Wang et al. \cite{Wang2017} describes a novel
   LSTM module, named Spatiotemporal LSTM (ST-LSTM) and an architecture build from this sub-module named PredRNN.
   This ST-LSTM consists of the typical temporal memory, but extends this by having an additional spatiotemporal memory.
   \begin{equation}
