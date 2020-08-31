@@ -18,7 +18,7 @@
   One possible use-case is the \textbf{one-frame prediction}, where one predicts $x_n$, given the the sequence $X$. Another common use-case is \textbf{multi-frame prediction}, where the key is to 
   predict $t > 1$ many frames into the future ($x_n, \ldots, x_{n+t-1}$).
   This is often performed using sequence-to-sequence learning \cite{Sutskever2014}. The first frames will look much better then the last frames, as 
-  ground-truth is missing. The predicted frames are only approximated, which means they contain a certain level of error, so using them as input, in a
+  ground-truth is missing. The predicted frames are only approximated, which means they contain a certain level of error. Using them as input in a
   feedback loop, to perform \textbf{multi-frame prediction} will increase the level of error for the following frames.
 
  % subsection
@@ -103,7 +103,7 @@
    \label{fig:cnn_stage}
   \end{figure}\noindent
   CNN's were invented in the early 1990 and are used heavily in the field of computer vision, because the architecture is inspired from the visual neuroscience
-  and is able to handle two- and three-dimensional data, without having the need of reshaping the data. It is also very popular, because it is more sparse then
+  and is able to handle two- and three-dimensional data without having the need of reshaping the data. It is also very popular, because it is more sparse then
   a typical feed-forward neural network.
   
  % subsection
@@ -295,7 +295,7 @@
    \end{equation}
    $U,V,W$ are the weight matrices for input-to-hidden, hidden-to-output and hidden-to-hidden.\\
    After computing the output, one again needs an error function, e.g. MSE (known from equation~\ref{equation::mse}.)\\
-   This time, it is also necessary to have this error function for every iteration.
+   This time it is also necessary to have this error function for every iteration.
    \begin{equation}
     L(y, \hat{y}) = \sum_{t}(L_t(y_t, \hat{y}_t))
    \end{equation}
