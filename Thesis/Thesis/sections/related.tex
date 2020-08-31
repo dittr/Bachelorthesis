@@ -18,7 +18,7 @@
   \cite{Graves2013} in an autoencoder architecture~\ref{subsection::autoencoder} for image reconstruction and future image prediction.
   The architecture for image reconstruction and image prediction is the same, the necessary behavior is achieved only through the different training.
   For image reconstruction, the network will get the already seen image sequence to compare and compute the error for. For image prediction, the network gets
-  the next $n$ frames, which it predicts to compare and compute the error for.
+  the next $n$ frames, which it predicts to compare and compute the error.
   Another use-case given by the authors is a composed model, in which image reconstruction and image prediction is done simultaneously. Therefore they have
   one encoder and two different decoder, one decoder for image reconstruction and one for image prediction.
   This is an example of how representation learning algorithms (neural networks) are able to learn different behavior, due to the error computation and following
@@ -97,10 +97,10 @@
   logits as reconstruction error for it. The 
   MovingMNIST implementation is the same as in LSTM Autoencoder~\ref{subsection::lstm_autoencoder} (With two digits per frame.).
   \\
-  In contrast to the other two algorithms, this architecture is only capable of doing one-frame prediction as is. The authors input $19$ images and output one 
+  In contrast to the other two algorithms, this architecture is only capable of doing one-frame prediction. The authors input $19$ images and output one 
   image.
   \\\\
-  It is possible to have multi-frame prediction, by e.g. adding a feedback loop, in which the output of the network is used as the next frame in the input 
+  It would be possible to have multi-frame prediction, by e.g. adding a feedback loop, in which the output of the network is used as the next frame in the input 
   sequence. Therefore the network should be also trained for one-frame prediction and then simply used for multi-frame prediction. The architecture is also used
   as one of the baselines in the experiments~\ref{section::experiments}.
   \begin{figure}[H]

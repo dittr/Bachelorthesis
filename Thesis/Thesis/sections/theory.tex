@@ -37,7 +37,7 @@
   Therefore the architecture needs to learn how to extract useful features from the input $x$, because it is not able to simply copy the input $x$ to the output $x \prime$, because $h$ is a reduced
   representation of $x$.
   For example an undercomplete convolutional autoencoder, which is just the autoencoder architecture using convolutional layer. This autoencoder gets an input 
-  image, which it should reconstruct.
+  image, which the architecture should reconstruct.
   If the code is smaller then the input image, the network needs to abandon information from the input image. The idea is, that during the training the network 
   learns
   what type of information is obsolete and what type of information is necessary and should be stored in the code to get a useful approximation $x \prime$.
@@ -59,7 +59,7 @@
    \item Non-linearity (ReLU, sigmoid, $\ldots$)
    \item Pooling layer
   \end{enumerate}
-  The convolutional operation used is more precisely a discrete convolutional operation.
+  More precisely, the used convolutional operation is the discrete convolutional operation.  
   Convolutional operations are applicable on two or three dimensional data.\\
   The equation is given for the
   two dimensional convolution. In general the network is useful for e.g. images and time-series, as they can be represented in two or three dimensional tensors 

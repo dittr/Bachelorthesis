@@ -27,7 +27,7 @@
   \\\\
   For the first experiments there are several fixed hyperparameters, simply because the network already needs several hours to train, so hyperparameter 
   optimization was not intended, because it would have blown the experiments by a wide margin.
-  The amount of epochs and iterations per dataset are fixed as well, as well as using image normalization and having MSE as the
+  The amount of epochs and iterations per dataset are fixed, as well as using image normalization and having MSE as the
   error function for training and testing.
   \\\\
   For MovingMNIST, it was used one epoch with $5000$ iterations, for KTH $20$ epochs with $500$ iterations per epoch and for Kitti $50$ epochs with $500$ 
@@ -39,12 +39,12 @@
   (Only 
   objects in the scenery are moving, not the scenery as in Kitti.), the epoch size was artificially chosen to be $20$.
   \\\\
-  Adam \cite{Kingma2015} was used as optimizer for all networks, always with the same learning rate of $0.001$, and the same learning rate scheduler (Dividing the 
-  learning rate by factor ten after $50$\% of epochs.), even tho 
-  Patraucean et al. \cite{Patraucean2015} are using RMSProp \cite{Ruder2016}, in their paper, as optimizer and a different learning rate scheduler.
+  Adam \cite{Kingma2015} was used as optimizer for all networks, always with the same learning rate of $0.001$ and the same learning rate scheduler (Dividing the 
+  learning rate by factor ten after $50$\% of epochs.), even though 
+  Patraucean et al. \cite{Patraucean2015} are using RMSProp \cite{Ruder2016}, in their paper as optimizer and a different learning rate scheduler.
   The values are used by Lotter et al. \cite{Lotter2016} for PredNet and they were chosen as the hyperparameter for this experiment.
   \\\\
-  All other parameters, such as kernel-size, padding-size, channel, depth, etc. can be found in the implementation, in the yml-folder.  
+  All other parameters, such as kernel-size, padding-size, channel, depth, etc. can be found in the implementation, inside the yml-folder.  
   \\\\
   For the second experiments hyperparameter optimization, early stopping and used \glqq optimal values\grqq{} given by the authors in the papers was added,
   to show that using those important topics can totally change a decision.
@@ -55,9 +55,9 @@
   This section is divided into the three different datasets and all subsections are structured the same way. It starts by comparing the amount of paramters
   for the dataset, because the amount of parameters is directly correlated to the computing time the network needs for training and testing. It then shows
   examples of the testing output and a table of mean MSE error.
-  The number of parameters directly correlates to the performance\footnote{In computer science, the performance directly correlates with the computing time.}, 
-  therefore is a smaller amount always better, because the network will train faster and is also faster at test time. A tree graph of the performed experiments
-  can be found in the appendix~\ref{section::appendix}.
+  The number of parameters directly correlates to the performance\footnote{In computer science, the performance directly correlates with the computing time.}.
+  Therefore, a smaller amount of parameters is always better, because the network will train faster and is also faster at test time. A tree graph of the performed 
+  experiments can be found in the appendix~\ref{section::appendix}.
   
   % subsubsection
   \subsubsection{MovingMNIST}
@@ -72,8 +72,8 @@
     \end{center}
     \caption{Number of trainable parameter for MovingMNIST.}
    \end{table}\noindent
-   We can clearly see, that the networks using PredRNN, due to it's more complex architecture, has at least $~1.41$ times the amount of parameters. In the worst
-   case, here for PredNet (Because PredNet has the PredRNN module in every layer.), the value is $~1.8$. This results show, that the networks using PredRNN
+   One can clearly see, that the networks using PredRNN, due to it's more complex architecture, has at least $~1.41$ times the amount of parameters. In the worst
+   case, here for PredNet (Because PredNet has the PredRNN module in every layer.), the value is $~1.8$. The results show, that the networks using PredRNN
    should perform better in the test to be the superior architecture, because otherwise they don't have any advantage to the architecture using ConvLSTM.
    \begin{figure}[H]
     \includegraphics[width=0.45\textwidth]{../Images/prednet_mnist_training.png}
@@ -91,8 +91,9 @@
    \caption{Test results for PredNet on MovingMNIST.}
    \label{figure::prednet_mnist_results}
   \end{figure}\noindent
-  Here one can see a problem, that was always present during training. The values for MovingMNIST were vanishing very fast, which often resulted in empty images,
-  for ConvLSTM and PredRNN. This is due to the fact, that PyTorch is vanishing gradients faster then Keras \cite{chollet2015}, and that Lotter et al. used 
+  Here one can see a problem, that was always present during training. The values for MovingMNIST were vanishing very fast, which often resulted in empty images
+  for ConvLSTM and PredRNN. This is due to the fact, that PyTorch is vanishing gradients faster then Keras \cite{chollet2015} (This was tested, by running the 
+  same network with the same parameters and dataset.) and that Lotter et al. used 
   Matplotlib \cite{Hunter2007}, which is able to catch much smaller values then Tensorboard is (I had to multiply the values with factor ten, to even get some
   output.).
    \begin{table}[H]
@@ -187,7 +188,7 @@
 
  % subsection
  \subsection{Experimental Results (Second setup)} \label{subsection::second_exp}
-  This test was only performed on the KTH dataset, with an optimal learning rate of $0.0001$ for the Autoencoder.
+  This test was only performed on the KTH dataset with an optimal learning rate of $0.0001$ for the Autoencoder.
   \begin{figure}[H]
    \includegraphics[width=0.6\textwidth]{../Images/exp2_training_error.png}
    \centering

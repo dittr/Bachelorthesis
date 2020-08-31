@@ -17,15 +17,15 @@
  learning frameworks, such as PyTorch \cite{Paszke2019}.\\During the implementation of the networks and the review of relevant sources,
  I read several code bases which
  were not written very comprehensive and adaptable and in several different deep learning frameworks, which sometimes differ very strongly.
- This might be, due to the reason that the code should only work for the researches themselves, the researches use the framework which they are most
+ This might be due to the reason, that the code should only work for the researches themselves. The researches use the framework which they are most
  comfortable with and is therefore not described that well, but I believe that this should be done always, especially for people not working everyday with such a 
  programming language or deep learning framework.
  \\\\
  %
- The first experiments, were all hyperparameter were fixed, showed a problem, which is fundamental in machine learning, hyperparameter optimization. Looking at
+ The first experiments, where all hyperparameter were fixed, showed a problem, which is fundamental in machine learning, hyperparameter optimization. Looking at
  the results from the first experiments, one can clearly see, that changing the standard ConvLSTM module with the more advanced PredRNN module didn't
  showed any performance boost.\\In contrast, the change only increased the number of trainable parameter in the networks, which will lead to a worse performance
- of the network. Thinking about embedded systems, with only few resources per task, this is very important, even for neural networks, which are expensive during
+ of the network. Thinking about embedded systems, with only few resources per task, this is very important even for neural networks, which are expensive during
  training, but cheap for execution. After performing hyperparameter optimization as last task of the experiments, a simple example already showed a performance
- boost of $> 80\%$. Seeing this results, it would be interesting to also perform hyperparamter optimization for all $18$ setups and perform the tests again to
- see the full results afterwars. This was not unfortunately not applicable due to the limited time of the bachelorthesis.
+ boost of $> 80\%$. Seeing this results, it would be interesting to perform hyperparamter optimization for all $18$ setups and perform the tests again to
+ see the full results afterwars. This was unfortunately not applicable due to the limited time of the bachelorthesis.
