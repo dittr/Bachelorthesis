@@ -11,14 +11,13 @@
 import torch
 
 from validate import validation
-import numpy as np
 
 from helper.transformation import normalize, binarize
 from helper.loss import error_loss as Loss
 from helper.loss import loss as LOSS
 
 
-def train(name, model, optim, schedule, lossp, dataloader, device, logger,
+def train(name, model, optim, schedule, lossp, early, dataloader, device, logger,
           epoch, iteration, save, validate, depoch, diteration, norm, binar,
           time_weight, layer_weight, debug=False):
     """
@@ -29,6 +28,7 @@ def train(name, model, optim, schedule, lossp, dataloader, device, logger,
     optim := initialized optimizer
     schedule := initialized lr scheduler
     lossp := name of loss to use <mae|mse|bce|bcel>
+    early := initialized early stopping
     dataloader := initialized dataloader
     device := GPU or CPU
     logger := initialized tensorboard logger
@@ -48,7 +48,6 @@ def train(name, model, optim, schedule, lossp, dataloader, device, logger,
         print('[DEBUG] Start training.')
 
     it = 0
-    val_loss = np.inf
 
     # run through the epochs, omit some if pre-trained
     for i in range(depoch, epoch):
@@ -90,21 +89,20 @@ def train(name, model, optim, schedule, lossp, dataloader, device, logger,
             # log scalar values
             logger.plot_loss('error', loss, it)
 
-            if it >= iteration and iteration > 0:
+            if batch_id >= iteration and iteration > 0:
                 break
 
         # validation every n epochs
         if (i+1) % validate == 0:
             if len(dataloader) > 1:
-                val_loss_old = val_loss
                 with torch.no_grad():
                     val_loss = validation(name, model, lossp, dataloader[1], logger, device,
                                           normalize, binarize)
 #                print('Epoch: {} Mean loss: {:.6f}'.format(i+1, bloss / (batch_id + 1)))
                 print('Epoch: {} Validation loss: {:.6f}'.format(i+1, val_loss))
                 
-                # early stopping (Could be advanced over more then one epoch etc.)
-                if val_loss >= val_loss_old:
+                # early stopping
+                if early.step(val_loss):
                     return
 
         if i > 0:

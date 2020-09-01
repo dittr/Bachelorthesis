@@ -61,6 +61,8 @@ class ConsoleArguments():
                             help='Extrapolate t+n images into future.')
         parser.add_argument('--predrnn', '-R', action='store_true',
                             help='False: ConvLSTM, True: ST_ConvLSTM (Default: False)')
+        parser.add_argument('--patience', '-z', type=str,
+                            help='Patience for early stopping')
         
         self.args = parser.parse_args()
 
@@ -183,3 +185,9 @@ class ConsoleArguments():
         Return predrnn value
         """
         return self.args.predrnn
+
+    def get_patience(self):
+        """
+        Return early stopping patience
+        """
+        return self.args.patience

@@ -11,35 +11,45 @@ PredNet/
 | validate.py (Validation)
 | README (This readme file)
 - data/    (data files and some scripts for fetching and pre-processing)
+-- files/
 -- scripts/
---| 00sequences.txt
---| download_kth.sh (from:
+--| 00sequences.txt (File from KTH dataset)
+--| download_kth.sh
 --| download_caltech.sh
---| data_utils_kth.py (from:
+--| data_utils_kth.py (from: https://github.com/vkhoi/KTH-Action-Recognition/blob/master/main/data_utils.py)
 --| data_utils_caltech.py
---| moving_mnist.py (from:
+--| moving_mnist.py (from: https://gist.github.com/tencia/afb129122a64bde3bd0c)
 - datasets/
 -| __init__.py
--| Kitti.py
--| MovingMNIST.py
--| Kth.py
 -| Caltech.py
+-| Kitti.py
+-| Kth.py
+-| MovingMNIST.py
 - graph/   (.dot-graphs of backprop graph)
 - log/     (log of txt-file & tensorboard logs)
 - mdl/     (Saving PyTorch models)
-- model/   (PredNet model)
+- model/   (Models)
 -| __init__.py
+-| autoenc.py
 -| prednet.py
+-| spatiotemp.py
 -- modules/ (Simple modules, e.g. LSTM)
 --| __init__.py
+--| activation.py (HardSigmoid)
 --| conv_lstm.py
---| input.py
---| prediction.py
---| error.py
+--| error.py (PredNet)
+--| grid_generator.py (Spatiotemp)
+--| huber_penalty.py (Spatiotemp)
+--| input.py (PredNet)
+--| optical_flow.py (Spatiotemp)
+--| prediction.py (PredNet)
+--| predrnn.py
+--| spatial_autoencoder.py (Spatiotemp)
 -- helper/  (Useful helper, e.g. yml parser)
 --| __init__.py
 --| arguments.py
 --| datetime.py
+--| early_stopping.py (from: https://gist.github.com/stefanonardo/693d96ceb2f531fa05db530f3e21517d)
 --| logger.py
 --| loss.py
 --| mdl.py
@@ -51,5 +61,6 @@ PredNet/
 -| prednet_kitti_l0.yml
 -| prednet_kth_l0.yml
 -| prednet_mnist_l0.yml
+-| ... (and many more)
 
-To use the datasets <MovingMNIST|Kitti|KTH|Caltech> one needs to download and preprocess the data. Most download and preprocess scripts are found in data/scripts.
+To use the datasets <MovingMNIST|Kitti|KTH|Caltech> one needs to download and preprocess the data. Most download and preprocess scripts are found in data/scripts. The used datasets are also uploaded here: https://drive.google.com/drive/folders/1-u0VhsIiArUYPSdgragj2GzM8ySMxvpK?usp=sharing

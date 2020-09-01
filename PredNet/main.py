@@ -31,6 +31,7 @@ from helper.mdl import ModelSaver
 from helper.mdl import ModelParameter
 from helper.tensorboard_log import TensorLog
 from helper.plot_graph import plot_graph
+from helper.early_stopping import EarlyStopping
 
 # training and testing
 from train import train
@@ -153,6 +154,7 @@ def init_dataset(dataset, root, testing, seq_len, download=True):
             # todo
         elif dataset == 'kth':
             data.append(Kth(root, seq_len, testing))
+            data.append(Kth(root, seq_len, testing, True))
             # todo
         elif dataset == 'caltech':
             data.append(Caltech(root, seq_len, testing))
@@ -253,7 +255,7 @@ def load_model(model, optimizer, device, dataset, path, debug=False):
     return model, params.epoch, params.iteration, optimizer, params.loss
 
 
-def compute(name, testing, model, optimizer, scheduler, loss, dataloader,
+def compute(name, testing, model, optimizer, scheduler, loss, early, dataloader,
             device, logger, epoch, iteration, depoch, diteration, save, validate,
             normalize, binarize, time_weight, layer_weight, debug=False):
     """
@@ -265,6 +267,7 @@ def compute(name, testing, model, optimizer, scheduler, loss, dataloader,
     optimizer := initialized optimizer
     scheduler := initialized scheduler
     loss := loss function to use
+    early := initialized early stopping
     dataloader := initialized dataloader
     device := GPU or CPU
     logger := tensorboard logger
@@ -281,7 +284,7 @@ def compute(name, testing, model, optimizer, scheduler, loss, dataloader,
     debug := debug value
     """
     if not testing:
-        train(name, model, optimizer, scheduler, loss, dataloader, device,
+        train(name, model, optimizer, scheduler, loss, early, dataloader, device,
               logger, epoch, iteration, save, validate, depoch, diteration,
               normalize, binarize, time_weight, layer_weight, debug)
     else:
@@ -439,18 +442,23 @@ def main():
                                                          len(args['prednet']['channels'][:-1]),
                                                          gpu)
 
-    # 13. Train/Test the model
+    # 13. Initialize early stopping if training
+    early = None
+    if not console.get_testing():
+        early = EarlyStopping(patience=int(console.get_patience()))
+
+    # 14. Train/Test the model
     compute(name, console.get_testing(), model, optim, schedule,
-            console.get_loss(), dataloader, device, tensorlog,
+            console.get_loss(), early, dataloader, device, tensorlog,
             console.get_epoch(), console.get_iteration(), depoch,
             diteration, console.get_save(), console.get_validate(),
             console.get_normalize(), console.get_binarize(),
             time_weight, layer_weight, debug)
 
-    # 14. Close logger
+    # 15. Close logger
     tensorlog.close_writer()
 
-    # 15. Save model
+    # 16. Save model
     if console.get_save():
         save_model(model, optim, console.get_dataset(), args['mdl_path'])
 
