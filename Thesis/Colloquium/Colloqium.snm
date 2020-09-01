@@ -1,6 +1,8 @@
-\beamer@slide {fig:lstm_architecture}{19}
-\beamer@slide {fig:lstm_results_mnist}{20}
-\beamer@slide {fig:convlstm_architecture}{24}
-\beamer@slide {fig:lstm_architecture}{25}
-\beamer@slide {fig:spatiotemp_architecture}{28}
-\beamer@slide {fig:lstm_architecture}{29}
+\beamer@slide {fig:lstm_architecture}{30}
+\beamer@slide {fig:kernel}{36}
+\beamer@slide {fig:lstm_architecture}{50}
+\beamer@slide {fig:lstm_results_mnist}{51}
+\beamer@slide {fig:convlstm_architecture}{55}
+\beamer@slide {fig:lstm_architecture}{56}
+\beamer@slide {fig:spatiotemp_architecture}{59}
+\beamer@slide {fig:lstm_architecture}{60}
