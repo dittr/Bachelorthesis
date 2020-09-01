@@ -6,7 +6,7 @@ convlstm:
     kernel: 3
     padding: 1
     channel:
-        - 3
+        - 1
         - 32
         - 64
     dropout: 0
