@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper]{beamer}
+\documentclass[10pt, a4paper]{beamer}
 
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
@@ -20,6 +20,10 @@
 % citing
 \usepackage[square,numbers]{natbib}
 \bibliographystyle{dinat}
+
+\usepackage {tikz}
+\usepackage{tikz-qtree}
+\usetikzlibrary{positioning}
 
 \mode<presentation> {
  \usetheme{Madrid}
@@ -62,6 +66,9 @@ University of Hildesheim \\ % Your institution for the title page
 %	PRESENTATION SLIDES
 %----------------------------------------------------------------------------------------
 
+ % questions
+ \input{sections/questions}
+
  % introduction
  \input{sections/introduction}
  
@@ -85,5 +92,10 @@ University of Hildesheim \\ % Your institution for the title page
  
  % conclusion
  \input{sections/conclusion}
+ 
+ \begin{frame}{Bibliography}
+ \bibliographystyle{plainnat}
+ \bibliography{../Bibliography/bibliography.bib}
+ \end{frame}
 
 \end{document} 

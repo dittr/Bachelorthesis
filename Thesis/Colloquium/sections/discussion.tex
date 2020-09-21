@@ -1,1 +1,20 @@
- 
+\section{Discussion} 
+ \begin{frame}
+  \frametitle{Discussion}
+  
+  \begin{itemize}
+   \item<1-> Related work showed different state-of-the-art solutions for image-/video-prediction
+   \begin{itemize}
+    \item<2-> Showed how previous work is used and adapted to gain better performance
+    \item<3-> E.g. Shi et al. \cite{Shi2015} used the autoencoder architecture from Srivastava et al. \cite{Srivastava2015} but with novel ConvLSTM module
+   \end{itemize}
+   \begin{itemize}
+    \item<4-> All have a different approach to get to the same goal and rely on the same recurrent module basis
+   \end{itemize}
+   \item<5-> Network implementation showed, that a researcher should have basic skills in Python and more then one deep learning framework,
+   in order to be able to read and understand code
+   \item<6-> First experiments were fixed and didn't showed any superior behavior of PredRNN as recurrent layer
+   \item<7-> Using HP optimization, the tables turned and even one example outperformed the ConvLSTM solution with a performance boost of $>80\%$
+  \end{itemize}
+
+ \end{frame}
